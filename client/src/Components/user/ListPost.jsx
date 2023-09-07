@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { styled } from 'styled-components'
 
 const PostWrap = styled.div`
-    width: 90vw;
+    width: 80vw;
     height: 35vh;
     background-color: #eeebeb;
     padding: 2vh 2vw;
@@ -55,26 +55,44 @@ const ClippedPara = styled.p`
 
 
 const ListPost = ({post}) => {
+
+    function formatPrice(price) {
+        if (typeof price !== 'number' || isNaN(price)) {
+          return 'N/A'; 
+        }
+      
+        if (price >= 10000000) {
     
+          const formattedPrice = (price / 10000000).toFixed(2);
+          return formattedPrice.endsWith('.00') ? formattedPrice.slice(0, -3) + ' Cr' : formattedPrice + ' Cr';
+        } 
+        else if (price >= 100000) {
+          const formattedPrice = (price / 100000).toFixed(2);
+          return formattedPrice.endsWith('.00') ? formattedPrice.slice(0, -3) + ' Lac' : formattedPrice + ' Lac';
+        } else {
+          return price.toLocaleString('en-IN');
+        }
+      }
+
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   return (
       
-      <Link to={`/post-detail/${post._id}`} key={post._id} style={{textDecoration:'none', color:"#555"}}>
+      <Link to={`/post-detail/${post?._id}`} key={post?._id} style={{textDecoration:'none', color:"#555"}}>
     <PostWrap>
         <ImgDiv>
-            <Img src={post?.images[0] ? PF + post.images[0]?.filename : "/images/noPropImg.png"} alt=''/>
+            <Img src={post?.images[0] ? PF + post?.images[0]?.filename : "/images/noPropImg.png"} alt=''/>
         </ImgDiv>
         <DetailsDiv>
-            <h4>{post.title}</h4>
+            <h4>{post?.title}</h4>
             <div style={{display:"flex",flexDirection:"column",justifyContent:"space-evenly",width:"20vw",marginTop:"2vh"}}>
-            <span>Type: {post.type}</span>
-            <span>Location: {post.location}</span>
+            <span>Type: {post?.type}</span>
+            <span>Location: {post?.location}</span>
             </div>
-            <ClippedPara>{post.description}</ClippedPara>
+            <ClippedPara>{post?.description}</ClippedPara>
         </DetailsDiv>
         <RightDiv>
-            <h3>₹{post.price}</h3>
-            <span>{post.area}</span>
+            <h3>₹{formatPrice(post?.price)}</h3>
+            <span>{post?.area}</span>
             <Button>Contact the Owner</Button>
         </RightDiv>
 

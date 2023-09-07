@@ -97,17 +97,17 @@ userCtrl.uploadImg = async (req, res) => {
 }
 
 userCtrl.addProperty = async (req, res) => {
-    const { title, type, location, price, area, description, ownerId } = req.body;
+    const { title, type, purpose, location, price, area, description, ownerId } = req.body;
 
     try {
         if (req.files) {
             const images = req.files;
-            const newProperty = new Property({ title, type, location, price, area, description, ownerId, images });
+            const newProperty = new Property({ title, type, purpose, location, price, area, description, ownerId, images });
             await newProperty.save();
             console.log("img Present")
         }
         else {
-            const newProperty = new Property({ title, type, location, price, area, description, ownerId });
+            const newProperty = new Property({ title, type, purpose, location, price, area, description, ownerId });
             await newProperty.save();
             console.log("img Absent")
         }
@@ -146,7 +146,7 @@ userCtrl.updateProperty = async (req, res) => {
     console.log(propId)
     try {
         console.log(req.body)
-        const { title, type, location, price, area, description } = req.body;
+        const { title, type, purpose, location, price, area, description } = req.body;
 
         if (req.files.length) {
             console.log(req.files)
@@ -155,7 +155,7 @@ userCtrl.updateProperty = async (req, res) => {
             const images = req.files;
             const updatedProperty = await Property.findByIdAndUpdate(propId, {
                 $set: {
-                    title, type, location, price, area, description
+                    title, type, purpose, location, price, area, description
                 },
                 $push: { images: { $each: images } }
             }, { new: true })
@@ -166,7 +166,7 @@ userCtrl.updateProperty = async (req, res) => {
             console.log(title, type)
             const updatedProperty = await Property.findByIdAndUpdate(propId, {
                 $set: {
-                    title, type, location, price, area, description
+                    title, type, purpose, location, price, area, description
                 }
             }, { new: true })
             res.status(200).json(updatedProperty)
@@ -188,19 +188,44 @@ userCtrl.deleteProperty = async (req, res) => {
     }
 }
 
+
+
 userCtrl.searchProperties = async (req, res) => {
+    console.log(req.query)
     const squery = req.query.squery;
+    const nav = req.query.nav;
+    const type = req.query.type;
+    const min = req.query.min;
+    const max = req.query.max;
+
     try {
-        if (squery) {
-            const regex = new RegExp(squery, 'i');
-            const properties = await Property.find({ title: { $regex: regex } });
-            res.status(200).json(properties);
-        }
+      if (squery) {
+        console.log(squery)
+        
+        const regex = new RegExp(squery, 'i');
+        const properties = await Property.find(
+            { title: { $regex: regex } ,
+             type:type,
+             price:{$gte:min,$lte:max}
+            });
+        console.log(properties);
+        res.status(200).json(properties);
+      }
+      else if(nav){
+        const properties = await Property.find({
+              purpose : nav,
+              type:type,
+              price:{$gte:min,$lte:max}
+          });
+
+        console.log(properties);
+          res.status(200).json(properties);
+      }
     } catch (error) {
-        console.log(error)
-        res.status(500).json({ msg: "Something went wrong" })
+      console.log(error);
+      res.status(500).json({ msg: "Something went wrong" });
     }
-}
+  };
 
 userCtrl.deleteImg = async (req, res) => {
     const propId = req.params.id;
@@ -221,15 +246,15 @@ userCtrl.deleteImg = async (req, res) => {
 
 userCtrl.getUserProps = async (req, res) => {
     const userId = req.params.id;
-    const squery = req.query.squery;
+    const search = req.query.squery;
     try {
-        if(squery){
-            const regex = new RegExp(squery,'i')
-            const properties = await Property.find({ ownerId: userId , title:{$regex:regex}});
+        if (search) {
+            const regex = new RegExp(search, 'i')
+            const properties = await Property.find({ ownerId: userId, title: { $regex: regex } });
             console.log(properties)
             res.status(200).json(properties)
         }
-        else{
+        else {
             const properties = await Property.find({ ownerId: userId });
             console.log(properties)
             res.status(200).json(properties)
@@ -290,11 +315,11 @@ userCtrl.checkVerified = async (req, res) => {
             changePaymentStatus(order.receipt).then(async () => {
                 try {
                     console.log(userId)
-                const user = await User.findOneAndUpdate({ _id: userId }, {
+                    const user = await User.findOneAndUpdate({ _id: userId }, {
                         $set: { subscribed: true }
-                    },{new:true});
+                    }, { new: true });
 
-                res.json({ msg: "Payment Successful",user });
+                    res.json({ msg: "Payment Successful", user });
 
                 } catch (error) {
                     console.error(error);
@@ -353,5 +378,5 @@ userCtrl.createSubscription = async (req, res) => {
         res.status(500).json(error)
     }
 }
-
+ 
 module.exports = userCtrl;

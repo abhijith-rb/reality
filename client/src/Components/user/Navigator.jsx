@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import axiosInstance from "../../axios/axiosInstance"
+import { useNavigate } from 'react-router-dom';
 
 const NavContainer = styled.div`
     width: 100%;
@@ -23,14 +25,18 @@ const Li = styled.li`
 
 
 const Navigator = () => {
+  const navigate = useNavigate()
+
+  const goToList = (query)=>{
+    navigate(`/list?nav=${query}`)
+  }
   return (
     <NavContainer>
         <Ul>
-          <Li>Buy</Li>
-          <Li>Rent</Li>
-          <Li>Sell</Li>
+          <Li onClick={()=>goToList("Buy")}>Buy</Li>
+          <Li onClick={()=>goToList("Rent")}>Rent</Li>
           <Li>Plots</Li>
-          {/* <Li>Commercial</Li> */}
+          <Li>Commercial</Li>
           <Li>Project</Li>
         </Ul>
 

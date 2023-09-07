@@ -18,6 +18,28 @@ const DBlock = styled.div`
 
 const DetailsCard = ({post}) => {
   console.log(post)
+
+  function formatPrice(price) {
+    if (typeof price !== 'number' || isNaN(price)) {
+      return 'N/A'; 
+    }
+  
+    if (price >= 10000000) {
+
+      const formattedPrice = (price / 10000000).toFixed(2);
+      return formattedPrice.endsWith('.00') ? formattedPrice.slice(0, -3) + ' Cr' : formattedPrice + ' Cr';
+    } 
+    else if (price >= 100000) {
+      const formattedPrice = (price / 100000).toFixed(2);
+      return formattedPrice.endsWith('.00') ? formattedPrice.slice(0, -3) + ' Lac' : formattedPrice + ' Lac';
+    } else {
+      return price.toLocaleString('en-IN');
+    }
+  }
+  
+   
+
+
   return (
     <Dcard>
         <h3>Details</h3>
@@ -31,7 +53,7 @@ const DetailsCard = ({post}) => {
         </DBlock>
         <DBlock>
             <p>Price</p>
-            <p>{post.price}</p>
+            <p>{formatPrice(post.price)}</p>
         </DBlock>
         <DBlock>
             <p>Area</p>

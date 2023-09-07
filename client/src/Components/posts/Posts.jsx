@@ -39,6 +39,24 @@ const Posts = ({title}) => {
 
     console.log(posts)
 
+    function formatPrice(price) {
+        if (typeof price !== 'number' || isNaN(price)) {
+          return 'N/A'; 
+        }
+      
+        if (price >= 10000000) {
+    
+          const formattedPrice = (price / 10000000).toFixed(2);
+          return formattedPrice.endsWith('.00') ? formattedPrice.slice(0, -3) + ' Cr' : formattedPrice + ' Cr';
+        } 
+        else if (price >= 100000) {
+          const formattedPrice = (price / 100000).toFixed(2);
+          return formattedPrice.endsWith('.00') ? formattedPrice.slice(0, -3) + ' Lac' : formattedPrice + ' Lac';
+        } else {
+          return price.toLocaleString('en-IN');
+        }
+      }
+
     return (
         <div className='posts'>
             <h2>{title}</h2>
@@ -59,7 +77,7 @@ const Posts = ({title}) => {
                                 </div>
                             </div>
                             <div className="priceDesc">
-                                <span className="price">₹ {post.price}</span>
+                                <span className="price">₹ {formatPrice(post.price)}</span>
                                 <ClippedPara>{ post.description}</ClippedPara>
                             </div>
                             <div className="placeDate">

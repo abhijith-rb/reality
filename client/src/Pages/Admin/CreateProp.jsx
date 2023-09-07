@@ -58,6 +58,7 @@ const CreateProp = () => {
   const navigate = useNavigate();
   const titleRef = useRef();
   const typeRef = useRef();
+  const purposeRef = useRef();
   const locationRef = useRef();
   const priceRef = useRef();
   const areaRef = useRef();
@@ -74,10 +75,10 @@ const CreateProp = () => {
     const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.webp)$/i;
 
     for (const file of files) {
-        if (!allowedExtensions.exec(file.name)) {
-            notify('Invalid file format. Only JPG, JPEG, PNG, or Webp images are allowed.');
-            return;
-        }
+      if (!allowedExtensions.exec(file.name)) {
+        notify('Invalid file format. Only JPG, JPEG, PNG, or Webp images are allowed.');
+        return;
+      }
     }
 
     const previewUrls = files.map((file) => URL.createObjectURL(file));
@@ -88,6 +89,7 @@ const CreateProp = () => {
     e.preventDefault();
     const title = titleRef.current.value;
     const type = typeRef.current.value;
+    const purpose = purposeRef.current.value;
     const location = locationRef.current.value;
     const price = priceRef.current.value;
     const area = areaRef.current.value;
@@ -95,10 +97,10 @@ const CreateProp = () => {
     const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.webp)$/i;
 
 
-    if (title === '' || type === '' || location === '') {
-      notify("Title, Type and Location are required")
+    if (title === '' || type === '' || purpose === '' || location === '') {
+      notify("Title, Type, Purpose and Location are required")
       return;
-    }
+  }
 
     const formData = new FormData();
     for (const file of selectedFiles) {
@@ -110,6 +112,7 @@ const CreateProp = () => {
     }
     formData.append('title', title)
     formData.append('type', type)
+    formData.append('purpose', purpose)
     formData.append('location', location)
     formData.append('price', price)
     formData.append('area', area)
@@ -122,7 +125,7 @@ const CreateProp = () => {
         navigate("/admin/propmng");
       }).catch((err) => {
         console.log(err)
-        
+
       })
   }
 
@@ -165,7 +168,7 @@ const CreateProp = () => {
 
           }
 
-          <Form onSubmit={handleSubmit} style={{marginTop:"1rem"}}>
+          <Form onSubmit={handleSubmit} style={{ marginTop: "1rem" }}>
             <Form.Group controlId="ControlFile">
               <Form.Control
                 type="file"
@@ -175,30 +178,37 @@ const CreateProp = () => {
               />
             </Form.Group>
 
-              <Form.Group controlId='title'>
-                <Form.Label>Title</Form.Label>
-                <Form.Control type='text' name='title' ref={titleRef} />
-              </Form.Group>
+            <Form.Group controlId='title'>
+              <Form.Label>Title</Form.Label>
+              <Form.Control type='text' name='title' ref={titleRef} />
+            </Form.Group>
 
-              <Form.Group controlId='type'>
-                <Form.Label>Type</Form.Label>
-                <Form.Select type='text' name='type' ref={typeRef}>
-                    <option value="Residential">Residential</option>
-                    <option value="Commercial">Commercial</option>
-                    <option value="Plot">Plot</option>
-                    <option value="Rent">Rent</option>
-                </Form.Select>
-              </Form.Group>
+            <Form.Group controlId='type'>
+              <Form.Label>Type</Form.Label>
+              <Form.Select type='text' name='type' ref={typeRef}>
+                <option value="Residential">Residential</option>
+                <option value="Commercial">Commercial</option>
+                <option value="Plot">Plot</option>
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group controlId='purpose'>
+              <Form.Label>Purpose</Form.Label>
+              <Form.Select type='text' name='purpose' ref={purposeRef}>
+                <option value="Rent">Rent</option>
+                <option value="Buy">Buy</option>
+              </Form.Select>
+            </Form.Group>
 
 
-              <Form.Group controlId='price'>
-                <Form.Label>Price</Form.Label>
-                <Form.Control type='text' name='price' ref={priceRef} />
-              </Form.Group>
-              <Form.Group controlId='area'>
-                <Form.Label>Area</Form.Label>
-                <Form.Control type='text' name='area' ref={areaRef} />
-              </Form.Group>
+            <Form.Group controlId='price'>
+              <Form.Label>Price</Form.Label>
+              <Form.Control type='number' name='price' ref={priceRef} min={0}/>
+            </Form.Group>
+            <Form.Group controlId='area'>
+              <Form.Label>Area</Form.Label>
+              <Form.Control type='text' name='area' ref={areaRef} />
+            </Form.Group>
 
             <Form.Group controlId='location'>
               <Form.Label>Location</Form.Label>

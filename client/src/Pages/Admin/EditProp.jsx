@@ -64,6 +64,7 @@ const EditProp = () => {
 
     const titleRef = useRef();
     const typeRef = useRef();
+    const purposeRef = useRef();
     const locationRef = useRef();
     const priceRef = useRef();
     const areaRef = useRef();
@@ -81,6 +82,7 @@ const EditProp = () => {
 
                 titleRef.current.value = property.title;
                 typeRef.current.value = property.type;
+                purposeRef.current.value = property.purpose;
                 locationRef.current.value = property.location;
                 priceRef.current.value = property.price;
                 areaRef.current.value = property.area;
@@ -120,6 +122,7 @@ const EditProp = () => {
         e.preventDefault();
         const title = titleRef.current.value;
         const type = typeRef.current.value;
+        const purpose = purposeRef.current.value;
         const location = locationRef.current.value;
         const price = priceRef.current.value;
         const area = areaRef.current.value;
@@ -127,8 +130,8 @@ const EditProp = () => {
         const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.webp)$/i;
 
 
-        if (title === '' || type === '' || location === '') {
-            notify("Title, Type and Location are required")
+        if (title === '' || type === '' || purpose === '' || location === '') {
+            notify("Title, Type, Purpose and Location are required")
             return;
         }
 
@@ -143,6 +146,7 @@ const EditProp = () => {
 
         formData.append('title', title)
         formData.append('type', type)
+        formData.append('purpose', purpose)
         formData.append('location', location)
         formData.append('price', price)
         formData.append('area', area)
@@ -241,13 +245,20 @@ const EditProp = () => {
                                 <option value="Residential">Residential</option>
                                 <option value="Commercial">Commercial</option>
                                 <option value="Plot">Plot</option>
+                            </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group controlId='purpose'>
+                            <Form.Label>Purpose</Form.Label>
+                            <Form.Select type='text' name='purpose' ref={purposeRef}>
                                 <option value="Rent">Rent</option>
+                                <option value="Buy">Buy</option>
                             </Form.Select>
                         </Form.Group>
 
                         <Form.Group controlId='price'>
                             <Form.Label>Price</Form.Label>
-                            <Form.Control type='text' name='price' ref={priceRef} />
+                            <Form.Control type='number' name='price' ref={priceRef} min={0}/>
                         </Form.Group>
                         <Form.Group controlId='area'>
                             <Form.Label>Area</Form.Label>
