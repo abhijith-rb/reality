@@ -54,6 +54,11 @@ const UserSidebar = ({setSidebar}) => {
   const navigate = useNavigate();
   const user = useSelector((state)=> state.user.user)
   const dispatch = useDispatch();
+
+  const goToList = (query)=>{
+    navigate(`/list?nav=${query}`)
+  }
+  
   const handleLogout = async () => {
     await axiosInstance.delete('/auth/logout')
         .then(() => {
@@ -80,6 +85,8 @@ const UserSidebar = ({setSidebar}) => {
           <Li onClick={()=>navigate("/userprops")}>My Properties</Li>
           <Li onClick={()=>navigate("/messenger")}>Chats</Li>
           <Li onClick={()=>navigate("")}>Favorites</Li>
+          <Li onClick={()=>goToList("Buy")}>Buy</Li>
+          <Li onClick={()=>goToList("Rent")}>Rent</Li>
           {user?.role === "user"
             ?<Li onClick={handleLogout}>Logout</Li>
             :<Li onClick={()=>navigate("/login")}>Login</Li>

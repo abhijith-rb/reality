@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import UserLayout from '../../Components/user/UserLayout'
 import { styled } from 'styled-components';
 import ListPost from '../../Components/user/ListPost';
-import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import axiosInstance from '../../axios/axiosInstance';
 import { Button, Form } from 'react-bootstrap';
@@ -20,7 +19,7 @@ const FullWrap = styled.div`
 
 const TopDiv = styled.div`
     width:100%;
-    height: 10vh;
+    height: 12vh;
     position: sticky;
     top: 15vh;
     left: 0;
@@ -32,7 +31,9 @@ const TopDiv = styled.div`
         width: 100vw;
         height: 12vh;
     }
-    background-color: blue;
+    border-radius: 5px;
+    color: #ffffff;
+    background-color: #1876D0;
 `;
 
 const LgDiv = styled.div`
@@ -40,7 +41,7 @@ const LgDiv = styled.div`
     height: 10vh;
     display: flex;
     align-items: center;
-    border: 3px solid green;
+    /* border: 3px solid green; */
     @media (max-width:800px){
         display:none;
     }
@@ -56,14 +57,14 @@ const SmDiv = styled.div`
         align-items: center;
         justify-content: space-between;
         padding: 0 1vw;
-        border: 3px solid green;
+        /* border: 3px solid green; */
     }
 `;
 
 
 const Wrapper = styled.div`
     width: 100%;
-    max-height: 193vh;
+    height: fit-content;
     display: flex;
     display: flex;
     flex-direction: column;
@@ -88,7 +89,7 @@ const MainDiv = styled.div`
 const BotDiv = styled.div`
     width: 50%;
     height: 5vh;
-    border: 2px solid blue;
+    /* border: 2px solid blue; */
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -100,6 +101,9 @@ const NavBtn = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 5px;
+    color: #ffffff;
+    background-color: #1876D0;
 `;
 
 const FilterBox = styled.div`
@@ -113,7 +117,6 @@ const FilterBox = styled.div`
     top: 0;
     z-index:8;
     padding: 0 4vw;
-    border: 2px solid red;
     background-color: #88C4FE;
 `;
 
@@ -215,7 +218,7 @@ const Listing = () => {
                     <LgDiv>
                         <Form style={{
                             width: "70%", display: 'flex',
-                            alignItems: 'center', justifyContent: 'space-around', backgroundColor: 'yellow'
+                            alignItems: 'center', justifyContent: 'space-around',
                         }}>
                             <Form.Group controlId='type'>
                                 <Form.Label>Type</Form.Label>
@@ -250,7 +253,7 @@ const Listing = () => {
                         <Form style={{
                             width: "30%", display: 'flex',
                             alignItems: 'center', justifyContent: 'flex-end',
-                            paddingRight: "2rem", backgroundColor: 'red'
+                            paddingRight: "2rem", 
                         }}>
                             <Form.Group controlId='sort' >
                                 <Form.Label>Sort by</Form.Label>
@@ -265,14 +268,14 @@ const Listing = () => {
                     </LgDiv>
 
                     <SmDiv>
-                        <Button onClick={() => setFilter(true)}>Apply Filters</Button>
+                        <Button onClick={() => setFilter(true)} variant='warning'>Apply Filters</Button>
 
 
 
                         <Form style={{
                             width: "60%", display: 'flex',
                             alignItems: 'center', justifyContent: 'flex-end',
-                            paddingRight: "2rem", backgroundColor: 'red'
+                            paddingRight: "2rem"
                         }}>
                             <Form.Group controlId='sort' >
                                 <Form.Label>Sort by</Form.Label>
@@ -292,7 +295,7 @@ const Listing = () => {
                                 <Cancel onClick={()=> setFilter(false)}/>
                                 <Form style={{
                                     width: "80%",height:"80%", display: 'flex', flexDirection:'column',
-                                     justifyContent:'space-around', backgroundColor: 'yellow'
+                                     justifyContent:'space-around'
                                 }}>
                                     <Form.Group controlId='type'>
                                         <Form.Label>Type</Form.Label>

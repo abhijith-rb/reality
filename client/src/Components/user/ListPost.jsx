@@ -1,4 +1,3 @@
-import { WidthFull } from '@mui/icons-material';
 import React from 'react'
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -6,17 +5,24 @@ import { styled } from 'styled-components'
 
 const PostWrap = styled.div`
     width: 80vw;
-    height: 35vh;
+    min-height: 35vh;
     background-color: #eeebeb;
     padding: 2vh 2vw;
     display: flex;
     border-radius:5px;
+    @media (max-width:800px){
+      flex-direction: column;
+    }
 `;
 
 const ImgDiv = styled.div`
     width: 25%;
     height: 90%;
-    background-color: red;
+    min-height: 30vh;
+    @media (max-width:800px){
+      width: 100%;
+      height: 25%;
+    }
 `;
 
 const DetailsDiv= styled.div`
@@ -25,6 +31,23 @@ const DetailsDiv= styled.div`
     color: #0f518f;
     padding-left: 5vw;
     padding-top: 2vh;
+    @media (max-width:800px){
+      width: 90%;
+      height: 50%;
+      padding-left: 1vw;
+    padding-top: 1vh;
+     
+    }
+`;
+
+const SubDetail = styled.div`
+  display:flex;
+  flex-direction:column;
+  width:80%;
+  margin-top:2vh;
+ @media (max-width:800px){
+  width: 50vw;
+ }
 `;
 
 const RightDiv = styled.div`
@@ -37,6 +60,15 @@ const RightDiv = styled.div`
     padding: 2vh 3vw;
     color: #0f518f;
     background-color: #c2bcbc;
+    @media (max-width:800px){
+      width: 100%;
+      height: 25%;
+      flex-direction: row;
+    }
+`;
+
+const SubRight = styled.div`
+
 `;
 
 const Img = styled.img`
@@ -50,7 +82,7 @@ const ClippedPara = styled.p`
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     line-height: 1.5;
-    margin-top: 5vh;
+    margin-top: 1vh;
 `;
 
 
@@ -84,15 +116,18 @@ const ListPost = ({post}) => {
         </ImgDiv>
         <DetailsDiv>
             <h4>{post?.title}</h4>
-            <div style={{display:"flex",flexDirection:"column",justifyContent:"space-evenly",width:"20vw",marginTop:"2vh"}}>
-            <span>Type: {post?.type}</span>
-            <span>Location: {post?.location}</span>
-            </div>
+            <SubDetail >
+            <h5>Type: {post?.type}</h5>
+            <h5>Location: {post?.location}</h5>
+            </SubDetail>
             <ClippedPara>{post?.description}</ClippedPara>
         </DetailsDiv>
         <RightDiv>
+          <SubRight>
             <h3>₹{formatPrice(post?.price)}</h3>
             <span>{post?.area}</span>
+
+          </SubRight>
             <Button>Contact the Owner</Button>
         </RightDiv>
 
