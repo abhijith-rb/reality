@@ -5,7 +5,6 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginStart, loginSuccess, loginFailure, logout } from '../../redux/userReducer';
 import styled from 'styled-components';
-import Header from '../../Components/user/Header';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axiosInstance from '../../axios/axiosInstance';
@@ -24,7 +23,6 @@ const Content = styled.div`
   padding-bottom: 2vh;
   padding-left:5vw;
   padding-right: 5vw;
-  /* margin-top: 14vh; */
 `;
 
 const LoginContainer = styled.div`
@@ -116,7 +114,6 @@ const Login = () => {
   return (
 
     <UserLayout>
-      {/* <Header /> */}
       <Content>
         <LoginContainer>
           <AppDetail>

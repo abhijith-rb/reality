@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, {  useEffect, useRef } from 'react';
 import { createPopper } from '@popperjs/core';
-import { Business, CreditCard, Download, FavoriteBorder, Help, Logout, Settings } from '@mui/icons-material';
+import {Logout, Settings } from '@mui/icons-material';
 import styled from "styled-components";
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -13,14 +13,18 @@ const Tooltip = styled.div`
     padding-top: 3vh;
     padding-bottom: 3vh;
     position: absolute;
+    top: 0;
+    right: 5;
     z-index: 99;
     display: flex;
     flex-direction: column;
-    color: #002f34;
+    color: #1876D0;
     justify-content: center;
     border: 1px solid #ccc;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     background-color: #ffffff;
+    margin-top: 10vh;
+    margin-right:10vw;
 `;
 
 const UserDetails = styled.div`
@@ -71,7 +75,6 @@ const Popper = ({buttonRef,handleLogout}) => {
       };
     }, []);
   return (
-    <div>
       
       <Tooltip>
         <UserDetails>
@@ -85,7 +88,6 @@ const Popper = ({buttonRef,handleLogout}) => {
       </Tooltip>
 
 
-    </div>
   )
 }
 

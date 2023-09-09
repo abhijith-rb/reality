@@ -50,6 +50,7 @@ const ChatBoxTop = styled.div`
     overflow-y: scroll;
     padding-right: 10px;
     border: 3px solid #88C4FE;
+    background-color:#ffffff;
 `;
 
 const ChatInfo = styled.div`
@@ -91,6 +92,7 @@ const FixedTextareaContainer = styled.div`
   padding: 10px; 
   display: flex;
   flex-direction: column; 
+  background-color: #ffffff;
 
   @media (min-width: 768px) {
     max-width: 800px; 

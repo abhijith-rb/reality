@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './posts.css';
+import UserLayout from '../../Components/user/UserLayout';
 import { FavoriteBorder, Star, StarBorder } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -17,8 +17,7 @@ const ClippedPara = styled.p`
     line-height: 1.5;
 `;
 
-
-const Posts = ({title}) => {
+const Favorites = () => {
     const navigate = useNavigate()
     const [posts,setPosts] = useState([]);
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -28,9 +27,9 @@ const Posts = ({title}) => {
         return toast(msg)
     }
     
-    const getPosts = async ()=>{
+    const getFavs = async ()=>{
         try {
-            await axiosInstance.get("/getallproperties")
+            await axiosInstance.get(`/getfavs/${user._id}`)
             .then((response)=>{
                 setPosts(response.data)
             })
@@ -44,7 +43,7 @@ const Posts = ({title}) => {
     }
 
     useEffect(()=>{
-        getPosts()
+        getFavs()
     },[])
 
     console.log(posts)
@@ -68,9 +67,6 @@ const Posts = ({title}) => {
       }
 
      const handleLike = async(propId,i)=>{
-        if(user?.role !== 'user'){
-            return
-        }
         await axiosInstance.put(`/likeprop`,
         {propId,userId:user._id}
         )
@@ -78,23 +74,24 @@ const Posts = ({title}) => {
             console.log(res)
             const updProp = res.data.updProp;
             console.log(updProp)
-            notify(res.data.msg)
-            const updPosts = posts.map((post)=>(
-                post._id === propId ? updProp : post
+
+            const updPosts = posts.filter((post)=>(
+                post._id !== propId 
             ))
 
             setPosts(updPosts)
+
+            notify(res.data.msg)
         })
         .catch((err)=>{
             console.log(err)
         })
 
      }
-
-
-    return (
+  return (
+    <UserLayout>
         <div className='posts'>
-            <h2>{title}</h2>
+            <h2>Favorite Properties</h2>
             <div className='cards'>
 
             {posts.length > 0 && posts.map((post,i)=>{
@@ -108,15 +105,14 @@ const Posts = ({title}) => {
                                 </div>
 
                                 <div className='heart' onClick={()=>handleLike(post?._id,i)}>
-                                    {post?.likedBy.includes(user?._id)
+                                    {post?.likedBy.includes(user._id)
                                     ?  <Star style={{color:"red"}}/>
                                     : <StarBorder/>
                                     }
                                 </div>
                             </div>
                             <div className="priceDesc" onClick={()=>navigate(`/post-detail/${post?._id}`)}>
-                                {/* <span>{post.title}</span> */}
-                                <span className="price">{post.title}</span>
+                                <span>{post.title}</span>
                                 <span className="price">₹ {formatPrice(post?.price)}</span>
                                 <span>Type: {post?.type}</span>
                                 <span>Purpose: {post?.purpose}</span>
@@ -128,11 +124,17 @@ const Posts = ({title}) => {
                         </div>
             )})}
 
+            {posts.length === 0 && 
+            <h1 style={{color:"#777"}}>
+                You haven't liked any properties yet</h1>}
+
             </div>
 
             <ToastContainer/>
+            
         </div>
-    )
+    </UserLayout>
+  )
 }
 
-export default Posts
+export default Favorites

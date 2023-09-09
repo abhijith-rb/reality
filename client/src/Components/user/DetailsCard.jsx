@@ -5,14 +5,35 @@ const Dcard = styled.div`
     margin-top: 1vh;
     padding-top: 1vh;
     padding-bottom: 1vh;
+    padding-left: 3vw;
     width: 100%;
-    padding-left: 1vw;
     background-color: #ffffff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight:500;
+    border-radius: 5px;
 ;`
 
-const DBlock = styled.div`
+
+
+const Ul = styled.ul`
+    list-style: none;
+    width: 100%;
+    height: auto;
+    font-size: 16px;
+
+`;
+
+const Li = styled.li`
+  width: 100%;
+    height: auto;
     display: flex;
-    gap: 8vw;
+    padding-bottom: 28px;
+`;
+
+const LabelDiv = styled.div`
+      width: 170px;
+    height: auto;
+    /* line-height: 20px; */
 `;
 
 
@@ -42,27 +63,42 @@ const DetailsCard = ({post}) => {
 
   return (
     <Dcard>
-        <h3>Details</h3>
-        <DBlock>
-            <p>Title</p>
-            <p>{post.title}</p>
-        </DBlock>
-        <DBlock>
-            <p>Type</p>
-            <p>{post.type}</p>
-        </DBlock>
-        <DBlock>
-            <p>Price</p>
-            <p>{formatPrice(post.price)}</p>
-        </DBlock>
-        <DBlock>
-            <p>Area</p>
-            <p>{post.area}</p>
-        </DBlock>
-        <DBlock>
-            <p>Location</p>
-            <p>{post.location}</p>
-        </DBlock>
+        <h1 style={{marginBottom:'4vh'}}>Property Details</h1>
+
+        <Ul>
+          <Li>
+              <LabelDiv>Title</LabelDiv>
+            <div>
+              <span>{post.title}</span>
+            </div>
+          </Li>
+          <Li>
+              <LabelDiv>Type</LabelDiv>
+            <div>
+              <span>{post.type}</span>
+            </div>
+          </Li>
+          <Li>
+              <LabelDiv>Price</LabelDiv>
+            <div>
+              <span>₹ {formatPrice(post.price)}</span>
+            </div>
+          </Li>
+          <Li>
+              <LabelDiv>Area</LabelDiv>
+            <div>
+              <span>{post.area}</span>
+            </div>
+          </Li>
+          <Li>
+              <LabelDiv>Location</LabelDiv>
+            <div>
+              <span>{post.location}</span>
+            </div>
+          </Li>
+        </Ul>
+
+
         <hr></hr>
         <h5>Description</h5>
         <p>{post.description}</p>

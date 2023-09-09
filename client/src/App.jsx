@@ -29,6 +29,13 @@ import Forgotpwd from './Pages/User/Forgotpwd';
 import ChangePwd from './Pages/User/ChangePwd';
 import Subscribe from './Pages/User/Subscribe';
 import SubscribedRoute from './utils/SubscribedRoute';
+import Write from './Pages/Blog/Write';
+import Blogs from './Pages/Blog/Blogs';
+import SingleBlog from './Pages/Blog/SingleBlog';
+import Blogmng from './Pages/Admin/Blogmng';
+import CreateBlog from './Pages/Admin/CreateBlog';
+import AdminSingleBlog from './Pages/Admin/AdminSingleBlog';
+import Favorites from './Pages/User/Favorites';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -82,8 +89,11 @@ function App() {
             <Route path='/admin/dashboard' element={<Dashboard/>}/>
             <Route path='/admin/usermng' element={<Usermng/>}/>
             <Route path='/admin/propmng' element={<Propmng/>}/>
+            <Route path='/admin/blogmng' element={<Blogmng/>}/>
             <Route path='/admin/catmng' element={<Catmng/>}/>
             <Route path='/admin/createuser' element={<CreateUser/>}/>
+            <Route path='/admin/createblog' element={<CreateBlog/>}/>
+            <Route path='/admin/blog/:id' element={<AdminSingleBlog/>}/>
             <Route path='/admin/edituser/:id' element={<EditUser/>}/>
             <Route path='/admin/createproperty' element={<CreateProp/>}/>
             <Route path='/admin/editproperty/:id' element={<EditProp/>}/>
@@ -97,6 +107,7 @@ function App() {
         <Route element={<UserProtectedRoute  />}>
           <Route path='/profile' element={ <Profile/>}/>
           <Route path='/messenger' element={<Messenger/>}/>
+          <Route path='/favorites' element={<Favorites/>}/>
         </Route>
 
         <Route element={<SubscribedRoute/>}>
@@ -116,7 +127,9 @@ function App() {
           
         </Route>
 
-        
+        <Route path='write' element={<Write/>}/>
+        <Route path='blogs' element={<Blogs/>}/>
+        <Route path='blog/:id' element={<SingleBlog/>}/>
 
         <Route path='*' element={<Notfound/>}/>
 

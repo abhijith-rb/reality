@@ -7,6 +7,7 @@ import axios from 'axios';
 import { logout } from '../../redux/userReducer';
 import { setCurrentChat } from '../../redux/chatReducer';
 import axiosInstance from '../../axios/axiosInstance';
+import { Close } from '@mui/icons-material';
 
 const SideContainer = styled.div`
   min-width: 17vw;
@@ -48,6 +49,7 @@ const Logo = styled.span`
 const LogoDiv = styled.div`
   display: flex;
   align-items: center;
+  margin-left: 1vw;
 `;
 
 const UserSidebar = ({setSidebar}) => {
@@ -75,16 +77,17 @@ const UserSidebar = ({setSidebar}) => {
   return (
     <SideContainer>
       <LogoDiv>
-        <MenuIcon onClick={()=> setSidebar(false)} style={{marginLeft:"1rem",color:"#ffffff",cursor:"pointer"}}/>
         <Logo onClick={() => navigate("/")}>
                 Reality
         </Logo>
+        <Close onClick={()=> setSidebar(false)} style={{marginRight:"1rem",color:"#ffffff",cursor:"pointer"}}/>
       </LogoDiv>
         <Ul>
           <Li onClick={()=>navigate("/profile")}>My Profile</Li>
           <Li onClick={()=>navigate("/userprops")}>My Properties</Li>
+          <Li onClick={()=>navigate("/blogs")}>Blogs</Li>
           <Li onClick={()=>navigate("/messenger")}>Chats</Li>
-          <Li onClick={()=>navigate("")}>Favorites</Li>
+          <Li onClick={()=>navigate("/favorites")}>Favorites</Li>
           <Li onClick={()=>goToList("Buy")}>Buy</Li>
           <Li onClick={()=>goToList("Rent")}>Rent</Li>
           {user?.role === "user"

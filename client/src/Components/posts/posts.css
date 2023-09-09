@@ -1,11 +1,11 @@
 .posts{
     height: auto;
-    background-color: white;
-    /* background-color: aquamarine; */
-    padding-top: 5vh;
-    padding-left: 4vw;
-    padding-right: 4vw;
+    display: flex;
+    flex-direction: column;
     padding-bottom: 5vh;
+    /* margin-bottom: 2vh; */
+    /* border: 2px solid green; */
+    padding-left: 2vw;
 }
 .posts h2{
     font-weight: 400;
@@ -13,12 +13,14 @@
     color: #000000;
 }
 .cards{
+    width: fit-content;
     display: flex;
-    align-items: center;
-    /* flex-wrap: wrap; */
-    overflow-x:scroll ;
+    /* align-items: center; */
+    flex-wrap: wrap;
+    /* overflow-x:scroll ; */
     margin-top: 15px;
-    gap: 15px;
+    gap: 3rem;
+    /* border: 2px solid blue; */
     
     &::-webkit-scrollbar {
         width: 0.01em;
@@ -33,10 +35,9 @@
       }
 }
 .card{
-    width: 280px;
-    /* width: 18vw; */
-    height: 45vh;
-    height: 45vh;
+    /* width: 280px; */
+    width: 18vw;
+    height: 55vh;
     border: 1px solid rgba(14,4,5,.2);
     border-radius: 4px;
     padding-left: 10px;
@@ -45,6 +46,16 @@
     padding-right: 5px;
     font-family: 'Roboto', sans-serif;
     cursor: pointer;
+
+    @media (max-width:800px) {
+        width: 36vw;
+        height: 55vh;
+    }
+
+    @media (max-width:500px) {
+        width: 85vw;
+        height: 55vh;
+    }
 }
 
 
@@ -54,14 +65,15 @@
     display: flex;
     justify-content: space-between;
     margin-top: 0;
+    margin-bottom: 1vh;
 }
 .pic{
     margin-top: 0.5em;
     display: flex;
     justify-content: center;
-    width: 260px;
+    width: 100%;
     /* width:17vw ; */
-    height: 22vh;
+    height: 90%;
     /* background-color: yellow; */
     padding-right:0 ;
 }

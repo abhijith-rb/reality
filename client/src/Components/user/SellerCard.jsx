@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ChevronRight, NavigateNext } from '@mui/icons-material';
 import { styled } from 'styled-components'
-import axios from 'axios';
 import { setCurrentChat } from '../../redux/chatReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +15,8 @@ const Sellercardx= styled.div`
     flex-direction: column;
     align-items: center;
     border-radius: 5px;
+    font-family: 'Montserrat', sans-serif;
+
 `;
 
 const Sellerdeets = styled.div`
@@ -39,7 +39,7 @@ const Img = styled.img`
 `;
 
 const LongBtn = styled.button`
-    width: 50%;
+    width: 60%;
     height: 5vh;
     font-weight: bold;
     margin-top: 1rem;
@@ -55,6 +55,7 @@ const Title = styled.h3`
 
 const OwnerName = styled.span`
     color: #043d72;
+    font-size: 18px;
 `;
 
 const SellerCard = ({post}) => {

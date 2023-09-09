@@ -2,11 +2,15 @@ import React from 'react'
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { styled } from 'styled-components'
+import { setCurrentChat } from '../../redux/chatReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../axios/axiosInstance';
 
 const PostWrap = styled.div`
     width: 80vw;
     min-height: 35vh;
-    background-color: #eeebeb;
+    background-color: #ffffff;
     padding: 2vh 2vw;
     display: flex;
     border-radius:5px;
@@ -87,6 +91,24 @@ const ClippedPara = styled.p`
 
 
 const ListPost = ({post}) => {
+  const dispatch = useDispatch();
+    const navigate = useNavigate();
+  const user = useSelector((state)=> state.user.user)
+  const ownerId = post.ownerId
+  console.log(post)
+
+  const handleChat = async()=>{
+    
+    await axiosInstance.post(`/chat/conversation/`,{
+        senderId:user?._id,
+        receiverId:ownerId
+    })
+    .then((res)=>{
+        dispatch(setCurrentChat(res.data))
+    })
+
+    navigate("/messenger")
+  }
 
     function formatPrice(price) {
         if (typeof price !== 'number' || isNaN(price)) {
@@ -128,7 +150,7 @@ const ListPost = ({post}) => {
             <span>{post?.area}</span>
 
           </SubRight>
-            <Button>Contact the Owner</Button>
+            <Button onClick={handleChat}>Contact the Owner</Button>
         </RightDiv>
 
     </PostWrap>

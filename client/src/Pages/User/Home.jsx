@@ -6,9 +6,9 @@ const Home = () => {
 
   return (
     <UserLayout>
-         <Posts title="Recommended Properties"/>
-         <Posts title="Trending Properties"/>
-         <Posts title="Properties in High Demand"/>
+         {/* <Posts title="Recommended Properties"/> */}
+         <Posts title="Latest Properties"/>
+         {/* <Posts title="Properties in High Demand"/> */}
     </UserLayout>
 
   )

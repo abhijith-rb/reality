@@ -98,14 +98,7 @@ const AdminHeader = ({ setShowSBar }) => {
                 </Logo>
             </LogoDiv>
 
-            {/* <SearchDiv>
-                <Bar placeholder='Search...' />
-
-                <Button variant='warning'>
-                    Search
-                </Button>
-
-            </SearchDiv> */}
+           
 
             <div>
 

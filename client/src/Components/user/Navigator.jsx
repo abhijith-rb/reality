@@ -35,9 +35,8 @@ const Navigator = () => {
         <Ul>
           <Li onClick={()=>goToList("Buy")}>Buy</Li>
           <Li onClick={()=>goToList("Rent")}>Rent</Li>
-          <Li>Plots</Li>
-          <Li>Commercial</Li>
-          <Li>Project</Li>
+          <Li onClick={()=>navigate("/blogs")}>Blogs</Li>
+          <Li onClick={()=>navigate("/favorites")}>Favorites</Li>
         </Ul>
 
     </NavContainer>

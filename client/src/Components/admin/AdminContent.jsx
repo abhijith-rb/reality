@@ -7,7 +7,7 @@ const ContentWrapper = styled.div`
     padding-right: 5vw;
     padding-top: 5vh;
     min-height: 90vh;
-    /* background-color: blue; */
+    background-color: #eeebeb;
 `;
 
 const AdminContent = ({children}) => {

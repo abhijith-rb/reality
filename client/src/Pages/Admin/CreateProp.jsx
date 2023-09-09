@@ -7,10 +7,9 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import AdminLayout from '../../Components/admin/AdminLayout';
 import axiosInstance from '../../axios/axiosInstance';
+import { useSelector } from 'react-redux';
 
 const MainBox = styled.div`
   width: 100%;
@@ -55,6 +54,7 @@ const CarouselDiv = styled.div`
 `;
 
 const CreateProp = () => {
+  const user = useSelector((state)=> state.user.user);
   const navigate = useNavigate();
   const titleRef = useRef();
   const typeRef = useRef();
@@ -117,6 +117,7 @@ const CreateProp = () => {
     formData.append('price', price)
     formData.append('area', area)
     formData.append('description', description)
+    formData.append('ownerId', user._id)
     console.log(formData)
 
     await axiosInstance.post('/addproperty', formData)

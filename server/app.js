@@ -6,6 +6,7 @@ const authRouter = require('./routes/authRoute.js')
 const userRouter = require('./routes/userRoute.js')
 const adminRouter = require('./routes/adminRoute.js')
 const chatRouter = require('./routes/chatRoute.js')
+const blogRouter = require('./routes/blogRoute.js')
 const cookieParser = require('cookie-parser')
 const path = require("path");
 const cors = require("cors")
@@ -35,6 +36,7 @@ app.use("/images", express.static(path.join(__dirname,"/public/images")))
 app.use('/api/auth', authRouter);
 app.use('/api/admin', adminRouter)
 app.use('/api/chat', chatRouter)
+app.use('/api/blog', blogRouter)
 app.use('/api',userRouter)
 
 app.listen(PORT, () => {

@@ -1,5 +1,3 @@
-const express = require('express')
-const router = express.Router();
 const User = require('../models/UserModel');
 const jwt = require('jsonwebtoken')
 const multer = require('multer');
@@ -123,6 +121,18 @@ userCtrl.getAllProps = async (req, res) => {
     try {
         const allProps = await Property.find();
         res.status(200).json(allProps)
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: "Something went wrong" })
+    }
+}
+
+userCtrl.getFavorites = async (req, res) => {
+    const userId = req.params.id;
+    try {
+        const favProps = await Property.find({likedBy:{$in:[userId]}});
+        console.log(userId)
+        res.status(200).json(favProps)
     } catch (error) {
         console.log(error);
         res.status(500).json({ msg: "Something went wrong" })
@@ -376,6 +386,28 @@ userCtrl.createSubscription = async (req, res) => {
         res.status(200).json(order)
     } catch (error) {
         res.status(500).json(error)
+    }
+}
+
+userCtrl.likeProp = async(req,res)=>{
+    const propId = req.body.propId;
+    const userId = req.body.userId;
+    const property = await Property.findById(propId)
+    try {
+        if(property.likedBy.includes(userId)){
+            const updProp = await Property.findByIdAndUpdate(propId,{
+                $pull:{likedBy:userId}
+            },{new:true})
+            res.status(200).json({updProp,msg:"Property removed from Favorite list"})
+        }
+        else{
+            const updProp = await Property.findByIdAndUpdate(propId,{
+                $push:{likedBy:userId}
+            },{new:true})
+            res.status(200).json({updProp,msg:"Property added to Favorite list"})
+        }
+    } catch (error) {
+        res.status(500).json({msg:"Something went wrong"})
     }
 }
  

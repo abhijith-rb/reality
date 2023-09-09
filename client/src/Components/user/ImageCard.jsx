@@ -8,12 +8,13 @@ const Card = styled.div`
     height: auto;
     background-color: #ffffff;
     padding-bottom: 1rem;
+    border-radius: 5px;
 `;
 
 const CarouselImage = styled.div`
     width: 100%;
     height: 450px;
-    background-color: black;
+    /* background-color: #88C4FE; */
 `;
 
 const Img = styled.img`
@@ -36,14 +37,21 @@ const Imagecard = ({post}) => {
   return (
     <Card>
         <Carousel >
-            {images.map((image,i)=>{
+            {images.length > 0 ?
+            images.map((image,i)=>{
                 return(
                 <CarouselImage key={i}>
                     <Img src={PF + image.filename} alt="" />
                     
                 </CarouselImage>
 
-            )})}
+            )})
+        
+            : <CarouselImage>
+                <Img src={"/images/noPropImg.png"} alt="" />
+            
+                </CarouselImage>
+        }
             
         </Carousel>
     </Card>

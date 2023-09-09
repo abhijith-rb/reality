@@ -20,7 +20,6 @@ const MainBox = styled.div`
 
 const Title = styled.h1`
   text-align: center;
-  /* background-color: red; */
 `;
 
 const Btns = styled.div`

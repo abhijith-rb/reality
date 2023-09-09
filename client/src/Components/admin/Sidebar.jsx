@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import MenuIcon from '@mui/icons-material/Menu';
+import { Close } from '@mui/icons-material';
 
 const SideContainer = styled.div`
   min-width: 17vw;
@@ -40,6 +41,7 @@ const Logo = styled.span`
 const LogoDiv = styled.div`
   display: flex;
   align-items: center;
+  margin-left: 1vw;
 `;
 
 const Sidebar = ({setShowSBar}) => {
@@ -48,17 +50,17 @@ const Sidebar = ({setShowSBar}) => {
   return (
     <SideContainer>
       <LogoDiv>
-        <MenuIcon onClick={()=> setShowSBar(false)} style={{marginLeft:"1rem",color:"#ffffff",cursor:"pointer"}}/>
         <Logo onClick={() => navigate("/")}>
                 Reality
         </Logo>
+        <Close onClick={()=> setShowSBar(false)} style={{marginRight:"1rem",color:"#ffffff",cursor:"pointer"}}/>
       </LogoDiv>
         <Ul>
           <Li onClick={()=>navigate("/admin/dashboard")}>Dashboard</Li>
           <Li onClick={()=>navigate("/admin/usermng")}>Users</Li>
           <Li onClick={()=>navigate("/admin/propmng")}>Properties</Li>
-          <Li onClick={()=>navigate("/admin/catmng")}>Categories</Li>
-          <Li onClick={()=>navigate("")}>Banners</Li>
+          <Li onClick={()=>navigate("/admin/blogmng")}>Blogs</Li>
+          
         </Ul>
 
     </SideContainer>

@@ -11,6 +11,7 @@ const propSchema = new mongoose.Schema({
     images:{type:Array},
     ownerId:{type:String},
     createdAt:{type:Date,default:Date.now()},
+    likedBy:{type:Array,default:[]}
 })
 
 const Property = mongoose.model('Property',propSchema);

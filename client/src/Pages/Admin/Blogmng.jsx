@@ -10,6 +10,7 @@ import AdminLayout from '../../Components/admin/AdminLayout';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import axiosInstance from '../../axios/axiosInstance';
+import {format} from 'date-fns'
 
 const MainBox = styled.div`
   width: 100%;
@@ -52,25 +53,26 @@ const TableResponsive = styled.div`
   }
 `;
 
-const Propmng = () => {
+const Blogmng = () => {
+
     const navigate = useNavigate();
-    const [properties, setProperties] = useState([]);
+    const [blogs, setBlogs] = useState([]);
     const searchRef = useRef();
-    const [propId, setPropId] = useState(null);
+    const [blogId, setBlogId] = useState(null);
     const [deleteMessage, setDeleteMessage] = useState("");
     const [displayConfirmationModal, setDisplayConfirmationModal] = useState(false);
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
-    console.log(properties)
+    console.log(blogs)
 
-    const showDeleteModal = (propid, title) => {
-        setPropId(propid);
+    const showDeleteModal = (blogid, title) => {
+        setBlogId(blogid);
         setDeleteMessage(`Are you sure you want to delete ${title}?`)
         setDisplayConfirmationModal(true)
     }
     const hideConfirmationModal = () => {
         setDisplayConfirmationModal(false)
-        setPropId(null)
+        setBlogId(null)
     }
 
 
@@ -84,15 +86,15 @@ const Propmng = () => {
 
     const handleDelete = async () => {
         try {
-            if (propId) {
-                await axiosInstance.get(`/deleteproperty/${propId}`)
+            if (blogId) {
+                await axiosInstance.delete(`/blog/${blogId}`)
                     .then((response) => {
-                        const updtdProps = properties.filter((prop) => (
-                            prop._id !== propId
+                        const updtdblogs = blogs.filter((blog) => (
+                            blog._id !== blogId
                         ))
-                        setProperties(updtdProps)
-                        setPropId(null)
-                        console.log("property deleted successfully");
+                        setBlogs(updtdblogs)
+                        setBlogId(null)
+                        console.log("blog deleted successfully");
                         notify(response.data.msg)
                     })
                     .catch((err) => {
@@ -107,11 +109,11 @@ const Propmng = () => {
 
     }
 
-    const getproperties = async () => {
-        await axiosInstance.get('/getallproperties')
+    const getblogs = async () => {
+        await axiosInstance.get('/blog')
             .then((response) => {
                 console.log(response.data);
-                setProperties(response.data)
+                setBlogs(response.data)
             })
             .catch((err)=>{
                 console.log(err)
@@ -119,7 +121,7 @@ const Propmng = () => {
     }
 
     useEffect(() => {
-        getproperties();
+        getblogs();
     }, [])
 
     const handleSearch = async (e) => {
@@ -127,9 +129,9 @@ const Propmng = () => {
         const squery = searchRef.current.value;
         console.log(squery)
         if (squery) {
-            await axiosInstance.get(`/search-property?squery=${squery}`)
+            await axiosInstance.get(`/blog?squery=${squery}`)
                 .then((response) => {
-                    setProperties(response.data)
+                    setBlogs(response.data)
                 })
                 .catch((err) => {
                     console.log(err)
@@ -139,37 +141,21 @@ const Propmng = () => {
     }
 
     const handleReset = () => {
-        getproperties();
+        getblogs();
         searchRef.current.value = "";
     }
 
-    function formatPrice(price) {
-        if (typeof price !== 'number' || isNaN(price)) {
-          return 'N/A'; 
-        }
-      
-        if (price >= 10000000) {
     
-          const formattedPrice = (price / 10000000).toFixed(2);
-          return formattedPrice.endsWith('.00') ? formattedPrice.slice(0, -3) + ' Cr' : formattedPrice + ' Cr';
-        } 
-        else if (price >= 100000) {
-          const formattedPrice = (price / 100000).toFixed(2);
-          return formattedPrice.endsWith('.00') ? formattedPrice.slice(0, -3) + ' Lac' : formattedPrice + ' Lac';
-        } else {
-          return price.toLocaleString('en-IN');
-        }
-      }
 
-    return (
-        <AdminLayout>
+  return (
+    <AdminLayout>
 
             <MainBox>
-                <Title>Property Management</Title>
+                <Title>Blog Management</Title>
 
                 <TopDiv>
                     <div>
-                        <Button onClick={() => navigate('/admin/createproperty')}>Create</Button>
+                        <Button onClick={() => navigate('/admin/createblog')}>Create</Button>
 
                     </div>
 
@@ -187,32 +173,27 @@ const Propmng = () => {
                 </TopDiv>
                 
                 {
-                    properties?.length > 0 ?
-                    (<TableResponsive className="table-responsive">
+                    blogs?.length > 0 ?
+                    <TableResponsive className="table-responsive">
                         <table className="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>Title</th>
-                                    <th>Location</th>
-                                    <th>Price</th>
-                                    <th style={{ textAlign: "center" }}>Actions</th>
+                                    <th>Author</th>
+                                    <th>Posted Date</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {
-                                    (properties.map((property) => {
-                                        return (<tr key={property._id}>
-                                            <td>{property.title}</td>
-                                            <td>{property.location}</td>
-                                            <td>₹ {formatPrice(property.price)}</td>
-                                            <td >
-                                                <Btns>
-
-                                                    <Button variant='warning' onClick={() => navigate(`/admin/editproperty/${property._id}`)}>Edit</Button>
-                                                    <Button variant='danger' onClick={() => showDeleteModal(property._id, property.title)}>Delete</Button>
-                                                </Btns>
-                                            </td>
-                                        </tr>)
+                                    (blogs.map((blog) => {
+                                        return (
+                                        <tr key={blog._id} style={{cursor:'pointer'}} onClick={()=>navigate(`/admin/blog/${blog._id}`)}>
+                                            <td>{blog.title}</td>
+                                            <td>{blog.username}</td>
+                                            <td> {format(new Date(blog.createdAt), 'dd/MM/yyyy')}</td>
+                              
+                                        </tr>
+                                        )
                                     }))
 
 
@@ -221,9 +202,9 @@ const Propmng = () => {
 
                             </tbody>
                         </table>
-                    </TableResponsive>)
+                    </TableResponsive>
 
-                    : (<h2 style={{ textAlign: 'center', color: "#777" }}>No Search Results</h2>)
+                    : <h2 style={{ textAlign: 'center', color: "#777" }}>No Search Results</h2>
 
                 }
 
@@ -232,8 +213,7 @@ const Propmng = () => {
             </MainBox>
 
         </AdminLayout>
-
-    )
+  )
 }
 
-export default Propmng
+export default Blogmng
