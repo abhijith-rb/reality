@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { Carousel } from 'react-responsive-carousel';
@@ -9,13 +8,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AdminLayout from '../../Components/admin/AdminLayout';
 import axiosInstance from '../../axios/axiosInstance';
+import LocationMap from '../../Components/LocationMap';
 
 const MainBox = styled.div`
   width: 100%;
-  height: 150vh;
+  min-height: 150vh;
+  margin-bottom:5vh;
   /* background-color: yellow; */
 `;
 
@@ -73,6 +73,8 @@ const EditProp = () => {
 
     const [oldImgs, setOldImgs] = useState([]);
     const [previewUrls, setPreviewUrls] = useState([]);
+    const [coordinates,setCoordinates] = useState({lat:28.6139, lng:77.2090})
+
 
     const getProperty = async () => {
         await axiosInstance.get(`/getproperty/${propId}`)
@@ -87,6 +89,7 @@ const EditProp = () => {
                 priceRef.current.value = property.price;
                 areaRef.current.value = property.area;
                 descriptionRef.current.value = property.description;
+                setCoordinates(property.coordinates)
                 setOldImgs(property.images);
             })
             .catch((err) => {
@@ -151,6 +154,7 @@ const EditProp = () => {
         formData.append('price', price)
         formData.append('area', area)
         formData.append('description', description)
+        formData.append('coordinates', JSON.stringify(coordinates))
         console.log(title)
 
         await axiosInstance.post(`/updateproperty/${propId}`, formData)
@@ -269,6 +273,9 @@ const EditProp = () => {
                             <Form.Label>Location</Form.Label>
                             <Form.Control type='text' name='location' ref={locationRef} />
                         </Form.Group>
+
+                        <LocationMap coordinates={coordinates} setCoordinates={setCoordinates} edit={true} />
+
                         <Form.Group controlId='description'>
                             <Form.Label>Description</Form.Label>
                             <Form.Control as='textarea' rows={4} style={{ maxHeight: "15vh" }}

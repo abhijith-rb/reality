@@ -9,6 +9,7 @@ const instance = new Razorpay({
     key_secret: 'Q15DfBbJFIrDy1K1FTsDE7CA',
 });
 const objectId = require('mongoose').Types.ObjectId;
+const bcrypt = require('bcrypt')
 
 const userCtrl = {}
 
@@ -61,12 +62,19 @@ userCtrl.authenticateToken = (req, res, next) => {
 
 userCtrl.getDetails = async (req, res) => {
     const username = req.user.name;
-
+    console.log(username)
     const user = await User.findOne({ username });
-    const { password, ...others } = user._doc
-    console.log(others)
-    console.log(req.user)
-    res.status(200).json(others)
+    try {
+        if(user){
+            const { password, ...others } = user._doc
+            console.log(others)
+            console.log(req.user)
+            res.status(200).json(others)
+        }
+        
+    } catch (error) {
+        res.status(500).json(error)
+    }
 }
 
 userCtrl.uploadImg = async (req, res) => {
@@ -96,16 +104,17 @@ userCtrl.uploadImg = async (req, res) => {
 
 userCtrl.addProperty = async (req, res) => {
     const { title, type, purpose, location, price, area, description, ownerId } = req.body;
-
+    const coordinates = JSON.parse(req.body.coordinates)
+    console.log(coordinates)
     try {
         if (req.files) {
             const images = req.files;
-            const newProperty = new Property({ title, type, purpose, location, price, area, description, ownerId, images });
+            const newProperty = new Property({ title, type, purpose, location, price, area, description, ownerId, coordinates, images });
             await newProperty.save();
             console.log("img Present")
         }
         else {
-            const newProperty = new Property({ title, type, purpose, location, price, area, description, ownerId });
+            const newProperty = new Property({ title, type, purpose, location, price, area, description, coordinates, ownerId });
             await newProperty.save();
             console.log("img Absent")
         }
@@ -157,6 +166,7 @@ userCtrl.updateProperty = async (req, res) => {
     try {
         console.log(req.body)
         const { title, type, purpose, location, price, area, description } = req.body;
+        const coordinates = JSON.parse(req.body.coordinates)
 
         if (req.files.length) {
             console.log(req.files)
@@ -165,7 +175,7 @@ userCtrl.updateProperty = async (req, res) => {
             const images = req.files;
             const updatedProperty = await Property.findByIdAndUpdate(propId, {
                 $set: {
-                    title, type, purpose, location, price, area, description
+                    title, type, purpose, location, price, area, description, coordinates
                 },
                 $push: { images: { $each: images } }
             }, { new: true })
@@ -176,7 +186,7 @@ userCtrl.updateProperty = async (req, res) => {
             console.log(title, type)
             const updatedProperty = await Property.findByIdAndUpdate(propId, {
                 $set: {
-                    title, type, purpose, location, price, area, description
+                    title, type, purpose, location, price, area, description, coordinates
                 }
             }, { new: true })
             res.status(200).json(updatedProperty)
@@ -214,7 +224,8 @@ userCtrl.searchProperties = async (req, res) => {
         
         const regex = new RegExp(squery, 'i');
         const properties = await Property.find(
-            { title: { $regex: regex } ,
+            { 
+             $or:[{title: {$regex:regex}} ,{location: {$regex:regex}}],
              type:type,
              price:{$gte:min,$lte:max}
             });
@@ -406,6 +417,53 @@ userCtrl.likeProp = async(req,res)=>{
             },{new:true})
             res.status(200).json({updProp,msg:"Property added to Favorite list"})
         }
+    } catch (error) {
+        res.status(500).json({msg:"Something went wrong"})
+    }
+}
+
+userCtrl.editProfile = async(req,res)=>{
+    const userId = req.params.id;
+    const updateObj = req.body;
+    console.log(updateObj)
+
+    if(req.file){
+        updateObj.image = req.file.originalname
+    }
+    console.log(updateObj)
+
+    try {
+       const updatedUser = await User.findByIdAndUpdate(userId,{
+            $set:updateObj
+       },{new:true})
+       console.log(updatedUser)
+
+       const {password, ...userInfo} = updatedUser._doc;
+       console.log(userInfo)
+       res.status(200).json({userInfo,msg:"Profile Updated Successfully"})
+    } catch (err) {
+        res.status(500).json({msg:"Something went wrong"})
+    }
+}
+
+userCtrl.changePwd = async(req,res)=>{
+    const userId = req.params.id;
+    const {oldPassword,newPassword} = req.body;
+    console.log({oldPassword,newPassword})
+    const user = await User.findById(userId);
+    console.log(user)
+    try {
+        const validPwd = await bcrypt.compare(oldPassword,user.password)
+        if(!validPwd){
+            return res.status(400).json({msg:"Incorrect Password"})
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt)
+        await User.findByIdAndUpdate(userId,{
+            $set:{password:hashedPassword}
+        })
+        res.status(200).json({msg:"Password Changed Successfully"})
     } catch (error) {
         res.status(500).json({msg:"Something went wrong"})
     }

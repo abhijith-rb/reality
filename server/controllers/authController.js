@@ -45,7 +45,6 @@ authCtrl.userAuth = async (req, res) => {
 
         const validPassword = await bcrypt.compare(req.body.password, user.password);
         if (!validPassword) {
-            console.log(validPassword)
             return res.status(400).json({ msg: 'Invalid username or password' })
         }
 

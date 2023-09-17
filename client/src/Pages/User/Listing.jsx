@@ -19,7 +19,7 @@ const FullWrap = styled.div`
 
 const TopDiv = styled.div`
     width:100%;
-    height: 12vh;
+    height: 14vh;
     position: sticky;
     top: 15vh;
     left: 0;
@@ -29,7 +29,7 @@ const TopDiv = styled.div`
         top: 10vh;
         flex-direction: column;
         width: 100vw;
-        height: 12vh;
+        height: 14vh;
     }
     border-radius: 5px;
     color: #ffffff;

@@ -8,7 +8,7 @@ import axiosInstance from '../../axios/axiosInstance';
 
 const Sellercardx= styled.div`
     width: 100%;
-    height: 25vh;
+    height: 28vh;
     padding-top: 1vh;
     background-color: #88C4FE;
     display: flex;

@@ -141,7 +141,7 @@ const NoConversationText = styled.span`
     
 `;
 
-const Img=styled.img`
+const Img = styled.img`
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -167,138 +167,159 @@ const Messenger = () => {
     const dispatch = useDispatch();
     const [conversations, setConversations] = useState([])
     const [messages, setMessages] = useState([])
-    const [newMessage, setNewMessage] = useState("")
+    // const [newMessage, setNewMessage] = useState("")
     const [arrivalMessage, setArrivalMessage] = useState(null)
     const user = useSelector((state) => state.user.user)
     const socket = useRef();
     const scrollRef = useRef();
     const currentChat = useSelector((state) => state.chat.current)
-    console.log(currentChat)
-    console.log(conversations)
+    console.log("firstCurrentChat",currentChat)
+    // console.log(conversations)
 
-    const[recInfo,setRecinfo] = useState(null)
+    const msgRef = useRef();
 
-    const receiverId = currentChat?.members.find((member) => member !== user._id)
-    console.log(receiverId)
+    const [recInfo, setRecinfo] = useState(null)
 
-    useEffect(()=>{
-        const getUser=async()=>{
-            try {
-                await axiosInstance.get(`/find-user/${receiverId}`)
-                .then((res)=>{
+    const receiverId = currentChat?.members?.find((member) => member !== user._id)
+    console.log("receiverId",receiverId)
+
+    const getUser = async () => {
+        try {
+            await axiosInstance.get(`/find-user/${receiverId}`)
+                .then((res) => {
                     setRecinfo(res.data)
                 })
-                .catch((err)=>{
+                .catch((err) => {
                     console.log(err)
                 })
-            } catch (error) {
-                console.log(error)
-            }
-        }
-
-        getUser();
-    },[currentChat])
-
-    //To receive messages
-    
-    useEffect(() => {
-        socket.current = io("ws://localhost:8900")
-        try {
-            socket.current.on("getMessage", (data) => {
-                console.log(data.text)
-                console.log("getMsgg listend")
-                const arrmsg = {
-                    senderId: data.senderId,
-                    text: data.text,
-                    createdAt: Date.now(),
-                }
-                console.log(arrmsg)
-                setArrivalMessage(arrmsg)
-                getConversations();
-            })
-
         } catch (error) {
-            console.log("something went wrong")
             console.log(error)
         }
+    }
+    
+
+    //To receive messages
+
+    useEffect(() => {
+        console.log("useeffect 2 called")
+
+        socket.current = io("ws://localhost:8800")
+        socket.current.on("getMessage", (data) => {
+            console.log(data.text)
+            console.log(data)
+            console.log("getMsgg listend")
+            const arrmsg = {
+                senderId: data.senderId,
+                text: data.text,
+                createdAt: Date.now(),
+            }
+            console.log("arrmsg",arrmsg)
+            setArrivalMessage(arrmsg)
+            
+            getConversations();
+        })
+
+        return ()=>{
+            socket.current.disconnect()
+        }
+
     }, [])
 
-    console.log(arrivalMessage)
+    console.log("arrivalMessage",arrivalMessage)
 
 
     useEffect(() => {
-        // console.log("arrival useeffect called")
-        arrivalMessage &&
-            (currentChat?.members.includes(arrivalMessage?.senderId)
-                && setMessages((prev) => [...prev, arrivalMessage])
-            )
+        console.log("arrival useeffect called")
+        console.log(arrivalMessage)
+        console.log("2ndcurrentChat", currentChat)
+        console.log(arrivalMessage?.senderId)
+        const isSenderActive = currentChat?.members.includes(arrivalMessage?.senderId)
+        console.log(isSenderActive)
+        {
+            arrivalMessage
+            && 
+            isSenderActive
+            && setMessages((prev) => [...prev, arrivalMessage])
+        }
 
-        // arrivalMessage && sortConvs(arrivalMessage.senderId)
+
     }, [arrivalMessage, currentChat])
 
+
+
     //To add the current user to the list of active users and retrieve the list of active users
+    
     useEffect(() => {
+        console.log("useeffect 3 called")
+
         socket.current.emit("addUser", user._id)
         console.log("Add user emitted")
         socket.current.on("getUsers", (users) => {
             //Modify it => Current user should only see certain active users not all
             // setOnlineUsers(users)
-            console.log(users)
+            console.log("onlineUsers",users)
         })
+
+        getConversations()
     }, [user])
 
     const getConversations = async () => {
         await axiosInstance.get(`/chat/conversation/${user._id}`)
             .then((res) => {
-                console.log(res.data)
-                setConversations(res.data)
+                // console.log(res.data)
+                setConversations(res.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)))
             })
             .catch((err) => {
                 console.log(err)
             })
     }
+
+   
+    const getMessages = async () => {
+        await axiosInstance.get(`/chat/message/${currentChat?._id}`)
+            .then((res) => {
+                // console.log(res.data)
+                setMessages(res.data);
+            })
+            .catch((err) => {
+                console.log((err))
+            })
+    }
+
     useEffect(() => {
-
-        getConversations()
-    }, [user._id])
-
-    useEffect(() => {
-        const getMessages = async () => {
-            await axiosInstance.get(`/chat/message/${currentChat?._id}`)
-                .then((res) => {
-                    console.log(res.data)
-                    setMessages(res.data);
-                })
-                .catch((err) => {
-                    console.log((err))
-                })
-        }
-
+        console.log("useeffect 1 called")
+        getUser();
         getMessages();
     }, [currentChat])
 
+
     useEffect(() => {
+        console.log("useeffect 5 called")
+
         scrollRef.current?.scrollIntoView({ behavior: "smooth" })
     }, [messages])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const newMessage = msgRef.current.value;
 
-        if(newMessage === "") return;
+        if (newMessage === "") return;
+
+        const recId = currentChat?.members.find((member) => member !== user._id)
+        // console.log(recId)
 
         const message = {
             conversationId: currentChat._id,
             senderId: user._id,
-            receiverId: receiverId,
+            receiverId: recId,
             text: newMessage,
         }
 
-        console.log(receiverId)
 
         //Sending message to Socket server
         socket.current.emit("sendMessage", {
             senderId: user._id,
-            receiverId,
+            receiverId: recId,
             text: newMessage
         })
 
@@ -306,7 +327,7 @@ const Messenger = () => {
             await axiosInstance.post("/chat/message", message)
                 .then((res) => {
                     setMessages([...messages, res.data])
-                    setNewMessage("")
+                    msgRef.current.value = "";
                 })
         } catch (err) {
             console.log(err)
@@ -337,16 +358,16 @@ const Messenger = () => {
                                 (<>
                                     <ChatBoxTopWrap>
                                         <ChatInfo>
-                                        <InfoLeft>
-                                            <Img src={recInfo?.image ? PF+ recInfo.image : "/images/avatar.png"} alt="" />
-                                            <span>{recInfo?.username}</span>
-                                        </InfoLeft>
-                                        <InfoRight>
-                                            <Cancel 
-                                            onClick={()=>dispatch(setCurrentChat(null))}
-                                            style={{color:"white",cursor:"pointer"}}
-                                            />
-                                        </InfoRight>
+                                            <InfoLeft>
+                                                <Img src={recInfo?.image ? PF + recInfo.image : "/images/avatar.png"} alt="" />
+                                                <span>{recInfo?.username}</span>
+                                            </InfoLeft>
+                                            <InfoRight>
+                                                <Cancel
+                                                    onClick={() => dispatch(setCurrentChat(null))}
+                                                    style={{ color: "white", cursor: "pointer" }}
+                                                />
+                                            </InfoRight>
 
                                         </ChatInfo>
                                         <ChatBoxTop>
@@ -370,9 +391,8 @@ const Messenger = () => {
                                             <FixedTextarea
                                                 rows="4"
                                                 cols="50"
-                                                placeholder='write something' 
-                                                onChange={(e)=> setNewMessage(e.target.value)}
-                                                value={newMessage}
+                                                placeholder='write something'
+                                                ref={msgRef}
                                             />
                                         </FixedTextareaContainer>
                                         <ChatSubmitButton onClick={handleSubmit}>
@@ -381,14 +401,14 @@ const Messenger = () => {
                                     </ChatBoxBottom>
                                 </>)
 
-                                : ( <OpenDiv>
-                                        <NoConversationText>Open a conversation to start a chat.</NoConversationText>
-                                    </OpenDiv>
+                                : (<OpenDiv>
+                                    <NoConversationText>Open a conversation to start a chat.</NoConversationText>
+                                </OpenDiv>
                                 )
                         }
                     </ChatBoxWrapper>
                 </ChatBox>
-                
+
 
             </Wrapper>
 

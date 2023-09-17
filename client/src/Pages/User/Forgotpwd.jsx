@@ -4,7 +4,6 @@ import { styled } from 'styled-components';
 import { Button, Form } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axios/axiosInstance';
 
@@ -13,7 +12,6 @@ const Wrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    /* background-color: yellow; */
 `;
 
 const FormWrap = styled.div`

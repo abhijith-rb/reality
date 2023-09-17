@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { styled } from 'styled-components'
+import LocationMap from '../LocationMap';
 
 const Dcard = styled.div`
     margin-top: 1vh;
@@ -39,6 +40,7 @@ const LabelDiv = styled.div`
 
 const DetailsCard = ({post}) => {
   console.log(post)
+  const coordinates={lat:post.coordinates?.lat,lng:post.coordinates?.lng}
 
   function formatPrice(price) {
     if (typeof price !== 'number' || isNaN(price)) {
@@ -57,8 +59,6 @@ const DetailsCard = ({post}) => {
       return price.toLocaleString('en-IN');
     }
   }
-  
-   
 
 
   return (
@@ -102,7 +102,8 @@ const DetailsCard = ({post}) => {
         <hr></hr>
         <h5>Description</h5>
         <p>{post.description}</p>
-
+        <h5>Location</h5>
+        <LocationMap coordinates={post.coordinates ? post.coordinates : {lat:28.6139, lng:77.2090}} edit={false}/>
     </Dcard>
   )
 }

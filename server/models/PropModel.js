@@ -10,8 +10,9 @@ const propSchema = new mongoose.Schema({
     description:{type:String},
     images:{type:Array},
     ownerId:{type:String},
-    createdAt:{type:Date,default:Date.now()},
-    likedBy:{type:Array,default:[]}
+    coordinates:{type:{lat:{type:Number}, lng:{type:Number}}, _id:false},
+    createdAt:{type:Date, default:Date.now()},
+    likedBy:{type:Array, default:[]}
 })
 
 const Property = mongoose.model('Property',propSchema);

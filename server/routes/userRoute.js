@@ -19,5 +19,7 @@ router.post('/subscribe/:id/to',userCtrl.authenticateToken, userCtrl.createSubsc
 router.post('/verifypayment',userCtrl.authenticateToken, userCtrl.checkVerified)
 
 router.put('/likeprop',userCtrl.authenticateToken, userCtrl.likeProp)
+router.put('/editprofile/:id',userCtrl.authenticateToken,userCtrl.uploadSingle.single('image'), userCtrl.editProfile)
+router.put('/changepwd/:id',userCtrl.authenticateToken, userCtrl.changePwd)
 
 module.exports = router;
