@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Close } from '@mui/icons-material';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button } from 'react-bootstrap';
+import axiosInstance from '../../axios/axiosInstance';
+import { logout } from '../../redux/userReducer';
 
 const SideContainer = styled.div`
   min-width: 17vw;
@@ -44,24 +48,51 @@ const LogoDiv = styled.div`
   margin-left: 1vw;
 `;
 
-const Sidebar = ({setShowSBar}) => {
+const Sidebar = ({ setShowSBar }) => {
+  const user = useSelector((state) => state.user.user)
+  const dispatch = useDispatch()
   const navigate = useNavigate();
+  const handleLogout = async () => {
+    await axiosInstance.delete('/auth/logout')
+      .then(() => {
+        dispatch(logout())
+        console.log("logout dispatched")
+      })
+      .catch((error) => {
+        console.log(error)
+
+      })
+  }
 
   return (
     <SideContainer>
       <LogoDiv>
         <Logo onClick={() => navigate("/")}>
-                Reality
+          Reality
         </Logo>
-        <Close onClick={()=> setShowSBar(false)} style={{marginRight:"1rem",color:"#ffffff",cursor:"pointer"}}/>
+        <Close onClick={() => setShowSBar(false)} style={{ marginRight: "1rem", color: "#ffffff", cursor: "pointer" }} />
       </LogoDiv>
-        <Ul>
-          <Li onClick={()=>navigate("/admin/dashboard")}>Dashboard</Li>
-          <Li onClick={()=>navigate("/admin/usermng")}>Users</Li>
-          <Li onClick={()=>navigate("/admin/propmng")}>Properties</Li>
-          <Li onClick={()=>navigate("/admin/blogmng")}>Blogs</Li>
-          
-        </Ul>
+      <Ul>
+        <Li onClick={() => navigate("/admin/dashboard")}>Dashboard</Li>
+        <Li onClick={() => navigate("/admin/usermng")}>Users</Li>
+        <Li onClick={() => navigate("/admin/propmng")}>Properties</Li>
+        <Li onClick={() => navigate("/admin/blogmng")}>Blogs</Li>
+        <Li onClick={() => navigate("/admin/blogmng")}>
+          {user?.role === "admin"
+            ? (<Button variant='danger' onClick={handleLogout}>
+              Logout
+            </Button>)
+
+
+            : (<Button onClick={() => navigate('/login')}>
+              Login
+            </Button>)
+
+
+          }
+        </Li>
+
+      </Ul>
 
     </SideContainer>
   )

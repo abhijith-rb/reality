@@ -5,10 +5,11 @@ import { io } from "socket.io-client"
 import { useDispatch, useSelector } from 'react-redux';
 import Conversation from '../../Components/chat/Conversation';
 import Message from '../../Components/chat/Message';
-import axios from 'axios';
 import { setCurrentChat } from '../../redux/chatReducer';
-import { Cancel, Close } from '@mui/icons-material';
+import { Cancel, VideoCall } from '@mui/icons-material';
 import axiosInstance from '../../axios/axiosInstance';
+import Videocall from '../../Components/chat/Videocall';
+import Peer from 'peerjs';
 
 const Wrapper = styled.div`
     /* height: calc(100vh - 70px); */
@@ -72,7 +73,10 @@ const InfoLeft = styled.div`
 `;
 
 const InfoRight = styled.div`
-    
+    width:15vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 `;
 
 const ChatBoxBottom = styled.div`
@@ -124,14 +128,6 @@ const ChatMenuWrapper = styled.div`
     height: 100%;
 `;
 
-
-const ChatMenuInput = styled.input`
-    width: 90%;
-    padding: 1vh 1vw;
-    border: none;
-    border-bottom: 1px solid gray;
-`;
-
 const NoConversationText = styled.span`
     position: absolute;
     top: 10%;
@@ -167,21 +163,33 @@ const Messenger = () => {
     const dispatch = useDispatch();
     const [conversations, setConversations] = useState([])
     const [messages, setMessages] = useState([])
-    // const [newMessage, setNewMessage] = useState("")
     const [arrivalMessage, setArrivalMessage] = useState(null)
     const user = useSelector((state) => state.user.user)
     const socket = useRef();
     const scrollRef = useRef();
     const currentChat = useSelector((state) => state.chat.current)
-    console.log("firstCurrentChat",currentChat)
-    // console.log(conversations)
+    console.log("firstCurrentChat", currentChat)
+    const [callerName, setCallerName] = useState("An User")
+    const [vcMode, setVcMode] = useState("caller")
+
+    const [videocall, setVideocall] = useState(false)
 
     const msgRef = useRef();
 
     const [recInfo, setRecinfo] = useState(null)
 
+    const peer = useRef();
+
+    const [localStream, setLocalStream] = useState(null);
+    const [remoteStream, setRemoteStream] = useState(null);
+    const localVideoRef = useRef()
+    const remoteVideoRef = useRef();
+    const [showVbox, setShowVbox] = useState(false)
+    const [call,setCall] = useState(null)
+ 
+
     const receiverId = currentChat?.members?.find((member) => member !== user._id)
-    console.log("receiverId",receiverId)
+    console.log("receiverId", receiverId)
 
     const getUser = async () => {
         try {
@@ -196,12 +204,30 @@ const Messenger = () => {
             console.log(error)
         }
     }
-    
+
 
     //To receive messages
 
     useEffect(() => {
         console.log("useeffect 2 called")
+
+        const newPeer = new Peer(user._id, {
+            host: 'localhost',
+            port: 8800,
+            path: '/peerjs'
+        })
+
+        peer.current = newPeer;
+
+        peer.current.on('open', (id) => {
+            console.log("My peer id is : ", id)
+        })
+
+        peer.current.on('call', (call) => {
+            console.log("peer call reached")
+            setCall(call)
+
+        })
 
         socket.current = io("ws://localhost:8800")
         socket.current.on("getMessage", (data) => {
@@ -213,19 +239,26 @@ const Messenger = () => {
                 text: data.text,
                 createdAt: Date.now(),
             }
-            console.log("arrmsg",arrmsg)
+            console.log("arrmsg", arrmsg)
             setArrivalMessage(arrmsg)
-            
+
             getConversations();
         })
 
-        return ()=>{
+        socket.current.on('notifyCall', (callerName) => {
+            console.log(`video call from ${callerName} notified`)
+            setCallerName(callerName)
+            setVcMode("receiver")
+            setVideocall(true)
+        })
+
+        return () => {
             socket.current.disconnect()
         }
 
     }, [])
 
-    console.log("arrivalMessage",arrivalMessage)
+    console.log("arrivalMessage", arrivalMessage)
 
 
     useEffect(() => {
@@ -237,9 +270,9 @@ const Messenger = () => {
         console.log(isSenderActive)
         {
             arrivalMessage
-            && 
-            isSenderActive
-            && setMessages((prev) => [...prev, arrivalMessage])
+                &&
+                isSenderActive
+                && setMessages((prev) => [...prev, arrivalMessage])
         }
 
 
@@ -248,7 +281,7 @@ const Messenger = () => {
 
 
     //To add the current user to the list of active users and retrieve the list of active users
-    
+
     useEffect(() => {
         console.log("useeffect 3 called")
 
@@ -257,7 +290,7 @@ const Messenger = () => {
         socket.current.on("getUsers", (users) => {
             //Modify it => Current user should only see certain active users not all
             // setOnlineUsers(users)
-            console.log("onlineUsers",users)
+            console.log("onlineUsers", users)
         })
 
         getConversations()
@@ -274,7 +307,7 @@ const Messenger = () => {
             })
     }
 
-   
+
     const getMessages = async () => {
         await axiosInstance.get(`/chat/message/${currentChat?._id}`)
             .then((res) => {
@@ -335,12 +368,19 @@ const Messenger = () => {
 
     }
 
+
+    const handleVC = () => {
+        setVcMode("caller")
+        setVideocall(true)
+    }
+
+    console.log(peer)
+
     return (
         <UserLayout>
             <Wrapper>
                 <ChatMenu>
                     <ChatMenuWrapper>
-                        {/* <ChatMenuInput placeholder='Search here' /> */}
                         {conversations.map((c, i) => (
                             <div onClick={() => dispatch(setCurrentChat(c))}>
                                 <Conversation key={i} conversation={c}
@@ -363,6 +403,9 @@ const Messenger = () => {
                                                 <span>{recInfo?.username}</span>
                                             </InfoLeft>
                                             <InfoRight>
+                                                <VideoCall
+                                                    onClick={handleVC}
+                                                    style={{ color: 'white', fontSize: "40px", cursor: 'pointer' }} />
                                                 <Cancel
                                                     onClick={() => dispatch(setCurrentChat(null))}
                                                     style={{ color: "white", cursor: "pointer" }}
@@ -406,10 +449,14 @@ const Messenger = () => {
                                 </OpenDiv>
                                 )
                         }
+
+
                     </ChatBoxWrapper>
                 </ChatBox>
-
-
+                {videocall && <Videocall peer={peer.current} receiverId={receiverId} socket={socket} setVideocall={setVideocall} callerName={callerName} vcMode={vcMode} setVcMode={setVcMode}
+                    localStream={localStream} setLocalStream={setLocalStream} remoteStream={remoteStream} setRemoteStream={setRemoteStream} localVideoRef={localVideoRef} 
+                    remoteVideoRef={remoteVideoRef} showVbox={showVbox} setShowVbox={setShowVbox} call={call}
+                />}
             </Wrapper>
 
         </UserLayout>

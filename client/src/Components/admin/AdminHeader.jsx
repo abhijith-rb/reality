@@ -55,13 +55,6 @@ const Img = styled.img`
     background-color: aliceblue;
 `;
 
-const SearchDiv = styled.div`
-    flex: 5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1vw;
-`;
 
 const Bar = styled.input`
     width: 40%;

@@ -49,6 +49,15 @@ const socketConnect = (server)=>{
             console.log(receiverId)
             console.log(text)
         })
+
+
+        socket.on('init-call',(data)=>{
+            const receiver = getUser(data?.receiverId)
+            const callerName = data?.username
+            if(receiver){
+                io.to(receiver?.socketId).emit("notifyCall", callerName)
+            }
+        })
     
         //when disconnect
         socket.on("disconnect", ()=>{
