@@ -507,39 +507,46 @@ userCtrl.getOwnerPropDeets = async(req,res)=>{
 
         const viewAgt = await Property.aggregate([
             {
-                $match:{ownerId:userId}
+              $match: { ownerId: userId }
             },
             {
-                $unwind:"$views"
+              $addFields: {
+                viewsExist: { $gt: [{ $size: "$views" }, 0] } 
+              }
             },
             {
-                $group:{
-                    _id: null,
-                    viewArray:{
-                        $push:"$views"
-                    },
+              $match: { viewsExist: true } 
+            },
+            {
+              $unwind: "$views"
+            },
+            {
+              $group: {
+                _id: null,
+                viewArray: {
+                  $push: "$views"
+                },
+              }
+            },
+            {
+              $project: {
+                _id: 0,
+                viewCount: {
+                  $size: "$viewArray"
                 }
-            },
-            {
-                $project:{
-                    _id:0,
-                    viewCount:{
-                        $size:"$viewArray"
-                    }
-                }
+              }
             }
-
-        ]);
-
-        console.log(viewAgt[0].viewCount)
-        const views = viewAgt[0].viewCount;
+          ]);
+          
+   
+        const views = viewAgt.length === 0 ? 0 :  viewAgt[0].viewCount;
         const buys = await Property.find({ownerId:userId , purpose:"Buy"}).countDocuments().exec()
         const rents = await Property.find({ownerId:userId , purpose:"Rent"}).countDocuments().exec()
 
         console.log({views,buys,rents})
         res.status(200).json({views,buys,rents})
     } catch (error) {
-        res.status(500).json({msg:"Something went wrong"})
+        res.status(500).json({msg:"Something went wrong 56"})
     }
 }
 
