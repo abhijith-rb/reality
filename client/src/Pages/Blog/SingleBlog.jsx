@@ -73,7 +73,7 @@ const SinglePostInfo = styled.div`
     justify-content: space-between;
     font-size: 16px;
     font-family: 'Varela Round', sans-serif;
-    color: #b39656;
+    color: #79AC78;
 `;
 const SinglePostDesc = styled.p`
     &::first-letter{

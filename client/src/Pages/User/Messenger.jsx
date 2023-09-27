@@ -8,23 +8,34 @@ import Message from '../../Components/chat/Message';
 import { setCurrentChat } from '../../redux/chatReducer';
 import { Cancel, VideoCall } from '@mui/icons-material';
 import axiosInstance from '../../axios/axiosInstance';
-import Videocall from '../../Components/chat/Videocall';
-import Peer from 'peerjs';
+import {v4} from 'uuid'
+import NotifyVc from '../../Components/chat/NotifyVc';
+import { useNavigate } from 'react-router-dom';
+
+
 
 const Wrapper = styled.div`
     /* height: calc(100vh - 70px); */
-    height: 70vh;
+    height: fit-content;
     display: flex;
 `;
 
 const ChatMenu = styled.div`
-    flex: 2;
+    /* flex: 2; */
+    width: 20vw;
+    @media (max-width: 800px){
+        flex:3;
+    }
 `;
 
 const ChatBox = styled.div`
-    flex: 7;
+    /* flex: 4; */
+    width: 50vw;
     display: flex;
     justify-content: center;
+    @media (max-width: 800px){
+        flex:7;
+    }
 `;
 
 const ChatBoxWrapper = styled.div`
@@ -49,15 +60,15 @@ const ChatBoxTop = styled.div`
     height: 50vh;
     margin-top: 10vh;
     overflow-y: scroll;
-    padding-right: 10px;
-    border: 3px solid #88C4FE;
+    border: 3px solid #79AC78;
     background-color:#ffffff;
+    padding: 0 1vw;
 `;
 
 const ChatInfo = styled.div`
     width: 100%;
     height: 10vh;
-    background-color: #88C4FE;
+    background-color: #79AC78;
     position: absolute;
     top: 0;
     left: 0;
@@ -169,24 +180,17 @@ const Messenger = () => {
     const scrollRef = useRef();
     const currentChat = useSelector((state) => state.chat.current)
     console.log("firstCurrentChat", currentChat)
-    const [callerName, setCallerName] = useState("An User")
-    const [vcMode, setVcMode] = useState("caller")
+    const [roomId,setRoomId] = useState()
+    const navigate = useNavigate()
 
-    const [videocall, setVideocall] = useState(false)
+    const [callerName, setCallerName] = useState("An User")
+    const [callnotice,setCallnotice] = useState(false)
 
     const msgRef = useRef();
 
     const [recInfo, setRecinfo] = useState(null)
 
     const peer = useRef();
-
-    const [localStream, setLocalStream] = useState(null);
-    const [remoteStream, setRemoteStream] = useState(null);
-    const localVideoRef = useRef()
-    const remoteVideoRef = useRef();
-    const [showVbox, setShowVbox] = useState(false)
-    const [call,setCall] = useState(null)
- 
 
     const receiverId = currentChat?.members?.find((member) => member !== user._id)
     console.log("receiverId", receiverId)
@@ -211,23 +215,7 @@ const Messenger = () => {
     useEffect(() => {
         console.log("useeffect 2 called")
 
-        const newPeer = new Peer(user._id, {
-            host: 'localhost',
-            port: 8800,
-            path: '/peerjs'
-        })
-
-        peer.current = newPeer;
-
-        peer.current.on('open', (id) => {
-            console.log("My peer id is : ", id)
-        })
-
-        peer.current.on('call', (call) => {
-            console.log("peer call reached")
-            setCall(call)
-
-        })
+        
 
         socket.current = io("ws://localhost:8800")
         socket.current.on("getMessage", (data) => {
@@ -242,14 +230,14 @@ const Messenger = () => {
             console.log("arrmsg", arrmsg)
             setArrivalMessage(arrmsg)
 
-            getConversations();
         })
 
-        socket.current.on('notifyCall', (callerName) => {
+        socket.current.on('notifyCall', ({callerName,roomId}) => {
             console.log(`video call from ${callerName} notified`)
             setCallerName(callerName)
-            setVcMode("receiver")
-            setVideocall(true)
+            setRoomId(roomId)
+            setCallnotice(true)
+            
         })
 
         return () => {
@@ -275,6 +263,7 @@ const Messenger = () => {
                 && setMessages((prev) => [...prev, arrivalMessage])
         }
 
+        getConversations();
 
     }, [arrivalMessage, currentChat])
 
@@ -286,7 +275,9 @@ const Messenger = () => {
         console.log("useeffect 3 called")
 
         socket.current.emit("addUser", user._id)
+
         console.log("Add user emitted")
+
         socket.current.on("getUsers", (users) => {
             //Modify it => Current user should only see certain active users not all
             // setOnlineUsers(users)
@@ -297,6 +288,7 @@ const Messenger = () => {
     }, [user])
 
     const getConversations = async () => {
+        console.log("getConversations Called")
         await axiosInstance.get(`/chat/conversation/${user._id}`)
             .then((res) => {
                 // console.log(res.data)
@@ -328,7 +320,7 @@ const Messenger = () => {
 
     useEffect(() => {
         console.log("useeffect 5 called")
-
+        getConversations()
         scrollRef.current?.scrollIntoView({ behavior: "smooth" })
     }, [messages])
 
@@ -370,8 +362,15 @@ const Messenger = () => {
 
 
     const handleVC = () => {
-        setVcMode("caller")
-        setVideocall(true)
+        const roomId = v4()
+        console.log(roomId)
+        setRoomId(roomId)
+        navigate(`/room/${roomId}`)
+        socket.current.emit('room-id', {
+            receiverId,
+            username:user.username,
+            roomId
+        })
     }
 
     console.log(peer)
@@ -451,12 +450,10 @@ const Messenger = () => {
                         }
 
 
+                {callnotice && <NotifyVc callerName={callerName} setCallNotice={setCallnotice} roomId={roomId}/>}
                     </ChatBoxWrapper>
                 </ChatBox>
-                {videocall && <Videocall peer={peer.current} receiverId={receiverId} socket={socket} setVideocall={setVideocall} callerName={callerName} vcMode={vcMode} setVcMode={setVcMode}
-                    localStream={localStream} setLocalStream={setLocalStream} remoteStream={remoteStream} setRemoteStream={setRemoteStream} localVideoRef={localVideoRef} 
-                    remoteVideoRef={remoteVideoRef} showVbox={showVbox} setShowVbox={setShowVbox} call={call}
-                />}
+                
             </Wrapper>
 
         </UserLayout>

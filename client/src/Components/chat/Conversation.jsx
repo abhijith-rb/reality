@@ -3,24 +3,57 @@ import { styled } from 'styled-components';
 import axiosInstance from '../../axios/axiosInstance';
 
 const Wrapper=styled.div`
+    width: 100%;
+    height: 10vh;
     display: flex;
     align-items: center;
     padding: 10px;
     cursor: pointer;
     margin-top: 20px;
-    background-color: #88C4FE;
+    background-color: #B0D9B1;
+    border-radius: 5px;
+    @media (max-width: 800px){
+        flex-direction: column;
+        height: auto;
+    }
 `;
 
+const ImgDiv = styled.div`
+    flex: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`;
 
 const Img=styled.img`
     width: 40px;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    margin-right: 20px;
+`;
+
+const RightDiv= styled.div`
+flex: 7;
+    display: flex;
+    flex-direction: column;
+  overflow: hidden;
+
 `;
 const ConversationName=styled.span`
-    font-weight: 500;
+    font-weight: bold;
+`;
+
+const LastMsg = styled.span`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  width: 100%;
+  display: inline-block;
+  color: #333;
+    @media (max-width:800px){
+        display: none;
+    }
 `;
 
 const Conversation = ({conversation,currentUser}) => {
@@ -47,8 +80,15 @@ const Conversation = ({conversation,currentUser}) => {
     },[currentUser,conversation])
   return (
     <Wrapper>
+      <ImgDiv>
       <Img src={user2?.image ? PF+ user2.image : "/images/avatar.png"} alt="" />
-      <ConversationName >{user2?.username}</ConversationName>
+      </ImgDiv>
+      <RightDiv>
+        <ConversationName >{user2?.username}</ConversationName>
+        <LastMsg>
+            {conversation.lastMessage}
+        </LastMsg>
+      </RightDiv>
     </Wrapper>
   )
 }

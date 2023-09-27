@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, PieChart, Pie, } from 'recharts';
 import styled from 'styled-components';
 import AdminLayout from '../../Components/admin/AdminLayout';
+import { Apartment, CardMembership, CurrencyRupee } from '@mui/icons-material';
+import axiosInstance from '../../axios/axiosInstance';
+
 
 const MainBox = styled.div`
   width: 100%;
@@ -12,6 +15,8 @@ const MainBox = styled.div`
 
 const Title = styled.h1`
   text-align: center;
+  color: #96B6C5;
+  /* color: #36454F; */
 `;
 
 const OrderCardBlue = styled.div`
@@ -24,7 +29,7 @@ const OrderCardBlue = styled.div`
   margin-bottom: 30px;
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
-
+  height: 24vh;
 `;
 const OrderCardYellow = styled.div`
   color: #fff;
@@ -36,6 +41,7 @@ const OrderCardYellow = styled.div`
   margin-bottom: 30px;
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
+  height: 24vh;
 
 `;
 const OrderCardPink = styled.div`
@@ -48,6 +54,7 @@ const OrderCardPink = styled.div`
   margin-bottom: 30px;
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
+  height: 24vh;
 
 `;
 
@@ -61,20 +68,49 @@ const Head2 = styled.h2`
   align-items: center;
 `;
 
-const Fleft = styled.i`
-  font-size: 26px;
+const PieDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-top: 2vh;
+  align-items: center;
+  justify-content: center;
+  overflow-x:scroll;
+  border-radius: 10px;
+  box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5);
+  background-color: #ffffff;
+  width: 40%;
+  @media (max-width:800px){
+    width: 100%;
+  }
 
-`;
+  &::-webkit-scrollbar {
+    width: 0.01em;
+  }
 
-const Fright = styled.span`
-  float: right;
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
 `;
 
 const LineGraph = styled.div`
-display: flex;
-align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding-top: 2vh;
+  align-items: center;
   overflow-x:scroll;
-  border: 2px solid grey;
+  border-radius: 10px;
+  box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5);
+  background-color: #ffffff;
+  margin-left: 5vw;
+  @media (max-width:800px){
+    width: 100%;
+    margin-left: 0;
+  }
+
   &::-webkit-scrollbar {
     width: 0.01em;
   }
@@ -88,49 +124,58 @@ align-items: center;
   }
 `;
 
-const PieDiv = styled.div`
+const GraphsDiv = styled.div`
   display: flex;
-align-items: center;
-justify-content: center;
-  overflow-x:scroll;
-  border: 2px solid grey;
-  &::-webkit-scrollbar {
-    width: 0.01em;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: transparent;
+  justify-content: space-between;
+  @media (max-width: 1200px){
+    flex-direction: column;
   }
 `;
 
 const Dashboard = () => {
+  const [cardDeets, setCardDeets] = useState({})
+  const [pieDeets, setPieDeets] = useState({})
+  const [graphData, setGraphData] = useState([])
 
-  const data = [
-    { name: 'Jan', value: 100 },
-    { name: 'Feb', value: 125 },
-    { name: 'Mar', value: 350 },
-    { name: 'Apr', value: 175 },
-    { name: 'May', value: 200 },
-    { name: 'Jun', value: 225 },
-    { name: 'Jul', value: 250 },
-    { name: 'Aug', value: 275 },
-    { name: 'Sep', value: 300 },
-    { name: 'Oct', value: 125 },
-    { name: 'Nov', value: 350 },
-    { name: 'Dec', value: 375 },
-  ];
+  const getCardDeets = async () => {
+    await axiosInstance.get("/admin/carddeets")
+      .then((res) => {
+        console.log(res.data)
 
+        setCardDeets(res.data)
+      })
 
-  const colors = ['#FF5733', '#338BFF', '#9933FF', '#FFC300', '#33FF57'];
+  }
+
+  const getPieDeets = async () => {
+    await axiosInstance.get("/admin/piedeets")
+      .then((res) => {
+        console.log(res.data)
+        setPieDeets(res.data)
+      })
+  }
+
+  const getGraphData = async () => {
+    await axiosInstance.get("/admin/graphdata")
+      .then((res) => {
+        console.log(res.data)
+        setGraphData(res.data)
+      })
+  }
+
+  useEffect(() => {
+    getCardDeets();
+    getPieDeets();
+    getGraphData();
+  }, [])
+
+  console.log(pieDeets)
+  const colors = ['#338BFF', '#9933FF', '#FFC300', '#33FF57', '#FF5733'];
 
   const pieData = [
-    { name: 'Category A', value: 30, fill:colors[0] },
-    { name: 'Category B', value: 20 , fill:colors[1]},
-    { name: 'Category C', value: 50 , fill:colors[2]},
+    { name: 'Residential', value: pieDeets["residential"], fill: colors[0] },
+    { name: 'Commercial', value: pieDeets["commercial"], fill: colors[1] },
+    { name: 'Plot', value: pieDeets["plot"], fill: colors[2] },
   ];
 
 
@@ -143,9 +188,8 @@ const Dashboard = () => {
           <div className="col-md-4 col-xl-4">
             <OrderCardBlue>
               <CardBlock>
-                <h6 className="m-b-20">Orders Received</h6>
-                <Head2 ><Fleft className="fa fa-cart-plus"></Fleft><span>486</span></Head2>
-                <p className="m-b-0">Completed Orders<Fright className="f-right">351</Fright></p>
+                <h3 className="m-b-20">Listed Properties</h3>
+                <Head2 ><Apartment style={{ fontSize: '35px' }} /><span>{cardDeets.props}</span></Head2>
               </CardBlock>
             </OrderCardBlue>
           </div>
@@ -153,9 +197,8 @@ const Dashboard = () => {
           <div className="col-md-4 col-xl-4">
             <OrderCardYellow>
               <CardBlock>
-                <h6 className="m-b-20">Orders Received</h6>
-                <Head2 ><Fleft className="fa fa-refresh"></Fleft><span>486</span></Head2>
-                <p className="m-b-0">Completed Orders<Fright className="f-right">351</Fright></p>
+                <h3 className="m-b-20">Total Revenue</h3>
+                <Head2 ><CurrencyRupee style={{ fontSize: '35px' }} /><span>{cardDeets.revenue}</span></Head2>
               </CardBlock>
             </OrderCardYellow>
           </div>
@@ -163,18 +206,17 @@ const Dashboard = () => {
           <div className="col-md-4 col-xl-4">
             <OrderCardPink>
               <CardBlock>
-                <h6 className="m-b-20">Orders Received</h6>
-                <Head2 ><Fleft className="fa fa-credit-card"></Fleft><span>486</span></Head2>
-                <p className="m-b-0">Completed Orders<Fright className="f-right">351</Fright></p>
+                <h3 className="m-b-20">Subscribers</h3>
+                <Head2 ><CardMembership style={{ fontSize: '35px' }} /><span>{cardDeets.subscribers}</span></Head2>
               </CardBlock>
             </OrderCardPink>
           </div>
         </div>
 
-        <div className='row'>
-          
+        <div className="row">
 
           <PieDiv className="col-sm-12 col-md-6 col-lg-6 col-xl-6" >
+            <h3>Property Types</h3>
             <PieChart width={400} height={400}>
               <Pie
                 data={pieData}
@@ -190,8 +232,10 @@ const Dashboard = () => {
             </PieChart>
           </PieDiv>
 
+
           <LineGraph className="col-sm-12 col-md-6 col-lg-6 col-xl-6" >
-            <LineChart width={600} height={300} data={data}>
+            <h2>Listings per month</h2>
+            <LineChart width={400} height={300} data={graphData}>
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />

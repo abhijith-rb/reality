@@ -1,21 +1,25 @@
 import React from 'react';
 import styled from 'styled-components';
-import axiosInstance from "../../axios/axiosInstance"
 import { useNavigate } from 'react-router-dom';
 
 const NavContainer = styled.div`
     width: 100%;
     height: 5vh;
-    background-color: #88C4FE;
+    background-color: #B0D9B1;
+    display: flex;
+    justify-content: space-between;
     @media (max-width:800px){
       display:none;
     }
 `;
 
 const Ul = styled.ul`
+width: 100%;
   list-style: none;
   display: flex;
   justify-content: space-around;
+/* border: 2px solid red; */
+
 `;
 
 const Li = styled.li`

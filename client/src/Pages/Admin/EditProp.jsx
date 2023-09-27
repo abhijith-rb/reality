@@ -15,26 +15,32 @@ import LocationMap from '../../Components/LocationMap';
 const MainBox = styled.div`
   width: 100%;
   min-height: 150vh;
-  margin-bottom:5vh;
-  /* background-color: yellow; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4vh;
 `;
 
 
 const Title = styled.h1`
   text-align: center;
+  color:#36454F;
+
 `;
 
 const Edit = styled.div`
-  width: 100%;
-  padding-top: 3vh;
+  width: fit-content;
+  padding:2vh 3vw;
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* border: 2px solid red; */
+  border: 2px solid #ADC4CE;
+  border-radius: 5px;
+  background-color: #96B6C5;
 `;
 
 const ImageBox = styled.div`
-    width: 50%;
+    /* width: 50%; */
     height:40vh;
 `;
 

@@ -11,10 +11,16 @@ import { logout } from '../../redux/userReducer';
 const SideContainer = styled.div`
   min-width: 17vw;
   height: 100vh;
-  background-color: #637CFE;
   position: fixed;
+  background-color: #96B6C5;
   padding-top: 2vh;
   z-index  : 99;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  @media (min-width:800px){
+    display: none;
+  }
 `;
 
 const Ul = styled.ul`
@@ -39,13 +45,16 @@ const Logo = styled.span`
     font-family: 'Times New Roman', Times, serif;
     font-style: italic;
     flex: 2;
-    margin-left: 1vw;
+    /* margin-left: 1vw; */
 `;
 
 const LogoDiv = styled.div`
+  width: 100%;
+  padding: 0 1vw 0 2vw;
   display: flex;
   align-items: center;
-  margin-left: 1vw;
+  justify-content: space-between;
+  
 `;
 
 const Sidebar = ({ setShowSBar }) => {
@@ -68,7 +77,7 @@ const Sidebar = ({ setShowSBar }) => {
     <SideContainer>
       <LogoDiv>
         <Logo onClick={() => navigate("/")}>
-          Reality
+          Realify
         </Logo>
         <Close onClick={() => setShowSBar(false)} style={{ marginRight: "1rem", color: "#ffffff", cursor: "pointer" }} />
       </LogoDiv>
@@ -76,8 +85,9 @@ const Sidebar = ({ setShowSBar }) => {
         <Li onClick={() => navigate("/admin/dashboard")}>Dashboard</Li>
         <Li onClick={() => navigate("/admin/usermng")}>Users</Li>
         <Li onClick={() => navigate("/admin/propmng")}>Properties</Li>
+        <Li onClick={() => navigate("/admin/bannermng")}>Banners</Li>
         <Li onClick={() => navigate("/admin/blogmng")}>Blogs</Li>
-        <Li onClick={() => navigate("/admin/blogmng")}>
+        <Li>
           {user?.role === "admin"
             ? (<Button variant='danger' onClick={handleLogout}>
               Logout

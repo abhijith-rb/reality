@@ -12,7 +12,7 @@ import axiosInstance from '../../axios/axiosInstance';
 const HeadContainer = styled.div`
     width: 100%;
     height: 10vh;
-    background-color: #637CFE;
+    background-color: #96B6C5;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -38,6 +38,15 @@ const Logo = styled.span`
 const LogoDiv = styled.div`
   display: flex;
   align-items: center;
+  @media (min-width:800px){
+        display: none;
+    }
+`;
+
+const JustLogo = styled.div`
+    @media (max-width:800px){
+        display: none;
+    }
 `;
 
 const AuthDiv = styled.div`
@@ -87,9 +96,15 @@ const AdminHeader = ({ setShowSBar }) => {
             <LogoDiv>
                 <MenuIcon onClick={() => setShowSBar(true)} style={{ marginLeft: "1rem", color: "#ffffff", cursor: "pointer" }} />
                 <Logo onClick={() => navigate("/")}>
-                    Reality
+                    Realify
                 </Logo>
             </LogoDiv>
+
+            <JustLogo>
+                <Logo onClick={() => navigate("/")}>
+                    Realify
+                </Logo>
+            </JustLogo>
 
            
 

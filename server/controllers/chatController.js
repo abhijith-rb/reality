@@ -64,10 +64,16 @@ chatCtrl.getSpecificConversation = async(req,res)=>{
 }
 
 chatCtrl.addMsg = async(req,res)=>{
-    const newMessage = new Message(req.body)
+    const msg = req.body;
+    const conversationId = msg.conversationId;
+    const lastMessage = msg.text;
+    const newMessage = new Message(msg)
 
     try {
         const savedMessage = await newMessage.save()
+        await Conversation.findByIdAndUpdate(conversationId,{
+            $set:{lastMessage}
+        })
         res.status(200).json(savedMessage)
     } catch (err) {
         res.status(500).json(err)

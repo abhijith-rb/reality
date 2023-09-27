@@ -11,7 +11,9 @@ const Dcard = styled.div`
     background-color: #ffffff;
     font-family: 'Montserrat', sans-serif;
     font-weight:500;
-    border-radius: 5px;
+    border-radius: 10px;
+  box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5);
+
 ;`
 
 

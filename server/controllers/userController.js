@@ -2,6 +2,7 @@ const User = require('../models/UserModel');
 const jwt = require('jsonwebtoken')
 const multer = require('multer');
 const Property = require('../models/PropModel');
+const Banner = require('../models/BannerModel');
 const Razorpay = require('razorpay');
 const Subscription = require('../models/SubscribeModel');
 const instance = new Razorpay({
@@ -388,6 +389,7 @@ userCtrl.createSubscription = async (req, res) => {
     const newSub = new Subscription({
         userId: userId,
         plan: plan,
+        price: price,
     })
     try {
         const savedSub = await newSub.save()
@@ -469,4 +471,76 @@ userCtrl.changePwd = async(req,res)=>{
     }
 }
  
+userCtrl.getBanner = async(req,res)=>{
+    try {
+        const banner = await Banner.findOne()
+        res.status(200).json(banner)
+    } catch (error) {
+        res.status(500).json({msg:"Something went wrong"})
+    }
+}
+
+userCtrl.addView = async(req,res)=>{
+    const {userId, postId} = req.body;
+    const property = await Property.findById(postId)
+    console.log(property)
+
+    if(property.views.includes(userId)){
+       return res.status(204).json({msg:"Already viewed"})
+    }
+
+    try {
+        await Property.findByIdAndUpdate(property._id,{
+            $push:{views:userId}
+        })
+
+        res.status(200).json({msg:"View added"})
+    } catch (error) {
+        res.status(500).json({msg:"Something went wrong"})
+    }
+}
+
+userCtrl.getOwnerPropDeets = async(req,res)=>{
+    const userId = req.params.id;
+    console.log("userid",userId)
+    try {
+
+        const viewAgt = await Property.aggregate([
+            {
+                $match:{ownerId:userId}
+            },
+            {
+                $unwind:"$views"
+            },
+            {
+                $group:{
+                    _id: null,
+                    viewArray:{
+                        $push:"$views"
+                    },
+                }
+            },
+            {
+                $project:{
+                    _id:0,
+                    viewCount:{
+                        $size:"$viewArray"
+                    }
+                }
+            }
+
+        ]);
+
+        console.log(viewAgt[0].viewCount)
+        const views = viewAgt[0].viewCount;
+        const buys = await Property.find({ownerId:userId , purpose:"Buy"}).countDocuments().exec()
+        const rents = await Property.find({ownerId:userId , purpose:"Rent"}).countDocuments().exec()
+
+        console.log({views,buys,rents})
+        res.status(200).json({views,buys,rents})
+    } catch (error) {
+        res.status(500).json({msg:"Something went wrong"})
+    }
+}
+
 module.exports = userCtrl;

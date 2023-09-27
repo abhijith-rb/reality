@@ -18,7 +18,8 @@ const Tooltip = styled.div`
     z-index: 99;
     display: flex;
     flex-direction: column;
-    color: #1876D0;
+    color: #79AC78;
+    /* color: #1876D0; */
     justify-content: center;
     border: 1px solid #ccc;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -84,6 +85,7 @@ const Popper = ({buttonRef,handleLogout}) => {
       
         <hr></hr>
         <Link to="/profile" style={{textDecoration:'none',color:"inherit",fontSize:"20px"}}>Profile</Link>
+        {user?.subscribed && <Link to="/userprops" style={{textDecoration:'none',color:"inherit",fontSize:"20px"}}>Dashboard</Link>}
         <Link style={{textDecoration:'none',color:"inherit"}} onClick={handleLogout}> <Logout/> Logout</Link>
       </Tooltip>
 

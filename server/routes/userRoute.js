@@ -19,7 +19,13 @@ router.post('/subscribe/:id/to',userCtrl.authenticateToken, userCtrl.createSubsc
 router.post('/verifypayment',userCtrl.authenticateToken, userCtrl.checkVerified)
 
 router.put('/likeprop',userCtrl.authenticateToken, userCtrl.likeProp)
+router.put('/addview', userCtrl.authenticateToken, userCtrl.addView)
+
+router.get("/ownerdashboard/:id", userCtrl.authenticateToken, userCtrl.getOwnerPropDeets)
+
 router.put('/editprofile/:id',userCtrl.authenticateToken,userCtrl.uploadSingle.single('image'), userCtrl.editProfile)
 router.put('/changepwd/:id',userCtrl.authenticateToken, userCtrl.changePwd)
+
+router.get('/getbanner',userCtrl.getBanner)
 
 module.exports = router;

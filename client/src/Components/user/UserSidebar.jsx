@@ -12,7 +12,8 @@ import { Close } from '@mui/icons-material';
 const SideContainer = styled.div`
   min-width: 17vw;
   height: 100vh;
-  background-color: #1876D0;
+  /* background-color: #1876D0; */
+  background-color: #79AC78;
   position: fixed;
   padding-top: 2vh;
   z-index  : 99;
@@ -78,18 +79,18 @@ const UserSidebar = ({setSidebar}) => {
     <SideContainer>
       <LogoDiv>
         <Logo onClick={() => navigate("/")}>
-                Reality
+                Realify
         </Logo>
         <Close onClick={()=> setSidebar(false)} style={{marginRight:"1rem",color:"#ffffff",cursor:"pointer"}}/>
       </LogoDiv>
         <Ul>
           <Li onClick={()=>navigate("/profile")}>My Profile</Li>
-          <Li onClick={()=>navigate("/userprops")}>My Properties</Li>
-          <Li onClick={()=>navigate("/blogs")}>Blogs</Li>
-          <Li onClick={()=>navigate("/messenger")}>Chats</Li>
-          <Li onClick={()=>navigate("/favorites")}>Favorites</Li>
           <Li onClick={()=>goToList("Buy")}>Buy</Li>
           <Li onClick={()=>goToList("Rent")}>Rent</Li>
+          <Li onClick={()=>navigate("/messenger")}>Chats</Li>
+          <Li onClick={()=>navigate("/favorites")}>Favorites</Li>
+          {user?.subscribed && <Li onClick={()=>navigate("/userprops")}>My Properties</Li>}
+          <Li onClick={()=>navigate("/blogs")}>Blogs</Li>
           {user?.role === "user"
             ?<Li onClick={handleLogout}>Logout</Li>
             :<Li onClick={()=>navigate("/login")}>Login</Li>

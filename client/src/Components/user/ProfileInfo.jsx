@@ -5,7 +5,7 @@ import styled from 'styled-components';
 const ProfileBox = styled.div`
   flex: 6;
   width: 50vw;
-  background-color: #88C4FE;
+  background-color: #B0D9B1;
   padding-bottom: 2vh;
   padding-top: 2vh;
   @media (max-width:930px){

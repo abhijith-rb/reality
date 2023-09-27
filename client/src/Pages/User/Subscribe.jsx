@@ -21,49 +21,62 @@ const Wrapper = styled.div`
 
 const FormWrap = styled.div`
     width: 80vw;
-    min-height: 80vh;
-    /* height: 65vh; */
+    /* min-height: 80vh; */
+    height: fit-content;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 3vh;
-    background-color: #88C4FE;
+    background-color: #B0D9B1;
     padding: 3vh 3vw;
+    margin-bottom:3vh;
 `;
 
 const SubBox = styled.div`
     width:100%;
-    height: 30vh;
+    height: auto;
     /* border: 2px solid grey; */
     display: flex;
     justify-content: space-around;
     align-items: center;
+    @media (max-width:500px){
+        flex-direction: column;
+        gap: 2vh;
+    }
 `;
 
 const MonthBox = styled.div`
     min-width:20vw;
-    max-width:40vw;
+    /* max-width:40vw; */
     height: 30vh;
-    /* border: 2px solid blue; */
+    padding: 2vh 2vw;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     color: #ffffff;
     background-color: teal;
+    border-radius: 5px;
+    @media (max-width:500px){
+        width: 90%;
+    }
 `;
 
 const YearBox = styled.div`
     min-width:20vw;
-    max-width:40vw;
+    /* max-width:40vw; */
     height: 30vh;
-    /* border: 2px solid blue; */
+    padding: 2vh 2vw;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     color: #ffffff;
     background-color: teal;
+    border-radius: 5px;
+    @media (max-width:500px){
+        width: 90%;
+    }
 `;
 
 const Subscribe = () => {
@@ -141,7 +154,18 @@ const Subscribe = () => {
                 <FormWrap>
                     <h2>Subscribe to the App</h2>
                     <h5>Terms & Conditions</h5>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce tincidunt libero id tellus tempus bibendum. Nulla facilisi. Etiam eu quam at neque tincidunt tristique. Sed malesuada justo nec justo efficitur, ac congue augue sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nullam in semper nunc. Suspendisse hendrerit velit vel ligula malesuada, at efficitur erat lacinia. Quisque ut felis sed odio vestibulum faucibus. Donec ut metus eget dui sollicitudin congue. Nulla facilisi. Praesent feugiat nec odio at dictum. Integer ac augue eget eros tempor venenatis. Aliquam erat volutpat. Sed bibendum sem sit amet arcu faucibus, eget aliquam turpis accumsan. Aenean id fringilla justo. Nulla facilisi. Vestibulum id felis vel purus tincidunt posuere.</p>
+                    <p>By subscribing to Realify, you agree to comply with these Terms 
+                        and Conditions. You are responsible for maintaining the confidentiality
+                         of your account information and using the app solely for lawful 
+                         purposes. Subscription fees, if applicable, are non-refundable. We 
+                         reserve the right to terminate your subscription for any violation of
+                          these terms. The app's use is also subject to our Privacy Policy. 
+                          All intellectual property rights to Realify belong to Realify Company
+                          , and you may not reproduce or modify any part of it without our written 
+                          consent. We provide Realify "as is" and disclaim any warranties. Realify
+                           will not be liable for any damages resulting from app use. These terms 
+                           are governed by India's laws, and we may update them periodically, with 
+                           the latest version available on the Realify app. For questions, contact us at realify@gmail.com.</p>
                     
                     {user?.subscribed
                         ? <h2 style={{color:"green"}}>Congrats!!! You are subscribed to this App.</h2>

@@ -1,20 +1,11 @@
-import axios from 'axios'
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import Header from '../../Components/user/Header';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axiosInstance from '../../axios/axiosInstance';
 import UserLayout from '../../Components/user/UserLayout';
-
-const Wrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-`;
 
 const Content = styled.div`
   height: 85vh;
@@ -22,7 +13,6 @@ const Content = styled.div`
   padding-bottom: 2vh;
   padding-left:5vw;
   padding-right: 5vw;
-  /* margin-top: 14vh; */
 `;
 
 const RegContainer = styled.div`
@@ -31,44 +21,46 @@ const RegContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: blue;
 `;
 
-const AppInfo = styled.div`
-    width: 45%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5vh;
-    color: white;
-    background-color: #1876D0;
 
-`;
 
 const RegisterBox = styled.div`
     width: 55%;
-    height: 100%;
+    height: fit-content;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 3vh;
-    background-color: #88C4FE;
+    background-color: #B0D9B1;
+    padding: 2vh 2vw;
+    margin-bottom: 2vh;
+    border-radius: 5px;
+    /* box-shadow: 5px 5px 23px -5px rgba(0,0,0,0.61); */
+    box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5);
 
+    @media (max-width:800px){
+      width: 85%;
+    margin-bottom: 3vh;
+
+    }
 `;
 
 const RowClass = styled.div`
     display: flex;
-    align-items: center;
+    align-items: last baseline;
+    justify-content: space-between;
     gap: 2vw;
+    margin-bottom: 2vh;
+    @media (max-width:800px){
+      flex-direction: column;
+      align-items: center;
+      gap: 2vh;
+    }
 `;
 
-const SubmitBtn = styled.button`
-    width: 100%;
-    margin-top: 2vh;
-`;
+
 
 
 const Register = () => {
@@ -146,15 +138,7 @@ const Register = () => {
     <UserLayout>
       <Content>
         <RegContainer>
-          <AppInfo>
-            <h1>Reality</h1>
-            <h4>Create your account to unlock these benefits</h4>
-            <ul>
-              <li>Get market information, reports and price trends.</li>
-              <li>Access millions of advertiser details in one click.</li>
-            </ul>
-
-          </AppInfo>
+         
           <RegisterBox>
             <h1>Register</h1>
             <Form onSubmit={handleRegister}>
@@ -188,11 +172,15 @@ const Register = () => {
                   <Form.Control type='password' name='confirmpwd' ref={confirmPwdRef} />
                 </Form.Group>
 
-              </RowClass>
+                <Button type='submit' className='submitBtn'>
+                  Register
+                </Button>
 
-              <Button type='submit' className='submitBtn'>
-                Register
-              </Button>
+              </RowClass>
+              {/* <RowClass>
+
+              </RowClass> */}
+
             </Form>
             <Link to='/login'>Login</Link>
           </RegisterBox>

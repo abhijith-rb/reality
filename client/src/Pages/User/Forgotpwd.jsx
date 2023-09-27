@@ -4,25 +4,47 @@ import { styled } from 'styled-components';
 import { Button, Form } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../axios/axiosInstance';
 
 const Wrapper = styled.div`
-    height: 60vh;
+    height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 10vh;
 `;
 
 const FormWrap = styled.div`
     width: 40vw;
-    height: 40vh;
+    height: fit-content;
     display: flex;
     flex-direction: column;
     gap: 3vh;
     align-items: center;
-    background-color: #88C4FE;
+    background-color: #B0D9B1;
     padding: 3vh 3vw;
+    border-radius: 5px;
+    margin-bottom: 4vh;
+    box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5);
+
+    @media (max-width:900px){
+      width: 70vw;
+      padding: 2vh 0;
+    }
+`;
+
+const RowClass = styled.div`
+    display: flex;
+    /* width: 100%; */
+    align-items: last baseline;
+    /* justify-content: center; */
+    gap: 2vw;
+    margin-bottom: 2vh;
+    @media (max-width:900px){
+      flex-direction: column;
+      gap: 1vh;
+    }
 `;
 
 const Forgotpwd = () => {
@@ -67,30 +89,39 @@ const Forgotpwd = () => {
         <UserLayout>
             <Wrapper>
                 <FormWrap>
+                    <h1>Forgot password ?</h1>
                 <Form onSubmit={handleSend}>
-                    <Form.Group controlId='email'>
-                        <Form.Label >Enter email</Form.Label>
-                        <Form.Control type='email' name='email' 
-                        ref={emailRef} style={{width:"20vw"}}/>
-                    </Form.Group>
+                    <RowClass>
+                        <Form.Group controlId='email'>
+                            <Form.Label >Enter email</Form.Label>
+                            <Form.Control type='email' name='email' 
+                            ref={emailRef} />
+                        </Form.Group>
 
-                    <Button type='submit' variant='primary'>
-                        Send Otp
-                    </Button>
+                        <Button type='submit' variant='primary'>
+                            Send Otp
+                        </Button>
+
+                    </RowClass>
                 </Form>
 
                 <Form onSubmit={handleVerify}>
+                    <RowClass>
+                        <Form.Group controlId='otp'>
+                            <Form.Label >Enter Otp</Form.Label>
+                            <Form.Control type='otp' name='otp' 
+                            ref={otpRef} />
+                        </Form.Group>
 
-                    <Form.Group controlId='otp'>
-                        <Form.Label >Enter Otp</Form.Label>
-                        <Form.Control type='otp' name='otp' 
-                        ref={otpRef} style={{width:"20vw"}}/>
-                    </Form.Group>
+                        <Button type='submit' variant='primary'>
+                            Verify
+                        </Button>
 
-                    <Button type='submit' variant='primary'>
-                        Verify Otp
-                    </Button>
+                    </RowClass>
                 </Form>
+
+            <Link to='/login'>Login</Link>
+
                 </FormWrap>
             </Wrapper>
 

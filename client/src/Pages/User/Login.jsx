@@ -1,60 +1,51 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Form, Toast } from 'react-bootstrap'
-import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginStart, loginSuccess, loginFailure, logout } from '../../redux/userReducer';
+import { Button, Form} from 'react-bootstrap'
+import { useDispatch } from 'react-redux';
+import { loginStart, loginSuccess, loginFailure } from '../../redux/userReducer';
 import styled from 'styled-components';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axiosInstance from '../../axios/axiosInstance';
 import UserLayout from '../../Components/user/UserLayout';
 
-const Wrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-`;
 
 const Content = styled.div`
-  height: 85vh;
+  height: 75vh;
   padding-top: 2vh;
   padding-bottom: 2vh;
   padding-left:5vw;
   padding-right: 5vw;
+
 `;
 
 const LoginContainer = styled.div`
-    width: 100%;
+  width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: blue;
-`;
 
-const AppDetail = styled.div`
-    width: 50%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5vh;
-    color: white;
-    background-color: rgb(43, 110, 226);
-`;
+`
+
 
 const LoginBox = styled.div`
     width: 50%;
     height: 100%;
+    padding: 2vh 2vw;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 3vh;
-    background-color: #88C4FE;
+    border-radius: 5px;
+    background-color: #B0D9B1;
+    margin-bottom: 2vh;
+    box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5);
+
+    @media (max-width:800px){
+      width: 90%;
+    }
 `;
 
 const Login = () => {
@@ -115,16 +106,7 @@ const Login = () => {
 
     <UserLayout>
       <Content>
-        <LoginContainer>
-          <AppDetail>
-            <h1>Reality</h1>
-            <h4>Login to your account to unlock these benefits</h4>
-            <ul>
-              <li>Get latest updates about Properties and Projects.</li>
-              <li>Access millions of advertiser details in one click.</li>
-            </ul>
-
-          </AppDetail>
+          <LoginContainer>
           <LoginBox>
             <h1>Login</h1>
             <Form onSubmit={handleLogin} style={{ height: "50%", display: "flex", flexDirection: "column", justifyContent: "space-between" }} >
@@ -148,7 +130,8 @@ const Login = () => {
             <Link to='/register'>Register</Link>
           </LoginBox>
 
-        </LoginContainer>
+          </LoginContainer>
+
 
       </Content>
       <ToastContainer

@@ -18,11 +18,21 @@ const MainBox = styled.div`
 
 
 const Edit = styled.div`
-  width: 50%;
+  min-width: 40vw;
+  width: fit-content;
+  padding:2vh 3vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid #ADC4CE;
+  border-radius: 5px;
+  background-color: #96B6C5;
 `;
 
 const Title = styled.h1`
   text-align: center;
+  color:#36454F;
+
 `;
 
 const Btns = styled.div`

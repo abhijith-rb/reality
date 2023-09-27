@@ -8,23 +8,23 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../axios/axiosInstance";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Button } from "react-bootstrap";
 
 const Wrapper = styled.div`
-width: 90vw;
-    /* padding-top: 2vh;
-    padding-bottom: 2vh; */
+    width: 90vw;
     padding: 2vh;
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
-    /* align-items: center; */
 `;
 const WriteImg = styled.img`
-    /* margin-left: 150px; */
     width: 40vw;
     height: 40vh;
     border-radius: 10px;
     object-fit: cover;
+    @media (max-width: 800px){
+        width: 90vw;
+    }
 `;
 const WriteForm = styled.form`
     position: relative;
@@ -32,27 +32,34 @@ const WriteForm = styled.form`
 `;
 
 const WriteFormGroup = styled.div`
-    /* margin-left: 150px; */
     display: flex;
     align-items: center;
     flex-direction: column;
+    border-radius: 5px;
 `;
 
+const DescNPublish = styled.div`
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 5px;
+`;
 
 const WriteInput = styled.input`
     &:focus{
         outline: none;
     }
-    font-size: 30px;
-    border: none;
+    font-size: 18px;
+    border: 1px solid grey;
     padding: 20px;
-    width: 70vw;
+    width: 30vw;
+    border-radius: 5px;
+    @media (max-width: 800px){
+        width: 80vw;
+    }
 `;
 
 const WriteSubmit = styled.button`
-    position: absolute;
-    top: 140px;
-    right: 50px;
     background-color: teal;
     color: aliceblue;
     padding: 10px;
@@ -64,15 +71,16 @@ const WriteSubmit = styled.button`
 
 const FixedTextareaContainer = styled.div`
   width: 80%; 
-  max-width: 500px; 
+  max-width: 40vw; 
+ border-radius: 5px;
   height: auto; 
   border: 3px solid #ccc; 
   padding: 10px; 
   display: flex;
   flex-direction: column; 
 
-  @media (min-width: 768px) {
-    max-width: 40vw; 
+  @media (max-width: 1000px) {
+    max-width: 85vw;
   }
 `;
 
@@ -82,8 +90,18 @@ const FixedTextarea = styled.textarea`
   resize: none;
   border: none;
   outline: none;
-  padding: 0;
+  padding: 1vh 2vw;
   margin: 0;
+  border-radius: 10px;
+
+`;
+
+const Btns = styled.div`
+    margin-top: 2vh;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
 `;
 
 export default function Write() {
@@ -96,13 +114,13 @@ export default function Write() {
     const [file, setFile] = useState(null);
 
     const navigate = useNavigate();
-    const notify = (msg)=> toast(msg)
+    const notify = (msg) => toast(msg)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.webp)$/i;
-        if (title === '' || description === '' ) {
+        if (title === '' || description === '') {
             notify("Title and Description are required")
             return;
         }
@@ -110,7 +128,7 @@ export default function Write() {
         if (file && !allowedExtensions.exec(file.name)) {
             notify('Invalid file format. Only JPG, JPEG, PNG, or Webp images are allowed.');
             return;
-          }
+        }
 
         const formData = new FormData();
 
@@ -142,16 +160,16 @@ export default function Write() {
     return (
         <UserLayout>
             <Wrapper>
-                {file && (
-                    <WriteImg
-                        src={URL.createObjectURL(file)}
-                        alt="" />
-                )
-
-                }
 
                 <WriteForm onSubmit={handleSubmit}>
                     <WriteFormGroup>
+                        {file && (
+                            <WriteImg
+                                src={URL.createObjectURL(file)}
+                                alt="" />
+                        )
+
+                        }
                         <label htmlFor="fileInput">
                             Add Image <AddCircle />
                         </label>
@@ -167,24 +185,32 @@ export default function Write() {
                         <WriteInput type="text" placeholder="tag 2" autoFocus={true}
                             onChange={(e) => setTag2(e.target.value)} />
 
+
                     </WriteFormGroup>
-                    <WriteFormGroup>
+                    
+                    <DescNPublish>
 
 
                         <FixedTextareaContainer>
                             <FixedTextarea
-                                rows="4"
-                                cols="50"
+                                rows="7"
+                                cols="55"
                                 placeholder='write something'
                                 onChange={(e) => setDescription(e.target.value)}
                                 value={description}
                             />
                         </FixedTextareaContainer>
-                    </WriteFormGroup>
-                    <WriteSubmit type="submit">Publish</WriteSubmit>
+
+                        <Btns>
+                            <WriteSubmit type="submit">Publish</WriteSubmit>
+                            <Button variant="secondary" onClick={()=>navigate("/blogs")}>Cancel</Button>
+
+                        </Btns>
+                    </DescNPublish>
                 </WriteForm>
+
             </Wrapper>
-                <ToastContainer/>
+            <ToastContainer />
         </UserLayout>
     )
 }

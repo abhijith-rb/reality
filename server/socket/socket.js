@@ -58,6 +58,15 @@ const socketConnect = (server)=>{
                 io.to(receiver?.socketId).emit("notifyCall", callerName)
             }
         })
+
+        socket.on('room-id',(data)=>{
+            const receiver = getUser(data?.receiverId)
+            const callerName = data?.username;
+            const roomId = data?.roomId;
+            if(receiver){
+                io.to(receiver?.socketId).emit("notifyCall", {callerName,roomId})
+            }
+        })
     
         //when disconnect
         socket.on("disconnect", ()=>{

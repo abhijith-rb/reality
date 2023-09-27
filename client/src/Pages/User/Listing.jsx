@@ -33,7 +33,8 @@ const TopDiv = styled.div`
     }
     border-radius: 5px;
     color: #ffffff;
-    background-color: #1876D0;
+    /* background-color: #1876D0; */
+    background-color: #79AC78;
 `;
 
 const LgDiv = styled.div`
@@ -103,7 +104,7 @@ const NavBtn = styled.button`
     justify-content: center;
     border-radius: 5px;
     color: #ffffff;
-    background-color: #1876D0;
+    background-color: #79AC78;
 `;
 
 const FilterBox = styled.div`

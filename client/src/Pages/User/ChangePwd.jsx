@@ -24,7 +24,7 @@ const FormWrap = styled.div`
     flex-direction: column;
     gap: 3vh;
     align-items: center;
-    background-color: #88C4FE;
+    background-color: #B0D9B1;
     padding: 3vh 3vw;
 `;
 

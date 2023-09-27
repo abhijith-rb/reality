@@ -10,11 +10,12 @@ const Sellercardx= styled.div`
     width: 100%;
     height: 28vh;
     padding-top: 1vh;
-    background-color: #88C4FE;
+    background-color: #B0D9B1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-radius: 5px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5);
     font-family: 'Montserrat', sans-serif;
 
 `;

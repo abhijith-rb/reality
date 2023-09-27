@@ -15,15 +15,18 @@ const Wrapper = styled.div`
     align-items: center; 
     justify-content:center;
     padding-bottom:5vh;
-    /* border: 2px solid red; */
+    @media (max-width: 1000px){
+        flex-direction: column;
+    }
 `;
 
 const TopDiv = styled.div`
-    width:100%;
+    width:90%;
     height: 10vh;
     /* border: 2px solid blue; */
     display: flex;
     align-items: center;
+    justify-content: flex-end;
 `;
 
 const Blogs = () => {

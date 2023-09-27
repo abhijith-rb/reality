@@ -1,73 +1,57 @@
 import React, { useEffect, useState } from 'react';
-import './posts.css';
-import { FavoriteBorder, Star, StarBorder } from '@mui/icons-material';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+// import './posts.css';
 import { styled } from 'styled-components';
 import axiosInstance from '../../axios/axiosInstance';
 import { useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PropCard from './PropCard';
 
-const ClippedPara = styled.p`
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    line-height: 1.5;
+const PostsDiv = styled.div`
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 5vh;
+    padding-left: 2vw;
+    font-family: 'Montserrat', sans-serif;
+    font-weight:500;
+`;
+
+const PostsHead = styled.h2`
+    font-weight: 400;
+    color: #000000;
+`;
+
+const Cards = styled.div`
+    width: fit-content;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 15px;
+    gap: 3rem;
+    
+    &::-webkit-scrollbar {
+        width: 0.01em;
+      }
+    
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+    
+      &::-webkit-scrollbar-thumb {
+        background: transparent;
+      }
 `;
 
 
 const Posts = ({title}) => {
-    const navigate = useNavigate()
     const [posts,setPosts] = useState([]);
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const user = useSelector((state)=>state.user.user);
 
     const notify = (msg)=>{
         return toast(msg)
     }
-    
-    const getPosts = async ()=>{
-        try {
-            await axiosInstance.get("/getallproperties")
-            .then((response)=>{
-                setPosts(response.data)
-            })
-            .catch((err)=>{
-               
-            })
 
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    useEffect(()=>{
-        getPosts()
-    },[])
-
-    console.log(posts)
-
-    function formatPrice(price) {
-        if (typeof price !== 'number' || isNaN(price)) {
-          return 'N/A'; 
-        }
-      
-        if (price >= 10000000) {
-    
-          const formattedPrice = (price / 10000000).toFixed(2);
-          return formattedPrice.endsWith('.00') ? formattedPrice.slice(0, -3) + ' Cr' : formattedPrice + ' Cr';
-        } 
-        else if (price >= 100000) {
-          const formattedPrice = (price / 100000).toFixed(2);
-          return formattedPrice.endsWith('.00') ? formattedPrice.slice(0, -3) + ' Lac' : formattedPrice + ' Lac';
-        } else {
-          return price.toLocaleString('en-IN');
-        }
-      }
-
-     const handleLike = async(propId,i)=>{
+    const handleLike = async(propId,i)=>{
         if(user?.role !== 'user'){
             return
         }
@@ -90,48 +74,44 @@ const Posts = ({title}) => {
         })
 
      }
+    
+    const getPosts = async ()=>{
+        try {
+            await axiosInstance.get("/getallproperties")
+            .then((response)=>{
+                setPosts(response.data)
+            })
+            .catch((err)=>{
+               
+            })
 
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    useEffect(()=>{
+        getPosts()
+    },[])
+
+    console.log(posts)
 
     return (
-        <div className='posts'>
-            <h2>{title}</h2>
-            <div className='cards'>
+        <PostsDiv>
+            <PostsHead>{title}</PostsHead>
+            <Cards>
 
             {posts.length > 0 && posts.map((post,i)=>{
                 
                 return (
-                    <div className="card" key={i}>
-                            <div className="picNlike">
-                                <div className="pic" onClick={()=>navigate(`/post-detail/${post._id}`)}>
-                                    <img src={post?.images[0] ? PF + post.images[0]?.filename : "/images/noPropImg.png"}
-                                        alt="" />
-                                </div>
+                    <PropCard post={post} handleLike={handleLike} i={i}/>
+            )}
+            )}
 
-                                <div className='heart' onClick={()=>handleLike(post?._id,i)}>
-                                    {post?.likedBy.includes(user?._id)
-                                    ?  <Star style={{color:"red"}}/>
-                                    : <StarBorder/>
-                                    }
-                                </div>
-                            </div>
-                            <div className="priceDesc" onClick={()=>navigate(`/post-detail/${post?._id}`)}>
-                                {/* <span>{post.title}</span> */}
-                                <span className="price">{post.title}</span>
-                                <span className="price">₹ {formatPrice(post?.price)}</span>
-                                <span>Type: {post?.type}</span>
-                                <span>Purpose: {post?.purpose}</span>
-                                <ClippedPara>{ post?.description}</ClippedPara>
-                            </div>
-                            <div className="placeDate" onClick={()=>navigate(`/post-detail/${post?._id}`)}>
-                                <span className="place">{post?.area},{post?.location}</span>
-                            </div>
-                        </div>
-            )})}
-
-            </div>
+            </Cards>
 
             <ToastContainer/>
-        </div>
+        </PostsDiv>
     )
 }
 

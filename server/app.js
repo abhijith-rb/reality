@@ -11,7 +11,6 @@ const cookieParser = require('cookie-parser')
 const path = require("path");
 const cors = require("cors");
 const socketConnect = require('./socket/socket.js');
-const {ExpressPeerServer} = require('peer');
 
 const PORT = process.env.PORT || 8800;
 const MongoURI = process.env.MongoURI;
@@ -57,9 +56,6 @@ const connect = async () => {
 connect()
     .then((server) => {
         socketConnect(server)
-        
-        const peerServer = ExpressPeerServer(server, {debug:true})
-        app.use('/peerjs',peerServer)
     })
     .catch((err) => {
         console.log(err)

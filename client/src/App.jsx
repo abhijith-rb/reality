@@ -21,7 +21,6 @@ import styled from 'styled-components';
 import UserProps from './Pages/User/UserProps';
 import PostProp from './Pages/User/PostProp';
 import UpdateProp from './Pages/User/UpdateProp';
-import Catmng from './Pages/Admin/Catmng';
 import Detail from './Pages/User/Detail';
 import Messenger from './Pages/User/Messenger';
 import Listing from './Pages/User/Listing';
@@ -34,8 +33,12 @@ import Blogs from './Pages/Blog/Blogs';
 import SingleBlog from './Pages/Blog/SingleBlog';
 import Blogmng from './Pages/Admin/Blogmng';
 import CreateBlog from './Pages/Admin/CreateBlog';
+import CreateBanner from './Pages/Admin/CreateBanner';
 import AdminSingleBlog from './Pages/Admin/AdminSingleBlog';
 import Favorites from './Pages/User/Favorites';
+import RoomPage from './Pages/User/RoomPage';
+import Bannermng from './Pages/Admin/Bannermng';
+import EditBanner from './Pages/Admin/EditBanner';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -44,6 +47,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
+  font-family: 'Montserrat', sans-serif;
+  font-weight:500;
 `;
 
 
@@ -90,11 +95,13 @@ function App() {
             <Route path='/admin/usermng' element={<Usermng/>}/>
             <Route path='/admin/propmng' element={<Propmng/>}/>
             <Route path='/admin/blogmng' element={<Blogmng/>}/>
-            <Route path='/admin/catmng' element={<Catmng/>}/>
+            <Route path='/admin/bannermng' element={<Bannermng/>}/>
             <Route path='/admin/createuser' element={<CreateUser/>}/>
+            <Route path='/admin/createbanner' element={<CreateBanner/>}/>
             <Route path='/admin/createblog' element={<CreateBlog/>}/>
             <Route path='/admin/blog/:id' element={<AdminSingleBlog/>}/>
             <Route path='/admin/edituser/:id' element={<EditUser/>}/>
+            <Route path='/admin/editbanner/:id' element={<EditBanner/>}/>
             <Route path='/admin/createproperty' element={<CreateProp/>}/>
             <Route path='/admin/editproperty/:id' element={<EditProp/>}/>
           </Route>
@@ -108,6 +115,7 @@ function App() {
           <Route path='/profile' element={ <Profile/>}/>
           <Route path='/messenger' element={<Messenger/>}/>
           <Route path='/favorites' element={<Favorites/>}/>
+          <Route path='/room/:roomId' element={<RoomPage/>}/>
         </Route>
 
         <Route element={<SubscribedRoute/>}>

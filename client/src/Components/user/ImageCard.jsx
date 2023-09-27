@@ -8,7 +8,8 @@ const Card = styled.div`
     height: auto;
     background-color: #ffffff;
     padding-bottom: 1rem;
-    border-radius: 5px;
+    border-radius: 10px;
+  box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5);
 `;
 
 const CarouselImage = styled.div`

@@ -10,7 +10,6 @@ import AdminLayout from '../../Components/admin/AdminLayout';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import axiosInstance from '../../axios/axiosInstance';
-import {format} from 'date-fns'
 
 const MainBox = styled.div`
   width: 100%;
@@ -23,6 +22,7 @@ const MainBox = styled.div`
 const Title = styled.h1`
   text-align: center;
   color: #96B6C5;
+
 
 `;
 
@@ -55,26 +55,25 @@ const TableResponsive = styled.div`
   }
 `;
 
-const Blogmng = () => {
-
+const Bannermng = () => {
     const navigate = useNavigate();
-    const [blogs, setBlogs] = useState([]);
+    const [banners, setBanners] = useState([]);
     const searchRef = useRef();
-    const [blogId, setBlogId] = useState(null);
+    const [bannerId, setbannerId] = useState(null);
     const [deleteMessage, setDeleteMessage] = useState("");
     const [displayConfirmationModal, setDisplayConfirmationModal] = useState(false);
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
-    console.log(blogs)
+    console.log(banners)
 
-    const showDeleteModal = (blogid, title) => {
-        setBlogId(blogid);
+    const showDeleteModal = (bannerid, title) => {
+        setbannerId(bannerid);
         setDeleteMessage(`Are you sure you want to delete ${title}?`)
         setDisplayConfirmationModal(true)
     }
     const hideConfirmationModal = () => {
         setDisplayConfirmationModal(false)
-        setBlogId(null)
+        setbannerId(null)
     }
 
 
@@ -88,15 +87,15 @@ const Blogmng = () => {
 
     const handleDelete = async () => {
         try {
-            if (blogId) {
-                await axiosInstance.delete(`/blog/${blogId}`)
+            if (bannerId) {
+                await axiosInstance.delete(`/admin/deletebanner/${bannerId}`)
                     .then((response) => {
-                        const updtdblogs = blogs.filter((blog) => (
-                            blog._id !== blogId
+                        const updtdbanners = banners.filter((banner) => (
+                            banner._id !== bannerId
                         ))
-                        setBlogs(updtdblogs)
-                        setBlogId(null)
-                        console.log("blog deleted successfully");
+                        setBanners(updtdbanners)
+                        setbannerId(null)
+                        console.log("banner deleted successfully");
                         notify(response.data.msg)
                     })
                     .catch((err) => {
@@ -111,11 +110,11 @@ const Blogmng = () => {
 
     }
 
-    const getblogs = async () => {
-        await axiosInstance.get('/blog')
+    const getbanners = async () => {
+        await axiosInstance.get('/admin/getallbanners')
             .then((response) => {
                 console.log(response.data);
-                setBlogs(response.data)
+                setBanners(response.data)
             })
             .catch((err)=>{
                 console.log(err)
@@ -123,7 +122,7 @@ const Blogmng = () => {
     }
 
     useEffect(() => {
-        getblogs();
+        getbanners();
     }, [])
 
     const handleSearch = async (e) => {
@@ -131,9 +130,9 @@ const Blogmng = () => {
         const squery = searchRef.current.value;
         console.log(squery)
         if (squery) {
-            await axiosInstance.get(`/blog?squery=${squery}`)
+            await axiosInstance.get(`/admin/search-banner?squery=${squery}`)
                 .then((response) => {
-                    setBlogs(response.data)
+                    setBanners(response.data)
                 })
                 .catch((err) => {
                     console.log(err)
@@ -143,21 +142,20 @@ const Blogmng = () => {
     }
 
     const handleReset = () => {
-        getblogs();
+        getbanners();
         searchRef.current.value = "";
     }
 
-    
 
-  return (
-    <AdminLayout>
+    return (
+        <AdminLayout>
 
             <MainBox>
-                <Title>Blog Management</Title>
+                <Title>Banner Management</Title>
 
                 <TopDiv>
                     <div>
-                        <Button onClick={() => navigate('/admin/createblog')}>Create</Button>
+                        <Button onClick={() => navigate('/admin/createbanner')}>Create</Button>
 
                     </div>
 
@@ -175,27 +173,32 @@ const Blogmng = () => {
                 </TopDiv>
                 
                 {
-                    blogs?.length > 0 ?
-                    <TableResponsive className="table-responsive">
+                    banners?.length > 0 ?
+                    (<TableResponsive className="table-responsive">
                         <table className="table table-bordered">
                             <thead>
                                 <tr>
                                     <th>Title</th>
-                                    <th>Author</th>
-                                    <th>Posted Date</th>
+                                    <th>Image</th>
+                                    <th>Description</th>
+                                    <th style={{ textAlign: "center" }}>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {
-                                    (blogs.map((blog) => {
-                                        return (
-                                        <tr key={blog._id} style={{cursor:'pointer'}} onClick={()=>navigate(`/admin/blog/${blog._id}`)}>
-                                            <td>{blog.title}</td>
-                                            <td>{blog.username}</td>
-                                            <td> {format(new Date(blog.createdAt), 'dd/MM/yyyy')}</td>
-                              
-                                        </tr>
-                                        )
+                                    (banners.map((banner) => {
+                                        return (<tr key={banner._id}>
+                                            <td>{banner.title}</td>
+                                            <td>{banner.image}</td>
+                                            <td>{banner.description}</td>
+                                            <td >
+                                                <Btns>
+
+                                                    <Button variant='warning' onClick={() => navigate(`/admin/editbanner/${banner._id}`)}>Edit</Button>
+                                                    <Button variant='danger' onClick={() => showDeleteModal(banner._id, banner.title)}>Delete</Button>
+                                                </Btns>
+                                            </td>
+                                        </tr>)
                                     }))
 
 
@@ -204,9 +207,9 @@ const Blogmng = () => {
 
                             </tbody>
                         </table>
-                    </TableResponsive>
+                    </TableResponsive>)
 
-                    : <h2 style={{ textAlign: 'center', color: "#777" }}>No Search Results</h2>
+                    : (<h2 style={{ textAlign: 'center', color: "#777" }}>No Search Results</h2>)
 
                 }
 
@@ -215,7 +218,8 @@ const Blogmng = () => {
             </MainBox>
 
         </AdminLayout>
-  )
+
+    )
 }
 
-export default Blogmng
+export default Bannermng

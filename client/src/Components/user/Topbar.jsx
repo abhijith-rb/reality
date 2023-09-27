@@ -17,7 +17,7 @@ import axiosInstance from '../../axios/axiosInstance';
 const TopContainer = styled.div`
     width: 100%;
     height: 10vh;
-    background-color: #1876D0;
+    background-color: #79AC78;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -148,13 +148,13 @@ const Topbar = ({setSidebar}) => {
             <LogoDiv>
                 <MenuIcon onClick={() => setSidebar(true)} style={{ marginLeft: "1rem", color: "#ffffff", cursor: "pointer" }} />
                 <Logo onClick={() => navigate("/")}>
-                    Reality
+                    Realify
                 </Logo>
             </LogoDiv>
 
             <JustLogo>
                 <Logo onClick={() => navigate("/")}>
-                    Reality
+                    Realify
                 </Logo>
             </JustLogo>
 
@@ -174,7 +174,7 @@ const Topbar = ({setSidebar}) => {
 
                         <div ref={buttonRef} onClick={() => { setTooltip(!tooltip) }}>
                             <Img src={user?.image ? PF + user.image : '/images/avatar.png'} alt="" />
-                            <ArrowDropDownCircle style={{color:"#88C4FE"}}/>
+                            <ArrowDropDownCircle style={{color:"black"}}/>
                         </div>
 
                         <Chat onClick={()=> navigate("/messenger")} style={{color:"white"}}/>

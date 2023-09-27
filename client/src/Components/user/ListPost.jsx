@@ -9,11 +9,13 @@ import axiosInstance from '../../axios/axiosInstance';
 
 const PostWrap = styled.div`
     width: 80vw;
-    min-height: 35vh;
+    /* min-height: 35vh; */
+    height: auto;
     background-color: #ffffff;
     padding: 2vh 2vw;
     display: flex;
     border-radius:5px;
+    box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5);
     @media (max-width:800px){
       flex-direction: column;
     }
@@ -21,11 +23,12 @@ const PostWrap = styled.div`
 
 const ImgDiv = styled.div`
     width: 25%;
-    height: 90%;
-    min-height: 30vh;
+    height: 23vh;
+    /* min-height: 30vh; */
     @media (max-width:800px){
       width: 100%;
-      height: 25%;
+      height: 25vh;
+
     }
 `;
 
@@ -63,7 +66,8 @@ const RightDiv = styled.div`
     align-items: center;
     padding: 2vh 3vw;
     color: #0f518f;
-    background-color: #c2bcbc;
+    background-color: #B0D9B1;
+    border-radius: 5px;
     @media (max-width:800px){
       width: 100%;
       height: 25%;
@@ -78,6 +82,7 @@ const SubRight = styled.div`
 const Img = styled.img`
     width: 100%;
     height: 100%;
+    border-radius: 5px;
 `;
 
 const ClippedPara = styled.p`
@@ -146,7 +151,7 @@ const ListPost = ({post}) => {
         </DetailsDiv>
         <RightDiv>
           <SubRight>
-            <h3>₹{formatPrice(post?.price)}</h3>
+            <h3>₹ {formatPrice(post?.price)}</h3>
             <span>{post?.area}</span>
 
           </SubRight>
