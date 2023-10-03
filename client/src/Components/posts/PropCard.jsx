@@ -136,30 +136,6 @@ const PropCard = ({post,handleLike,i}) => {
         navigate(`/post-detail/${post._id}`)
     }
 
-    // const handleLike = async(propId,i)=>{
-    //     if(user?.role !== 'user'){
-    //         return
-    //     }
-    //     await axiosInstance.put(`/likeprop`,
-    //     {propId,userId:user._id}
-    //     )
-    //     .then((res)=>{
-    //         console.log(res)
-    //         const updProp = res.data.updProp;
-    //         console.log(updProp)
-    //         notify(res.data.msg)
-    //         const updPosts = posts.map((post)=>(
-    //             post._id === propId ? updProp : post
-    //         ))
-
-    //         setPosts(updPosts)
-    //     })
-    //     .catch((err)=>{
-    //         console.log(err)
-    //     })
-
-    //  }
-
 
     return (
         <Card key={i}>

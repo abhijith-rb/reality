@@ -8,28 +8,37 @@ const axiosInstance = axios.create({
 
 
 axiosInstance.interceptors.response.use(
-    async(response)=>{
-        return response
-    },
-    async(err)=>{
-        console.log(err)
-        if (err.response?.status === 401) {
-            try {
-                await axiosInstance.post('/auth/refresh-token');
-                console.log("new access token generated");
-                  
-                const originalRequest = err.config;
-                return axiosInstance(originalRequest);
-            } catch (refreshErr) {
-                console.log(refreshErr);
-                console.log("Failed to regenerate new access token")
-                
-            }
-        }
+  async (response) => {
+    return response;
+  },
+  async (err) => {
+    console.log(err);
 
-        return Promise.reject(err);
+    let retryCount = 0;
+    const maxRetries = 6;
+
+    if (err.response?.status === 401) {
+      if (retryCount < maxRetries) {
+        try {
+          await axiosInstance.post('/auth/refresh-token');
+          console.log("New access token generated");
+
+          const originalRequest = err.config;
+          retryCount++; 
+          return axiosInstance(originalRequest);
+        } catch (refreshErr) {
+          console.log(refreshErr);
+          console.log("Failed to regenerate new access token");
+        }
+      } else {
+        console.log("Maximum retry limit reached. Aborting.");
+      }
     }
+
+    return Promise.reject(err);
+  }
 );
+
 
 
 export default axiosInstance;

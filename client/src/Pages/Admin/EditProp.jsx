@@ -95,8 +95,8 @@ const EditProp = () => {
                 priceRef.current.value = property.price;
                 areaRef.current.value = property.area;
                 descriptionRef.current.value = property.description;
-                setCoordinates(property.coordinates)
-                setOldImgs(property.images);
+                property.coordinates && setCoordinates(property.coordinates)
+                property.images && setOldImgs(property.images);
             })
             .catch((err) => {
                 console.log(err)
@@ -191,10 +191,6 @@ const EditProp = () => {
             })
     }
 
-    const imgeditor = () => {
-
-    }
-
 
     return (
         <AdminLayout>
@@ -215,8 +211,6 @@ const EditProp = () => {
                                                 <Img src={elem.filename ? PF + elem.filename : elem} alt="" />
                                                 {elem.filename &&
                                                     <>
-                                                        <EditIcon onClick={() => imgeditor(elem.filename)}
-                                                            style={{ color: "blue", cursor: "pointer", position: "absolute", left: "35px", top: "10px" }} />
 
                                                         <DeleteIcon onClick={() => imgremover(elem.filename)}
                                                             style={{ color: "red", cursor: "pointer", position: "absolute", right: "35px", top: "10px" }} />

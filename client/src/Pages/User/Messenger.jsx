@@ -182,6 +182,7 @@ const Messenger = () => {
     console.log("firstCurrentChat", currentChat)
     const [roomId,setRoomId] = useState()
     const navigate = useNavigate()
+    const SocketUrl = process.env.REACT_APP_SOCKET_URL;
 
     const [callerName, setCallerName] = useState("An User")
     const [callnotice,setCallnotice] = useState(false)
@@ -215,9 +216,7 @@ const Messenger = () => {
     useEffect(() => {
         console.log("useeffect 2 called")
 
-        
-
-        socket.current = io("ws://localhost:8800")
+        socket.current = io(SocketUrl)
         socket.current.on("getMessage", (data) => {
             console.log(data.text)
             console.log(data)

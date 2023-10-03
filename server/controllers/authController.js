@@ -31,7 +31,7 @@ authCtrl.createUser = async (req, res) => {
 //let refreshTokens = [];
 
 function generateAccessToken(user){
-    return jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'1m'})
+    return jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'15m'})
 }
 
 
@@ -58,7 +58,7 @@ authCtrl.userAuth = async (req, res) => {
         const accessToken = generateAccessToken({name:username,role:user.role});
         const refreshToken = jwt.sign({name:username,role:user.role},process.env.REFRESH_TOKEN_SECRET,{expiresIn:'30d'});
 
-        res.cookie('access_token',accessToken,{httpOnly:true, maxAge: 1000 * 60 })
+        res.cookie('access_token',accessToken,{httpOnly:true, maxAge: 1000 * 60 * 15})
         res.cookie('refresh_token', refreshToken,{httpOnly:true, maxAge: 1000 * 60 * 60 * 24 * 30})
         res.status(200).json(userInfo)
 
@@ -87,9 +87,9 @@ authCtrl.regenerateToken = async(req,res)=>{
 }
 
 
+// refreshTokens = refreshTokens.filter(token => token !== req.body.token);
 
 authCtrl.logout = async(req,res)=>{
-    // refreshTokens = refreshTokens.filter(token => token !== req.body.token);
     res.clearCookie('access_token');
     res.clearCookie('refresh_token');
     console.log("cookies gone")
