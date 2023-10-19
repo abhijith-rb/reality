@@ -107,6 +107,7 @@ const Bar = styled.input`
     height: 5vh;
     padding-left: 1vw;
     border: none;
+    border-radius: 5px;
 `;
 
 
@@ -161,7 +162,7 @@ const Topbar = ({setSidebar}) => {
             <SearchDiv>
                 <Bar name='searchbarusertop' placeholder='Search...' onChange={(e)=>setInputText(e.target.value)} />
 
-                <Button variant='warning' onClick={()=>handleSearch()}>
+                <Button className='btn btn-sm' variant='warning' onClick={()=>handleSearch()}>
                     <SearchIcon/>
                 </Button>
 

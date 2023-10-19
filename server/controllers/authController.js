@@ -9,8 +9,12 @@ const authCtrl = {};
 authCtrl.createUser = async (req, res) => {
     const { username, email, password, phone } = req.body;
     console.log(username, email, password, phone)
-    const user = await User.findOne({ username, email })
-    if (user) return res.redirect('/register');
+    const user = await User.findOne({ $or:[{username:username},{email:email}]})
+    // if (user) return res.redirect('/register');
+    if (user){
+      res.status(500).json({msg:"User already exists"});
+      return 
+    }
 
     try {
         const salt = await bcrypt.genSalt(10)
@@ -141,7 +145,7 @@ authCtrl.genOtp = async(req,res)=>{
   console.log(email)
   const user = await User.findOne({email})
   if(!user){
-    return res.status(401).json({msg:"You are not registered with us please sign up"})
+    return res.status(404).json({msg:"You are not registered with us please sign up"})
   }
   const otpExisting = await OtpModel.findOne({email})
   if(otpExisting){
@@ -193,6 +197,63 @@ authCtrl.verifyOtp = async(req,res)=>{
   
   return res.status(200).json({userId});
 }
+
+//Email verification
+
+authCtrl.createOtpForMail = async(req,res)=>{
+  const email = req.body.email;
+console.log(email)
+
+const otpExisting = await OtpModel.findOne({email})
+if(otpExisting){
+  await OtpModel.findByIdAndDelete(otpExisting._id);
+}
+try {
+  const OTP = generateOTP(); 
+
+  const otpDoc = new OtpModel({email,otp:OTP})
+  await otpDoc.save();
+  console.log(process.env.SENDGRID_API_KEY)
+
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+  const msg = {
+    to: email, 
+    from: 'abhijithrb91@gmail.com', 
+    subject: 'Your OTP to verify Email',
+    text: `Your OTP is ${OTP}`,
+  }
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log('Email sent')
+    })
+    .catch((error) => {
+      console.error(error)
+    })
+
+  res.status(200).json({msg:'Otp Sent successfully'})
+
+} catch (error) {
+    console.error(error);
+    res.status(500).json({msg:'Something went wrong'})
+}
+}
+
+authCtrl.verifyEmail = async(req,res)=>{
+    const otp = req.body.otp;
+  const email = req.body.email;
+  const validOtp = await OtpModel.findOne({email,otp})
+  if(!validOtp){
+    res.status(403).json({msg:'Invalid Otp number'})
+    return;
+  }
+
+  await OtpModel.findByIdAndDelete(validOtp._id)
+  
+  return res.status(200).json({msg:"Email verified"});
+}
+
+
 
 authCtrl.updatePwd = async(req,res)=>{
     const userId = req.params.id;

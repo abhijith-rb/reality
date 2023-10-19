@@ -8,6 +8,9 @@ router.post('/refresh-token',authCtrl.regenerateToken)
 router.delete('/logout',authCtrl.logout)
 router.post('/genotp',authCtrl.genOtp)
 router.post('/verifyotp',authCtrl.verifyOtp)
+
+router.post('/createotpformail',authCtrl.createOtpForMail)
+router.post('/verifyemail',authCtrl.verifyEmail)
 router.post('/updatepwd/:id',authCtrl.updatePwd)
 
 // router.get('/verifytoken',authCtrl.verifyToken, authCtrl.tokenVerifier)
