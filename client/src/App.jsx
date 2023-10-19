@@ -39,6 +39,8 @@ import Favorites from './Pages/User/Favorites';
 import RoomPage from './Pages/User/RoomPage';
 import Bannermng from './Pages/Admin/Bannermng';
 import EditBanner from './Pages/Admin/EditBanner';
+import { useEffect } from 'react';
+import axiosInstance from './axios/axiosInstance';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -57,30 +59,22 @@ function App() {
 
   const getData = async () => {
     console.log("calling getdata");
-    await axios.get('/api/getdetails')
+
+    await axiosInstance.get(`/getdetails`)
       .then((response) => {
         console.log(response.data)
         dispatch(updateUser(response.data));
         
       })
-      .catch((err) => {
+      .catch(async(err) => {
         console.log(err)
-        if (err.response && err.response.status === 401) {
-          axios.post('/api/auth/refresh-token')
-            .then(() => {
-              console.log("new acess token generated");
-              getData();
-            })
-            .catch((err) => {
-              console.log(err);
-              console.log("Failed to regenerate new access token")
-
-            })
-        }
+      
       })
   }
 
-  getData();
+  useEffect(()=>{
+    getData()
+  },[])
 
 
   return (

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-// import './posts.css';
 import { styled } from 'styled-components';
 import axiosInstance from '../../axios/axiosInstance';
 import { useSelector } from 'react-redux';
@@ -104,7 +103,7 @@ const Posts = ({title}) => {
             {posts.length > 0 && posts.map((post,i)=>{
                 
                 return (
-                    <PropCard post={post} handleLike={handleLike} i={i}/>
+                    <PropCard post={post} handleLike={handleLike} i={i} key={post._id}/>
             )}
             )}
 

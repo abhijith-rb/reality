@@ -6,6 +6,7 @@ const axiosInstance = axios.create({
     withCredentials : true,
 })
 
+let retryCount = 0;
 
 axiosInstance.interceptors.response.use(
   async (response) => {
@@ -14,7 +15,6 @@ axiosInstance.interceptors.response.use(
   async (err) => {
     console.log(err);
 
-    let retryCount = 0;
     const maxRetries = 6;
 
     if (err.response?.status === 401) {

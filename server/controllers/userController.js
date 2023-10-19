@@ -39,6 +39,13 @@ userCtrl.upload = multer({ storage })
 
 userCtrl.authenticateToken = (req, res, next) => {
     const token = req.cookies.access_token;
+    const refreshToken = req.cookies.refresh_token;
+
+    if(!refreshToken){
+        console.log("No refresh token");
+        return res.status(200).json(null)
+    }
+    
     console.log(token)
     console.log("##########################")
 
