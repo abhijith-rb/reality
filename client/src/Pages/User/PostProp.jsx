@@ -32,7 +32,7 @@ const Create = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #B0D9B1;
+  background-color: #B5CFD8;
   border-radius: 10px;
   box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5);
 `;

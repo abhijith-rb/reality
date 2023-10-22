@@ -60,7 +60,7 @@ const WriteInput = styled.input`
 `;
 
 const WriteSubmit = styled.button`
-    background-color: teal;
+    background-color: #6C737E;
     color: aliceblue;
     padding: 10px;
     border: none;
@@ -202,8 +202,8 @@ export default function Write() {
                         </FixedTextareaContainer>
 
                         <Btns>
-                            <WriteSubmit type="submit">Publish</WriteSubmit>
-                            <Button variant="secondary" onClick={()=>navigate("/blogs")}>Cancel</Button>
+                            <Button variant="outline-primary" type="submit">Publish</Button>
+                            <Button variant="outline-secondary" onClick={()=>navigate("/blogs")}>Cancel</Button>
 
                         </Btns>
                     </DescNPublish>

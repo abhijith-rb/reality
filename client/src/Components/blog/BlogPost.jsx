@@ -42,7 +42,7 @@ const PostTitle = styled.span`
     font-weight: 700;
     margin-top: 15px;
     cursor: pointer;
-
+    color:#4f5867;
 `;
 const PostDate = styled.span`
     font-size: 16px;
@@ -52,7 +52,7 @@ const PostDate = styled.span`
 const PostDesc = styled.p`
     font-size: 16px;
     margin-top: 2vh;
-    color: #053B50;
+    color: #4f5867;
     line-height: 24px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -67,11 +67,12 @@ const BlogPost = ({post}) => {
 
   return (
     <Wrapper onClick={()=> navigate(`/blog/${post?._id}`)}>
-       {/* <Link to = {`/blog/${post?._id}`} style={{textDecoration:'none'}}> */}
 
         <PostImg
             src={post?.image ? PF + post.image : "/images/noPropImg.png"}
-            alt="No Image" />
+            alt="No Image" 
+            onError={(e)=> e.target.src = "/images/noPropImg.png"}
+            />
         
         <PostInfo>
 
@@ -92,7 +93,6 @@ const BlogPost = ({post}) => {
             </PostDesc>
         </PostInfo>
 
-        {/* </Link> */}
     </Wrapper>
   )
 }

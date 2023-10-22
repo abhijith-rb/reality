@@ -52,7 +52,7 @@ const Blogs = () => {
     <UserLayout>
         {user?.subscribed &&
             <TopDiv>
-                <Button onClick={()=> navigate('/write')}>Write a blog</Button>
+                <Button variant='outline-primary' onClick={()=> navigate('/write')}>Write a blog</Button>
             </TopDiv>
         }
         <Wrapper>

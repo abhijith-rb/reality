@@ -17,7 +17,8 @@ import axiosInstance from '../../axios/axiosInstance';
 const TopContainer = styled.div`
     width: 100%;
     height: 10vh;
-    background-color: #79AC78;
+    /* background-color: #79AC78; */
+    background-color: #7393A7;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -38,7 +39,7 @@ const Logo = styled.span`
 const LogoDiv = styled.div`
   display: none;
   /* align-items: center; */
-  @media (max-width: 800px){
+  @media (max-width: 890px){
     display: flex;
   align-items: center;
   }
@@ -47,7 +48,7 @@ const LogoDiv = styled.div`
 const JustLogo = styled.div`
     display: flex;
   align-items: center;
-  @media (max-width: 800px){
+  @media (max-width: 890px){
     display: none;
   }
 `;
@@ -59,7 +60,7 @@ const TopRight = styled.div`
     justify-content: flex-end;
     gap: 1rem;
     /* background-color: yellow; */
-    @media (max-width: 800px){
+    @media (max-width: 890px){
     display: none;
   }
 `;
@@ -102,12 +103,28 @@ const SearchDiv = styled.div`
     /* background-color: red; */
 `;
 
+const SearchCombo = styled.div`
+    width: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-right: 1vw;
+    background-color  :white ;
+    border-radius: 5px;
+    @media (max-width:500px){
+        width: 95%;
+    }
+`;
+
 const Bar = styled.input`
-    width: 60%;
+    width: 92%;
     height: 5vh;
     padding-left: 1vw;
-    border: none;
     border-radius: 5px;
+    border: none;
+    &:focus{
+        outline: none;
+    }
 `;
 
 
@@ -118,9 +135,15 @@ const Topbar = ({setSidebar}) => {
     const navigate = useNavigate();
     const buttonRef = useRef(null);
     const [tooltip, setTooltip] = useState(false)
-    const [showSide, setShowSide] = useState(false)
-
     const [inputText, setInputText] = useState("")
+
+    let newName;
+    if(user?.username.includes("@")){
+        newName = user?.username.split("@")[0]
+    }
+    else{
+        newName = user?.username;
+    }
     
 
     const handleSearch = ()=>{
@@ -160,36 +183,41 @@ const Topbar = ({setSidebar}) => {
             </JustLogo>
 
             <SearchDiv>
-                <Bar name='searchbarusertop' placeholder='Search...' onChange={(e)=>setInputText(e.target.value)} />
-
-                <Button className='btn btn-sm' variant='warning' onClick={()=>handleSearch()}>
-                    <SearchIcon/>
-                </Button>
+                <SearchCombo>
+                    <Bar name='searchbarusertop' placeholder='Search...' onChange={(e)=>setInputText(e.target.value)} />
+                    <SearchIcon style={{cursor:"pointer"}} onClick={()=>handleSearch()}/>
+                </SearchCombo>
 
             </SearchDiv>
 
             <TopRight>
                 {user?.role === "user" ?
                     <InfoDiv>
-                        <span style={{ color: "#ffffff" }}>Hi, {user?.username}</span>
+                        <span style={{ color: "#ffffff" }}>Hi, {user && newName}</span>
 
                         <div ref={buttonRef} onClick={() => { setTooltip(!tooltip) }}>
-                            <Img src={user?.image ? PF + user.image : '/images/avatar.png'} alt="" />
-                            <ArrowDropDownCircle style={{color:"black"}}/>
+                            <Img src={user?.image ? 
+                            (user.googleUser 
+                                ? user.image
+                                : PF + user.image )
+                                : '/images/avatar.png'} alt="" 
+                                onError={(e)=> e.target.src = "/images/avatar.png"}
+                                />
+                            <ArrowDropDownCircle style={{color:"white"}}/>
                         </div>
 
                         <Chat onClick={()=> navigate("/messenger")} style={{color:"white"}}/>
                     </InfoDiv>
 
-                    : (<Button variant='warning' onClick={() => navigate('/login')}>
+                    : (<Button variant='info'  onClick={() => navigate('/login')}>
                         Login
                     </Button>)
                 }
                 {tooltip && <Popper buttonRef={buttonRef} handleLogout={handleLogout} />}
 
-                <PostBtn onClick={() => navigate('/userprops')}>
+                <Button size='lg' variant='outline-light' onClick={() => navigate('/userprops')}>
                     Post Property
-                </PostBtn>
+                </Button >
             </TopRight>
 
         </TopContainer>

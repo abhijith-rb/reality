@@ -36,7 +36,7 @@ const Edit = styled.div`
   align-items: center;
   border-radius: 10px;
   box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5);
-  background-color: #B0D9B1;
+  background-color: #B5CFD8;
 `;
 
 const ImageBox = styled.div`

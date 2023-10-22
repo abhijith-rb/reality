@@ -18,10 +18,8 @@ const Tooltip = styled.div`
     z-index: 99;
     display: flex;
     flex-direction: column;
-    color: #79AC78;
-    /* color: #1876D0; */
+    color: #6C737E;
     justify-content: center;
-    border: 1px solid #ccc;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     background-color: #ffffff;
     margin-top: 10vh;
@@ -30,11 +28,11 @@ const Tooltip = styled.div`
 
 const UserDetails = styled.div`
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 1rem;
-    @media (max-width: 1300px){
-      flex-direction: column;
-    }
+    flex-direction: column;
+    /* @media (max-width: 1300px){
+    } */
 `;
 
 const Img = styled.img`
@@ -75,18 +73,32 @@ const Popper = ({buttonRef,handleLogout}) => {
         }
       };
     }, []);
+
+    let newName;
+    if(user?.username.includes("@")){
+        newName = user?.username.split("@")[0]
+    }
+    else{
+        newName = user?.username;
+    }
+
   return (
       
       <Tooltip>
         <UserDetails>
-          <Img src={user?.image ? PF + user.image : '/images/avatar.png'} alt='img'/>
-          <h4>{user?.username}</h4>
+          <Img src={user?.image ?(user.googleUser 
+                                ? user.image
+                                : PF + user.image ) : '/images/avatar.png'} 
+                                alt='img'
+                                onError={(e)=>e.target.src="/images/avatar.png"}
+                                />
+          <h4>{user && newName}</h4>
         </UserDetails>
       
         <hr></hr>
         <Link to="/profile" style={{textDecoration:'none',color:"inherit",fontSize:"20px"}}>Profile</Link>
         {user?.subscribed && <Link to="/userprops" style={{textDecoration:'none',color:"inherit",fontSize:"20px"}}>Dashboard</Link>}
-        <Link style={{textDecoration:'none',color:"inherit"}} onClick={handleLogout}> <Logout/> Logout</Link>
+        <Link style={{textDecoration:'none',color:"red"}} onClick={handleLogout}> <Logout/> Logout</Link>
       </Tooltip>
 
 

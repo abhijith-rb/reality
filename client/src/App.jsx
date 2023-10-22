@@ -41,6 +41,7 @@ import Bannermng from './Pages/Admin/Bannermng';
 import EditBanner from './Pages/Admin/EditBanner';
 import { useEffect } from 'react';
 import axiosInstance from './axios/axiosInstance';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -49,7 +50,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-  font-family: 'Montserrat', sans-serif;
+  /* font-family: 'Montserrat', sans-serif; */
+  font-family: 'Roboto', sans-serif;
   font-weight:500;
 `;
 
@@ -120,7 +122,6 @@ function App() {
 
         <Route path='/subscribe' element={<Subscribe/>}/>
         
-
         <Route element={<AuthRoute />}>
           <Route path='register' element={<Register/>} />
           <Route path='login' element={<Login/>} />

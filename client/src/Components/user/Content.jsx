@@ -8,7 +8,8 @@ const ContentWrapper = styled.div`
     padding-top: 5vh;
     height: auto;
     min-height: 90vh;
-    background-color: #eeebeb;
+    /* background-color: #eeebeb; */
+    background-color: #E8ECF1;
     @media (max-width:800px){
       margin-top: 10vh;
     }

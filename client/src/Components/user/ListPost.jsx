@@ -35,7 +35,8 @@ const ImgDiv = styled.div`
 const DetailsDiv= styled.div`
     width: 50%;
     height: 90%;
-    color: #0f518f;
+    color: #4f5867;
+    /* color: #0f518f; */
     padding-left: 5vw;
     padding-top: 2vh;
     @media (max-width:800px){
@@ -65,8 +66,9 @@ const RightDiv = styled.div`
     gap: 2vh;
     align-items: center;
     padding: 2vh 3vw;
-    color: #0f518f;
-    background-color: #B0D9B1;
+    color: #4f5867;
+    /* color: #0f518f; */
+    background-color: #B5CFD8;
     border-radius: 5px;
     @media (max-width:800px){
       width: 100%;
@@ -155,7 +157,7 @@ const ListPost = ({post}) => {
             <span>{post?.area}</span>
 
           </SubRight>
-            <Button onClick={handleChat}>Contact the Owner</Button>
+            <Button variant='light' onClick={handleChat}>Contact the Owner</Button>
         </RightDiv>
 
     </PostWrap>

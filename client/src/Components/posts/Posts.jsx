@@ -12,13 +12,12 @@ const PostsDiv = styled.div`
     flex-direction: column;
     padding-bottom: 5vh;
     padding-left: 2vw;
-    font-family: 'Montserrat', sans-serif;
     font-weight:500;
 `;
 
 const PostsHead = styled.h2`
     font-weight: 400;
-    color: #000000;
+    color: #6C737E;
 `;
 
 const Cards = styled.div`
@@ -42,75 +41,80 @@ const Cards = styled.div`
 `;
 
 
-const Posts = ({title}) => {
-    const [posts,setPosts] = useState([]);
-    const user = useSelector((state)=>state.user.user);
+const Posts = ({ title }) => {
+    const [posts, setPosts] = useState([]);
+    const user = useSelector((state) => state.user.user);
 
-    const notify = (msg)=>{
+    const notify = (msg) => {
         return toast(msg)
     }
 
-    const handleLike = async(propId,i)=>{
-        if(user?.role !== 'user'){
+    const handleLike = async (propId, i) => {
+        if (user?.role !== 'user') {
             return
         }
         await axiosInstance.put(`/likeprop`,
-        {propId,userId:user._id}
+            { propId, userId: user._id }
         )
-        .then((res)=>{
-            console.log(res)
-            const updProp = res.data.updProp;
-            console.log(updProp)
-            notify(res.data.msg)
-            const updPosts = posts.map((post)=>(
-                post._id === propId ? updProp : post
-            ))
+            .then((res) => {
+                console.log(res)
+                const updProp = res.data.updProp;
+                console.log(updProp)
+                notify(res.data.msg)
+                const updPosts = posts.map((post) => (
+                    post._id === propId ? updProp : post
+                ))
 
-            setPosts(updPosts)
-        })
-        .catch((err)=>{
-            console.log(err)
-        })
+                setPosts(updPosts)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
 
-     }
-    
-    const getPosts = async ()=>{
+    }
+
+    const getPosts = async () => {
         try {
             await axiosInstance.get("/getallproperties")
-            .then((response)=>{
-                setPosts(response.data)
-            })
-            .catch((err)=>{
-               
-            })
+                .then((response) => {
+                    setPosts(response.data)
+                })
+                .catch((err) => {
+
+                })
 
         } catch (error) {
             console.log(error)
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getPosts()
-    },[])
+    }, [])
 
     console.log(posts)
 
     return (
-        <PostsDiv>
-            <PostsHead>{title}</PostsHead>
-            <Cards>
+        <>
+            {
+                posts.length > 0 &&
+                    <PostsDiv>
+                        <PostsHead>{title}</PostsHead>
 
-            {posts.length > 0 && posts.map((post,i)=>{
-                
-                return (
-                    <PropCard post={post} handleLike={handleLike} i={i} key={post._id}/>
-            )}
-            )}
+                        <Cards>
+                            {posts.map((post, i) => {
 
-            </Cards>
+                                return (
+                                    <PropCard post={post} handleLike={handleLike} i={i} key={post._id} />
+                                )
+                            }
+                            )}
+                        </Cards>
+                        <ToastContainer />
+                    </PostsDiv>
+            }
 
-            <ToastContainer/>
-        </PostsDiv>
+        </>
     )
 }
 

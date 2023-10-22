@@ -21,8 +21,9 @@ const Title = styled.h1`
   position: absolute;
   top: 25%;
   left: 20%;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bolder;
   filter: drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
-  /* filter: drop-shadow(0 0 0.75rem #B0D9B1); */
 `;
 
 const Description = styled.h5`
@@ -52,7 +53,9 @@ const Home = () => {
           <Banner>
             <Title>{banner?.title}</Title>
            
-            <Img src={banner ? PF + banner?.image : "/images/noBanner.jpg"} alt=''/>
+            <Img src={banner ? PF + banner?.image : "/images/noBanner.jpg"} alt=''
+                        onError={(e)=> e.target.src = "/images/noBanner.jpg"}
+                        />
           </Banner>
          {/* <Posts title="Recommended Properties"/> */}
          <Posts title="Latest Properties"/>

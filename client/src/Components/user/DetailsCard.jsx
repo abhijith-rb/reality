@@ -9,7 +9,6 @@ const Dcard = styled.div`
     padding-left: 3vw;
     width: 100%;
     background-color: #ffffff;
-    font-family: 'Montserrat', sans-serif;
     font-weight:500;
     border-radius: 10px;
   box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5);

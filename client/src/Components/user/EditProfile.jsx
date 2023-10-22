@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const ProfileBox = styled.div`
   flex: 6;
   width: 50vw;
-  background-color: #B0D9B1;
+  background-color: #B5CFD8;
   padding-bottom: 2vh;
   padding-top: 2vh;
   @media (max-width:930px){
@@ -110,7 +110,7 @@ const EditProfile = ({ user }) => {
   const getUser = async () => {
     nameRef.current.value = user.username
     emailRef.current.value = user.email
-    phoneRef.current.value = user.phone
+    phoneRef.current.value = user.phone ? user.phone : null;
   }
 
 
@@ -149,7 +149,12 @@ const EditProfile = ({ user }) => {
       <h2 style={{ textAlign: 'center', color: '#ffffff' }}> Edit Profile </h2>
       <ImgBox>
         <div className="avatar">
-          <ProfileImg src={user?.image ? PF + user.image : '/images/avatar.png'} alt="" />
+          <ProfileImg src={user?.image ? (user.googleUser 
+                                ? user.image
+                                : PF + user.image ) : '/images/avatar.png'} 
+                                alt="" 
+                                onError={(e)=>e.target.src="/images/avatar.png"}
+                                />
         </div>
 
         <div className="custom-file">

@@ -286,8 +286,8 @@ const UserProps = () => {
                             <Form.Group controlId="formBasicInput"  >
                                 <Form.Control type="text" name='search' ref={searchRef} placeholder="Search here..." />
                             </Form.Group>
-                            <Button type='submit' variant='secondary'><SearchIcon /></Button>
-                            <Button onClick={handleReset} variant='warning'><RestartAltIcon /></Button>
+                            <Button type='submit' variant='outline-secondary'><SearchIcon /></Button>
+                            <Button onClick={handleReset} variant='outline-warning'><RestartAltIcon /></Button>
                         </Form>
                     </div>
 

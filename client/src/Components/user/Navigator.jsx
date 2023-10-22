@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 const NavContainer = styled.div`
     width: 100%;
     height: 5vh;
-    background-color: #B0D9B1;
+    /* background-color: #B0D9B1; */
+    background-color: #B5CFD8;
     display: flex;
     justify-content: space-between;
     @media (max-width:800px){
@@ -23,6 +24,7 @@ width: 100%;
 `;
 
 const Li = styled.li`
+  color: #434549;
   cursor: pointer;
 `;
 

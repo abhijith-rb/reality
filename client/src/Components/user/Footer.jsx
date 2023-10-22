@@ -1,11 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import {Facebook, Instagram, YouTube} from '@mui/icons-material'
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const FootContainer = styled.div`
     width: 100%;
-    /* height: 35vh; */
     height: fit-content;
     background-color: bisque;
 `;
@@ -14,11 +13,12 @@ const FootLg = styled.div`
     width:100% ;
     height: fit-content;
     min-height: 22vh;
-    background-color: #D9D9D9;
+    background-color: #98b1c6;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 2vw;
+    padding: 1vh 2vw 0 2vw;
+    color: #3a3d43;
     @media (max-width: 800px){
         flex-direction: column;
         padding: 0 2px;
@@ -49,16 +49,10 @@ const Rightlg = styled.div`
     }
 `;
 
-// const FootMd = styled.div`
-//     width:100% ;
-//     height: 8vh;
-//     background-color: #C3C1C1;
-// `;
-
 const FootSm = styled.div`
     width:100% ;
     min-height: 5vh;
-    background-color: #000000;
+    background-color: #393c42;
     display: flex;
     align-items: center;
     justify-content: center;

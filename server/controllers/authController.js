@@ -272,4 +272,43 @@ authCtrl.updatePwd = async(req,res)=>{
     }
 }
 
+const tokenMaker = (res,user)=>{
+  const {password,...userInfo} = user._doc;
+
+  const accessToken = generateAccessToken({name:userInfo.username, role:userInfo.role});
+  const refreshToken = jwt.sign({name:userInfo.username, role:userInfo.role}, process.env.REFRESH_TOKEN_SECRET, {expiresIn:'30d'})
+  
+  res.cookie('access_token',accessToken,{httpOnly:true, maxAge: 1000 * 60 * 15})
+  res.cookie('refresh_token', refreshToken,{httpOnly:true, maxAge: 1000 * 60 * 60 * 24 * 30})
+  res.status(200).json(userInfo)
+}
+
+authCtrl.googleAuth = async(req,res)=>{
+  const {username,email,image} = req.body;
+  console.log(username,email,image)
+
+  try {
+    const existingUser = await User.findOne({email:email})
+    if(existingUser){
+      const user = existingUser
+      return tokenMaker(res,user);
+    }
+  
+    let newUser;
+    const nameRegex = new RegExp(username,"i")
+    const nameExists = await User.findOne({username:{$regex:nameRegex}})
+    if(nameExists){
+      newUser = new User({username:email, email, image, googleUser:true})
+    }else{
+      newUser = new User({username, email, image, googleUser:true})
+    }
+  
+    const user = await newUser.save();
+    return tokenMaker(res,user);
+    
+  } catch (error) {
+    res.status(500).json({msg:"Something went wrong"})
+  }
+}
+
 module.exports = authCtrl;

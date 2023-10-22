@@ -8,12 +8,13 @@ import { logout } from '../../redux/userReducer';
 import { setCurrentChat } from '../../redux/chatReducer';
 import axiosInstance from '../../axios/axiosInstance';
 import { Close } from '@mui/icons-material';
+import { Button } from 'react-bootstrap';
+import {googleLogout} from '@react-oauth/google'
 
 const SideContainer = styled.div`
   min-width: 17vw;
   height: 100vh;
-  /* background-color: #1876D0; */
-  background-color: #79AC78;
+  background-color: #B5CFD8;
   position: fixed;
   padding-top: 2vh;
   z-index  : 99;
@@ -24,7 +25,7 @@ const SideContainer = styled.div`
 
 const Ul = styled.ul`
   list-style: none;
-  color: #ffffff;
+  color: #6C737E;
   font-size: 25px;
   margin-top:5vh;
   font-style:bold;
@@ -38,7 +39,7 @@ const Li = styled.li`
 `;
 
 const Logo = styled.span`
-    color: #ffffff;
+    color: #6C737E;
     font-size: 2rem;
     cursor: pointer;
     font-family: 'Times New Roman', Times, serif;
@@ -68,6 +69,9 @@ const UserSidebar = ({setSidebar}) => {
             dispatch(logout())
             dispatch(setCurrentChat(null))
             console.log("logout dispatched")
+            googleLogout(()=>{
+              console.log("the google logout is successfull")
+            })
         })
         .catch((error) => {
             console.log(error)
@@ -81,7 +85,7 @@ const UserSidebar = ({setSidebar}) => {
         <Logo onClick={() => navigate("/")}>
                 Realify
         </Logo>
-        <Close onClick={()=> setSidebar(false)} style={{marginRight:"1rem",color:"#ffffff",cursor:"pointer"}}/>
+        <Close onClick={()=> setSidebar(false)} style={{marginRight:"1rem",color:"#6C737E",cursor:"pointer"}}/>
       </LogoDiv>
         <Ul>
           <Li onClick={()=>navigate("/profile")}>My Profile</Li>
@@ -92,8 +96,12 @@ const UserSidebar = ({setSidebar}) => {
           {user?.subscribed && <Li onClick={()=>navigate("/userprops")}>My Properties</Li>}
           <Li onClick={()=>navigate("/blogs")}>Blogs</Li>
           {user?.role === "user"
-            ?<Li onClick={handleLogout}>Logout</Li>
-            :<Li onClick={()=>navigate("/login")}>Login</Li>
+            ?<Li >
+              <Button variant='outline-danger' onClick={handleLogout}>Logout</Button> 
+              </Li>
+            :<Li >
+              <Button variant='outline-primary' onClick={()=>navigate("/login")}> Login</Button>
+              </Li>
         }
         </Ul>
 

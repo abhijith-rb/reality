@@ -79,7 +79,8 @@ const PriceDesc = styled.div`
 const Price = styled.span`
     font-size: 20px;
     font-weight:700;
-    color: #0f518f;
+    color: #4f5867;
+    /* color: #0f518f; */
 `;
 
 const PlaceDate = styled.div`
@@ -141,8 +142,10 @@ const PropCard = ({post,handleLike,i}) => {
         <Card key={i}>
             <PicNLike>
                 <Pic onClick={() => handleView(post)}>
-                    <Img src={post?.images[0] ? PF + post.images[0]?.filename : "/images/noPropImg.png"}
-                        alt="" />
+                    <Img src={post?.images[0] ? (PF + post.images[0]?.filename) : "/images/noPropImg.png"}
+                        alt="" 
+                        onError={(e)=> e.target.src = "/images/noPropImg.png"}
+                        />
                 </Pic>
 
                 <StarLike onClick={() => handleLike(post?._id, i)}>

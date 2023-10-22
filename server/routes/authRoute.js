@@ -13,6 +13,7 @@ router.post('/createotpformail',authCtrl.createOtpForMail)
 router.post('/verifyemail',authCtrl.verifyEmail)
 router.post('/updatepwd/:id',authCtrl.updatePwd)
 
+router.post('/google-auth',authCtrl.googleAuth)
 // router.get('/verifytoken',authCtrl.verifyToken, authCtrl.tokenVerifier)
 
 module.exports = router;

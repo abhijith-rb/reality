@@ -8,7 +8,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axiosInstance from '../../axios/axiosInstance';
 import UserLayout from '../../Components/user/UserLayout';
-
+import {GoogleLogin, GoogleOAuthProvider} from '@react-oauth/google'
+import jwt_decode from 'jwt-decode'
+import axios from 'axios';
 
 const Content = styled.div`
   height: 75vh;
@@ -39,7 +41,7 @@ const LoginBox = styled.div`
     justify-content: center;
     gap: 3vh;
     border-radius: 5px;
-    background-color: #B0D9B1;
+    background-color: #B5CFD8;
     margin-bottom: 2vh;
     box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5);
 
@@ -55,7 +57,7 @@ const Login = () => {
   const usernameRef = useRef();
   const passwordRef = useRef();
 
-  const notify = (msg) => toast.error(msg, {
+  const notify = (msg) => toast(msg, {
     position: "top-center",
     autoClose: 5000,
     hideProgressBar: false,
@@ -102,6 +104,42 @@ const Login = () => {
       notify(error.response.data.msg)
     });
   }
+
+  const onSuccess = async(credentialResponse)=>{
+    console.log("Google login success")
+    console.log(credentialResponse)
+    const decoded = jwt_decode(credentialResponse.credential)
+    console.log(decoded)
+
+    const userInfo = {
+      username : decoded.given_name,
+      email: decoded.email,
+      image: decoded.picture
+    }
+
+    dispatch(loginStart())
+
+    await axiosInstance.post("/auth/google-auth", userInfo)
+    .then((res)=>{
+      const userInfo = res.data;
+      dispatch(loginSuccess(userInfo))
+      if (userInfo.role === "user") {
+        navigate("/")
+      }
+      else if (userInfo.role === "admin") {
+        navigate("/admin/dashboard")
+      }
+    })
+    .catch((err)=>{
+      dispatch(loginFailure())
+      notify(err.response.data.msg)
+    })
+  }
+
+  const onError = ()=>{
+    notify("Error logging in with Google Account")
+  }
+
   return (
 
     <UserLayout>
@@ -127,8 +165,19 @@ const Login = () => {
            
             </Form>
 
+            {/* <GoogleOAuthProvider clientId={process.env.REACT_APP_OAUTH_CLIENT_ID}> */}
+              <GoogleLogin
+              onSuccess={onSuccess}
+              onError={onError}
+              cookiePolicy={'single_host_origin'}
+              />
+            {/* </GoogleOAuthProvider> */}
+
             <Link to='/register'>Register</Link>
           </LoginBox>
+
+          
+
 
           </LoginContainer>
 

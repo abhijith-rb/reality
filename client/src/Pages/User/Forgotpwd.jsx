@@ -22,7 +22,7 @@ const FormWrap = styled.div`
     flex-direction: column;
     gap: 3vh;
     align-items: center;
-    background-color: #B0D9B1;
+    background-color: #B5CFD8;
     padding: 3vh 3vw;
     border-radius: 5px;
     margin-bottom: 4vh;

@@ -60,7 +60,7 @@ const ChatBoxTop = styled.div`
     height: 50vh;
     margin-top: 10vh;
     overflow-y: scroll;
-    border: 3px solid #79AC78;
+    border: 3px solid #7393A7;
     background-color:#ffffff;
     padding: 0 1vw;
 `;
@@ -68,7 +68,7 @@ const ChatBoxTop = styled.div`
 const ChatInfo = styled.div`
     width: 100%;
     height: 10vh;
-    background-color: #79AC78;
+    background-color: #7393A7;
     position: absolute;
     top: 0;
     left: 0;
@@ -129,7 +129,7 @@ const ChatSubmitButton = styled.button`
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    background-color: teal;
+    background-color: #6C737E;
     color: white;
 `;
 

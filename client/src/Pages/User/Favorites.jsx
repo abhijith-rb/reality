@@ -14,7 +14,6 @@ const PostsDiv = styled.div`
     flex-direction: column;
     padding-bottom: 5vh;
     padding-left: 2vw;
-    font-family: 'Montserrat', sans-serif;
     font-weight:500;
 `;
 

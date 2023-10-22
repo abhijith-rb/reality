@@ -10,7 +10,7 @@ const Wrapper=styled.div`
     padding: 10px;
     cursor: pointer;
     margin-top: 20px;
-    background-color: #B0D9B1;
+    background-color: #B5CFD8;
     border-radius: 5px;
     @media (max-width: 800px){
         flex-direction: column;

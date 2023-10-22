@@ -10,7 +10,7 @@ const Sellercardx= styled.div`
     width: 100%;
     height: 28vh;
     padding-top: 1vh;
-    background-color: #B0D9B1;
+    background-color: #B5CFD8;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -102,7 +102,8 @@ const SellerCard = ({post}) => {
         <Title>Contact Owner</Title>
         <Sellerdeets>
             <Sellerline1>
-            <Img src={owner?.image ? PF + owner.image : '/images/avatar.png'} alt="" />
+            <Img src={owner?.image ? PF + owner.image : '/images/avatar.png'} alt=""
+            onError={(e)=>e.target.src="/images/avatar.png"} />
             
             <OwnerName>{owner?.username}</OwnerName>
 

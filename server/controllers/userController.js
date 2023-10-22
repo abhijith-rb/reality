@@ -279,7 +279,13 @@ userCtrl.getUserProps = async (req, res) => {
     try {
         if (search) {
             const regex = new RegExp(search, 'i')
-            const properties = await Property.find({ ownerId: userId, title: { $regex: regex } });
+            const properties = await Property.find(
+                {$and:[{ ownerId: userId},
+                    { 
+                        $or:[{title: {$regex:regex}} ,{location: {$regex:regex}}],
+                       }
+                ]}
+                );
             console.log(properties)
             res.status(200).json(properties)
         }

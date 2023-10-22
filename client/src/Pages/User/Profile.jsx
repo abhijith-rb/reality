@@ -28,7 +28,7 @@ const Mainbox = styled.div`
 const Sidebox = styled.div`
   flex: 4;
   height: 25vh;
-  background-color: #79AC78;
+  background-color: #7393A7;
   display: flex;
   align-items: center;
 `;

@@ -42,7 +42,9 @@ const Imagecard = ({post}) => {
             images.map((image,i)=>{
                 return(
                 <CarouselImage key={i}>
-                    <Img src={PF + image.filename} alt="" />
+                    <Img src={PF + image.filename} alt="" 
+                        onError={(e)=> e.target.src = "/images/noPropImg.png"}
+                        />
                     
                 </CarouselImage>
 

@@ -34,7 +34,7 @@ const RegisterBox = styled.div`
     align-items: center;
     justify-content: center;
     gap: 3vh;
-    background-color: #B0D9B1;
+    background-color: #B5CFD8;
     padding: 2vh 2vw;
     margin-bottom: 2vh;
     border-radius: 5px;

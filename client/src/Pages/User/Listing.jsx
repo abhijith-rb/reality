@@ -33,8 +33,8 @@ const TopDiv = styled.div`
     }
     border-radius: 5px;
     color: #ffffff;
-    /* background-color: #1876D0; */
-    background-color: #79AC78;
+    background-color: #7393A7;
+    /* background-color: #79AC78; */
 `;
 
 const LgDiv = styled.div`
@@ -104,7 +104,11 @@ const NavBtn = styled.button`
     justify-content: center;
     border-radius: 5px;
     color: #ffffff;
-    background-color: #79AC78;
+    background-color: #7393A7;
+    border: none;
+    &:hover{
+        background-color: #48728a;
+    }
 `;
 
 const FilterBox = styled.div`
@@ -118,7 +122,8 @@ const FilterBox = styled.div`
     top: 0;
     z-index:8;
     padding: 0 4vw;
-    background-color: #88C4FE;
+    color: #6C737E;
+    background-color: #B5CFD8;
 `;
 
 const Listing = () => {
@@ -133,7 +138,7 @@ const Listing = () => {
 
     const [type, setType] = useState('Residential')
     const [min, setMin] = useState(100000)
-    const [max, setMax] = useState(500000)
+    const [max, setMax] = useState(50000000)
     const [sort, setSort] = useState('latest')
     const [page, setPage] = useState(1)
 
@@ -269,7 +274,7 @@ const Listing = () => {
                     </LgDiv>
 
                     <SmDiv>
-                        <Button onClick={() => setFilter(true)} variant='warning'>Apply Filters</Button>
+                        <Button onClick={() => setFilter(true)} variant='light'>Apply Filters</Button>
 
 
 

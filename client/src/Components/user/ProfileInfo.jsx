@@ -5,7 +5,7 @@ import styled from 'styled-components';
 const ProfileBox = styled.div`
   flex: 6;
   width: 50vw;
-  background-color: #B0D9B1;
+  background-color: #B5CFD8;
   padding-bottom: 2vh;
   padding-top: 2vh;
   @media (max-width:930px){
@@ -80,7 +80,12 @@ const ProfileInfo = ({user}) => {
           <h2 style={{ textAlign: 'center', color: '#ffffff' }}>Profile </h2>
           <ImgBox>
             <div className="avatar">
-              <ProfileImg src={user?.image ? PF + user.image : '/images/avatar.png'} alt="" />
+              <ProfileImg src={user?.image ? (user.googleUser 
+                                ? user.image
+                                : PF + user.image ) : '/images/avatar.png'} 
+                                alt="" 
+                                onError={(e)=>e.target.src="/images/avatar.png"}
+                                />
             </div>
             
           </ImgBox>
