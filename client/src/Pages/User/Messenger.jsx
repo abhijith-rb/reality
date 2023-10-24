@@ -61,8 +61,13 @@ const ChatBoxTop = styled.div`
     margin-top: 10vh;
     overflow-y: scroll;
     border: 3px solid #7393A7;
+    border-top:none;
     background-color:#ffffff;
     padding: 0 1vw;
+    border-radius: 0 0 10px 10px;
+    &::-webkit-scrollbar{
+        display: none;
+    }
 `;
 
 const ChatInfo = styled.div`
@@ -77,6 +82,7 @@ const ChatInfo = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-radius: 10px 10px 0 0;
 `;
 
 const InfoLeft = styled.div`
@@ -108,7 +114,7 @@ const FixedTextareaContainer = styled.div`
   display: flex;
   flex-direction: column; 
   background-color: #ffffff;
-
+  border-radius: 10px;
   @media (min-width: 768px) {
     max-width: 800px; 
   }

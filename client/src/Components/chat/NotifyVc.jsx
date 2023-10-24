@@ -17,9 +17,9 @@ const Wrapper = styled.div`
     align-items: center;
     justify-content: center;
     gap: 5vh;
-    background-color: #B5CFD8;
+    background-color: #72b2c7;
     border-radius: 5px;
-    color: #D0E7D2;
+    color: #ffffff;
 `;
 
 const BtnsDiv = styled.div`

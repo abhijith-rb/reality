@@ -18,7 +18,7 @@ const SideContainer = styled.div`
   position: fixed;
   padding-top: 2vh;
   z-index  : 99;
-  @media (min-width:800px){
+  @media (min-width:890px){
     display: none;
   }
 `;

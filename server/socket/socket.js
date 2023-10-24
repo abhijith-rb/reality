@@ -1,10 +1,11 @@
 const socketIO = require("socket.io")
 
 const socketConnect = (server)=>{
-    // console.log("server",server)
+    const ClientUrl = process.env.ClientUrl;
+    
     const io = socketIO(server, {
         cors:{
-            origin:"http://localhost:3000",
+            origin:ClientUrl,
         },
     });
     
