@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch} from 'react-redux';
 import UserProtectedRoute from './utils/UserProtectedRoute';
 import Home from './Pages/User/Home';
 import Login from './Pages/User/Login'
@@ -13,7 +13,6 @@ import Usermng from './Pages/Admin/Usermng';
 import Propmng from './Pages/Admin/Propmng';
 import CreateProp from './Pages/Admin/CreateProp';
 import EditProp from './Pages/Admin/EditProp';
-import axios from 'axios';
 import AuthRoute from './utils/AuthRoute';
 import Notfound from './Pages/Notfound';
 import { updateUser } from './redux/userReducer';
@@ -41,7 +40,7 @@ import Bannermng from './Pages/Admin/Bannermng';
 import EditBanner from './Pages/Admin/EditBanner';
 import { useEffect } from 'react';
 import axiosInstance from './axios/axiosInstance';
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import MBmap from './Components/user/MBmap';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -50,7 +49,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-  /* font-family: 'Montserrat', sans-serif; */
   font-family: 'Roboto', sans-serif;
   font-weight:500;
 `;
@@ -77,7 +75,6 @@ function App() {
   useEffect(()=>{
     getData()
   },[])
-
 
   return (
     <Container >
@@ -107,7 +104,7 @@ function App() {
         <Route path='/post-detail/:id' element={<Detail/>}/>
         <Route path='/list' element={<Listing/>}/>
 
-        <Route element={<UserProtectedRoute  />}>
+        <Route element={<UserProtectedRoute />}>
           <Route path='/profile' element={ <Profile/>}/>
           <Route path='/messenger' element={<Messenger/>}/>
           <Route path='/favorites' element={<Favorites/>}/>
@@ -136,6 +133,7 @@ function App() {
 
         <Route path='*' element={<Notfound/>}/>
 
+        <Route path='/test' element={<MBmap/>} />
       </Routes>
 
       </BrowserRouter>

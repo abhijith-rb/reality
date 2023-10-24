@@ -1,12 +1,11 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { Navigate, Outlet} from 'react-router-dom';
 
 const UserProtectedRoute = () => {
-  const location = useLocation();
   const user = useSelector((state)=> state.user.user)
-  
+  console.log(user)
   return (
 
     user?.role === "user"

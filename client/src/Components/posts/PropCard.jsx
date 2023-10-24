@@ -16,7 +16,7 @@ const Card = styled.div`
     padding-right: 5px;
     cursor: pointer;
     box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5);
-
+    background-color: #ffffff;
     @media (max-width:800px) {
         width: 36vw;
         height: 55vh;

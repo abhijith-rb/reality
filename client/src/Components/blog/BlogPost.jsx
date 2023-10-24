@@ -12,6 +12,7 @@ const Wrapper = styled.div`
     font-family: 'Montserrat', sans-serif;
     font-weight:500;
     cursor: pointer;
+    background-color:#ffffff;
     @media (max-width: 1000px){
         width: 90vw;
     }
