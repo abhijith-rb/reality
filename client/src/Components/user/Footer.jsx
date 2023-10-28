@@ -97,7 +97,7 @@ const Footer = () => {
 
         <FootSm>
             <Copyright>All trademarks, logos and names are properties of their respective owners. 
-                All Rights Reserved. © Copyright 2023 Realify Realty Services Limited.</Copyright>
+                All Rights Reserved. © Copyright 2023 Realify Real-estate Services Limited.</Copyright>
         </FootSm>
 
     </FootContainer>

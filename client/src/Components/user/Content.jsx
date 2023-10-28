@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 const ContentWrapper = styled.div`
@@ -8,7 +8,6 @@ const ContentWrapper = styled.div`
     padding-top: 5vh;
     height: auto;
     min-height: 90vh;
-    /* background-color: #eeebeb; */
     background-color: #E8ECF1;
     @media (max-width:800px){
       margin-top: 10vh;
@@ -16,10 +15,11 @@ const ContentWrapper = styled.div`
 `;
 
 const Content = ({children}) => {
+ 
   return (
-    <ContentWrapper>
-        {children}
-    </ContentWrapper>
+      <ContentWrapper>
+          {children}
+      </ContentWrapper>
   )
 }
 

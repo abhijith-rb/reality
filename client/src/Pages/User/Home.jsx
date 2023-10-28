@@ -3,6 +3,7 @@ import Posts from '../../Components/posts/Posts';
 import UserLayout from '../../Components/user/UserLayout';
 import styled from 'styled-components';
 import axiosInstance from '../../axios/axiosInstance';
+import Loader from '../../utils/Loader';
 
 const Banner = styled.div`
   position: relative;
@@ -48,18 +49,32 @@ const Home = () => {
       getBanner()
   },[])
 
+  const [loading, setLoading] = useState(false);
+
+  useEffect(()=>{
+    setLoading(true)
+    setTimeout(()=>{
+      setLoading(false)
+    },[1500])
+  },[])
+
   return (
     <UserLayout>
-          <Banner>
-            <Title>{banner?.title}</Title>
-           
-            <Img src={banner ? PF + banner?.image : "/images/noBanner.jpg"} alt=''
-                        onError={(e)=> e.target.src = "/images/noBanner.jpg"}
-                        />
-          </Banner>
-         {/* <Posts title="Recommended Properties"/> */}
-         <Posts title="Latest Properties"/>
-         {/* <Posts title="Properties in High Demand"/> */}
+      {
+        loading ?
+        <Loader/>
+        :
+        <>
+            <Banner>
+              <Title>{banner?.title}</Title>
+            
+              <Img src={banner ? PF + banner?.image : "/images/noBanner.jpg"} alt=''
+                          onError={(e)=> e.target.src = "/images/noBanner.jpg"}
+                          />
+            </Banner>
+          <Posts title="Latest Properties"/>
+        </>
+      }
     </UserLayout>
 
   )

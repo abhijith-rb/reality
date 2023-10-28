@@ -1,34 +1,25 @@
-import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams} from 'react-router-dom'
-import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt"
-import { useSelector } from 'react-redux'
-import UserLayout from '../../Components/user/UserLayout';
+import React, { useEffect, useRef } from 'react';
+import { useNavigate, useParams} from 'react-router-dom';
+import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
+import { useSelector } from 'react-redux';
+import styled from 'styled-components';
 
+const Wrapper = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 const RoomPage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const clientUrl = process.env.REACT_APP_CLIENT;
-  const { roomId } = useParams()
-  const user = useSelector((state) => state.user.user)
+  const { roomId } = useParams();
+  const user = useSelector((state) => state.user.user);
+  const videoContainerRef = useRef();
 
-  // const [videoStream, setVideoStream] = useState(null);
-
-  // const getVideoStream = async()=>{
-  //   const stream = await navigator.mediaDevices.getUserMedia({
-  //     video:true, audio:true
-  //   })
-
-  //   setVideoStream(stream)
-  // }
-  
-  // useEffect(()=>{
-  //   getVideoStream()
-  //   return ()=>{
-  //     videoStream?.getTracks().forEach((track)=> track.stop())
-  //   }
-  // },[])
-
-  const myMeeting = async (element) => {
+  useEffect(()=>{
     const appID = Number(process.env.REACT_APP_ZEGO_APP_ID);
     const serverSecret = process.env.REACT_APP_ZEGO_SERVER_SECRET;
 
@@ -43,28 +34,33 @@ const RoomPage = () => {
     const zc = ZegoUIKitPrebuilt.create(kitToken)
 
     zc.joinRoom({
-      container: element,
+      container: videoContainerRef.current,
       sharedLinks: [
         {
           name: "Copy Link",
           url: `${clientUrl}room/${roomId}`
         }
       ],
+      maxUsers:2,
       scenario: {
         mode: ZegoUIKitPrebuilt.OneONoneCall
       },
       showScreenSharingButton: false,
+      showPreJoinView: false,
       onLeaveRoom : ()=>{
-          navigate("/messenger")
+        zc.destroy();
+        navigate("/messenger")
+
       }
     })
 
-  }
+    return()=>{
+      zc.destroy();
+    }
+  },[])
 
   return (
-    <UserLayout>
-      <div ref={myMeeting} />
-    </UserLayout>
+      <Wrapper ref={videoContainerRef} />
   )
 }
 

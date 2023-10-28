@@ -3,6 +3,13 @@ import mapboxgl from 'mapbox-gl';
 import SearchBox from '@mapbox/search-js-react';
 import styled from 'styled-components';
 import axios from 'axios';
+import Loader from '../../utils/Loader';
+
+const MapWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+`;
 
 const MapSideBar = styled.div`
   background-color: rgba(35, 55, 75, 0.9);
@@ -47,6 +54,7 @@ const Li = styled.li`
 `;
 
 const MBmap = () => {
+  const [loading, setLoading] = useState(false);
   const mapContainer = useRef(null);
   const map = useRef(null);
   const [lng,setLng] = useState(76.9);
@@ -54,6 +62,13 @@ const MBmap = () => {
   const [zoom,setZoom] = useState(13);
   const [query,setQuery] = useState("")
   const [suggestions, setSugggetions] = useState([])
+
+  useEffect(()=>{
+    setLoading(true)
+    setTimeout(()=>{
+      setLoading(false)
+    },[2000])
+  },[])
 
   useEffect(()=>{
     if(map.current) return;
@@ -130,28 +145,35 @@ const MBmap = () => {
   }, [map.current]);
 
   return (
-    <div>
-      <Searchbar placeholder='Search here' value={query} onChange={(e)=> setQuery(e.target.value)}/>
-      {
-        suggestions.length >0 &&
-        <Ul>
-          {
-            suggestions?.map((sgn)=>(
-              <>
-              <Li onClick={()=>getData(sgn.mapbox_id)}>{sgn.name}</Li>
-              {/* <hr style={{width:"100%", height:"2px",color:"black",borderTop:"2px solid black"}}/> */}
-              </>
-            ))
-          }
-        </Ul>
-      } 
+    <>
+      <MapWrapper>
+        <Searchbar placeholder='Search here' value={query} onChange={(e)=> setQuery(e.target.value)}/>
+        {
+          suggestions.length >0 &&
+          <Ul>
+            {
+              suggestions?.map((sgn)=>(
+                <>
+                <Li onClick={()=>getData(sgn.mapbox_id)}>{sgn.name}</Li>
+                {/* <hr style={{width:"100%", height:"2px",color:"black",borderTop:"2px solid black"}}/> */}
+                </>
+              ))
+            }
+          </Ul>
+        } 
+          
+        <MapSideBar>
+            Longitude: {lng} | Latitude:{lat} | Zoom: {zoom}
+        </MapSideBar>
         
-      <MapSideBar>
-          Longitude: {lng} | Latitude:{lat} | Zoom: {zoom}
-      </MapSideBar>
-      
-      <MapContainer ref={mapContainer} />
-    </div>
+        <MapContainer ref={mapContainer} />
+
+        {loading && <Loader/>}
+
+
+      </MapWrapper>
+
+    </>
   )
 }
 
