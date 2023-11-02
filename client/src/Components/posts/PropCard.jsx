@@ -2,7 +2,6 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import axiosInstance from '../../axios/axiosInstance';
 import { Star, StarBorder } from '@mui/icons-material';
 
 
@@ -80,7 +79,6 @@ const Price = styled.span`
     font-size: 20px;
     font-weight:700;
     color: #4f5867;
-    /* color: #0f518f; */
 `;
 
 const PlaceDate = styled.div`
@@ -126,22 +124,10 @@ const PropCard = ({post,handleLike,i}) => {
         }
       }
 
-    const handleView = async(post)=>{
-        if(user && user.role === "user"){
-            await axiosInstance.put("/addview",{
-                userId : user._id,
-                postId: post._id
-            })
-        }
-        
-        navigate(`/post-detail/${post._id}`)
-    }
-
-
     return (
         <Card key={i}>
             <PicNLike>
-                <Pic onClick={() => handleView(post)}>
+                <Pic onClick={() =>navigate(`/post-detail/${post._id}`)}>
                     <Img src={post?.images[0] ? (PF + post.images[0]?.filename) : "/images/noPropImg.png"}
                         alt="" 
                         onError={(e)=> e.target.src = "/images/noPropImg.png"}
@@ -155,16 +141,15 @@ const PropCard = ({post,handleLike,i}) => {
                     }
                 </StarLike>
             </PicNLike>
-            <PriceDesc onClick={() => handleView(post)}>
+            <PriceDesc onClick={() =>navigate(`/post-detail/${post._id}`)}>
                 <Price>{post.title}</Price>
                 <Price>₹ {formatPrice(post?.price)}</Price>
                 <span>Type: {post?.type}</span>
                 <span>Purpose: {post?.purpose}</span>
+                <span >Location: {post?.location}</span>
                 <ClippedPara>{post?.description ? post?.description : ""}</ClippedPara>
             </PriceDesc>
-            <PlaceDate onClick={() => handleView(post)}>
-                <span className="place">{post?.area},{post?.location}</span>
-            </PlaceDate>
+            
         </Card>
     )
 }

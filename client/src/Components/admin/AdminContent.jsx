@@ -46,6 +46,12 @@ const Ul = styled.ul`
 const Li = styled.li`
   cursor: pointer;
   margin-bottom:3vh;
+  padding: 0 20px;
+  border: 2px solid transparent;
+  &:hover{
+    border: 2px solid #434549;
+    border-radius: 10px;
+  }
 `;
 
 const MainDiv = styled.div`

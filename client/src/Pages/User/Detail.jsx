@@ -7,6 +7,7 @@ import axios from 'axios';
 import SellerCard from '../../Components/user/SellerCard';
 import { styled } from 'styled-components';
 import axiosInstance from '../../axios/axiosInstance';
+import { useSelector } from 'react-redux';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -42,7 +43,9 @@ const SideDiv = styled.div`
 const Detail = () => {
   const postId = useLocation().pathname.split("/")[2];
   const [post,setPost] = useState({})
-  const [date,setDate] = useState("")
+  const [date,setDate] = useState("");
+  const user = useSelector((state)=>state.user.user);
+
 
   const getProperty = async() => {
     await axiosInstance.get(`/getproperty/${postId}`)
@@ -56,8 +59,25 @@ const Detail = () => {
     })
     
   }
+
+  const addView = async()=>{
+    await axiosInstance.put("/addview",{
+        userId : user._id,
+        postId: postId
+    })
+  }
+
   useEffect(()=>{
-    getProperty()
+    getProperty();
+    if(user && user.role === "user"){
+        addView()
+        .then(()=>{
+            console.log("view added")
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    }
   },[postId])
 
   console.log(date)

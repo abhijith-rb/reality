@@ -1,23 +1,22 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios'
 import { logout } from '../../redux/userReducer';
-import { useEffect, useState } from 'react'
-import { Button, NavItem, Navbar } from 'react-bootstrap';
-import { ArrowDropDownCircle,Chat } from '@mui/icons-material';
+import { useState } from 'react'
+import { Button } from 'react-bootstrap';
+import { ArrowDropDownCircle, Chat, Close } from '@mui/icons-material';
 import Popper from '../Popper';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { setCurrentChat } from '../../redux/chatReducer';
 import axiosInstance from '../../axios/axiosInstance';
+import axios from 'axios';
 
 
 const TopContainer = styled.div`
     width: 100%;
     height: 10vh;
-    /* background-color: #79AC78; */
     background-color: #7393A7;
     display: flex;
     align-items: center;
@@ -30,7 +29,7 @@ const Logo = styled.span`
     color: #ffffff;
     font-size: 2rem;
     cursor: pointer;
-    font-family: 'Times New Roman', Times, serif;
+    /* font-family: 'Times New Roman', Times, serif; */
     font-style: italic;
     flex: 2;
     margin-left: 1vw;
@@ -38,7 +37,6 @@ const Logo = styled.span`
 
 const LogoDiv = styled.div`
   display: none;
-  /* align-items: center; */
   @media (max-width: 890px){
     display: flex;
   align-items: center;
@@ -59,7 +57,6 @@ const TopRight = styled.div`
     align-items: center;
     justify-content: flex-end;
     gap: 1rem;
-    /* background-color: yellow; */
     @media (max-width: 890px){
     display: none;
   }
@@ -81,18 +78,6 @@ const Img = styled.img`
     background-color: aliceblue;
 `;
 
-const PostBtn = styled.div`
-    width: 12vw;
-    height:6vh;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-radius:5px;
-    background-color: #ffffff;
-    cursor: pointer;
-    font-size:1em;
-`;
-
 
 const SearchDiv = styled.div`
     flex: 4;
@@ -100,7 +85,6 @@ const SearchDiv = styled.div`
     align-items: center;
     justify-content: flex-end;
     gap: 1vw;
-    /* background-color: red; */
 `;
 
 const SearchCombo = styled.div`
@@ -111,6 +95,8 @@ const SearchCombo = styled.div`
     padding-right: 1vw;
     background-color  :white ;
     border-radius: 5px;
+    position: relative;
+
     @media (max-width:500px){
         width: 95%;
     }
@@ -127,8 +113,44 @@ const Bar = styled.input`
     }
 `;
 
+const SgBoxDiv = styled.div`
+width: 100%;
+background-color: #ffffff;
+border: 2px solid grey ;
+border-radius: 10px;
+    display: flex;
+    z-index: 7;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  @media (max-width:800px){
+    flex-direction: column;
+  }
+`;
 
-const Topbar = ({setSidebar}) => {
+const Ul = styled.ul`
+width: 100%;
+height: auto;
+max-height: 60vh;
+/* border: 2px solid grey; */
+background-color: #ffffff;
+color: #777;
+list-style: none;
+margin: 0;
+padding-left: 5px;
+border-radius: 10px;
+
+`;
+
+const Li = styled.li`
+  cursor:pointer;
+  &:hover{
+    color: blueviolet;
+  }
+`;
+
+
+const Topbar = ({ setSidebar }) => {
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const user = useSelector((state) => state.user.user)
     const dispatch = useDispatch();
@@ -136,20 +158,51 @@ const Topbar = ({setSidebar}) => {
     const buttonRef = useRef(null);
     const [tooltip, setTooltip] = useState(false)
     const [inputText, setInputText] = useState("")
+    const [query, setQuery] = useState("");
+    const [box, setBox] = useState(false);
+    const [suggestions, setSuggestions] = useState([])
 
     let newName;
-    if(user?.username.includes("@")){
+    if (user?.username.includes("@")) {
         newName = user?.username.split("@")[0]
     }
-    else{
+    else {
         newName = user?.username;
     }
-    
 
-    const handleSearch = ()=>{
-        if(inputText === "") return;
-        
-        navigate(`/list?q=${inputText}`)
+    const handleQuery = (e) => {
+        setBox(true);
+        setQuery(e.target.value)
+    }
+
+    const suggest = async () => {
+        await axios.get(`https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}
+        &session_token=${123}&access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`)
+            .then((res) => {
+                console.log(res)
+                console.log(res.data)
+                setSuggestions(res.data.suggestions)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    useEffect(() => {
+        console.log(query)
+        suggest();
+    }, [query])
+
+    const handleSelect = (sgn) => {
+        setBox(false)
+        setQuery(sgn.name);
+    }
+
+    const handleSearch = () => {
+        setBox(false);
+        if (query === "") return;
+
+        navigate(`/list?q=${query}`)
     }
 
     const handleLogout = async () => {
@@ -162,7 +215,7 @@ const Topbar = ({setSidebar}) => {
             })
             .catch((error) => {
                 console.log(error)
-               
+
             })
     }
 
@@ -184,8 +237,22 @@ const Topbar = ({setSidebar}) => {
 
             <SearchDiv>
                 <SearchCombo>
-                    <Bar name='searchbarusertop' placeholder='Search...' onChange={(e)=>setInputText(e.target.value)} />
-                    <SearchIcon style={{cursor:"pointer"}} onClick={()=>handleSearch()}/>
+                    <Bar name='searchbarusertop' placeholder='Search...' value={query} onChange={handleQuery} />
+                    <SearchIcon style={{ cursor: "pointer" }} onClick={() => handleSearch()} />
+                    {box &&
+                        suggestions?.length > 0 &&
+                        <SgBoxDiv>
+                            <Ul>
+                                {
+                                    suggestions?.map((sgn) => (
+                                        <Li onClick={() => handleSelect(sgn)}>{sgn.name}</Li>
+                                    ))
+                                }
+                            </Ul>
+
+                             <Close onClick={() => setBox(false)} style={{cursor:"pointer"}}/>
+                        </SgBoxDiv>
+                    }
                 </SearchCombo>
 
             </SearchDiv>
@@ -196,20 +263,20 @@ const Topbar = ({setSidebar}) => {
                         <span style={{ color: "#ffffff" }}>Hi, {user && newName}</span>
 
                         <div ref={buttonRef} onClick={() => { setTooltip(!tooltip) }}>
-                            <Img src={user?.image ? 
-                            (user.googleUser 
-                                ? user.image
-                                : PF + user.image )
-                                : '/images/avatar.png'} alt="" 
-                                onError={(e)=> e.target.src = "/images/avatar.png"}
-                                />
-                            <ArrowDropDownCircle style={{color:"white"}}/>
+                            <Img src={user?.image ?
+                                (user.googleUser
+                                    ? user.image
+                                    : PF + user.image)
+                                : '/images/avatar.png'} alt=""
+                                onError={(e) => e.target.src = "/images/avatar.png"}
+                            />
+                            <ArrowDropDownCircle style={{ color: "white" }} />
                         </div>
 
-                        <Chat onClick={()=> navigate("/messenger")} style={{color:"white"}}/>
+                        <Chat onClick={() => navigate("/messenger")} style={{ color: "white" }} />
                     </InfoDiv>
 
-                    : (<Button variant='info'  onClick={() => navigate('/login')}>
+                    : (<Button variant='info' onClick={() => navigate('/login')}>
                         Login
                     </Button>)
                 }

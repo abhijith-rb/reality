@@ -11,6 +11,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import AdminLayout from '../../Components/admin/AdminLayout';
 import axiosInstance from '../../axios/axiosInstance';
 import LocationMap from '../../Components/LocationMap';
+import axios from 'axios';
+import { Close } from '@mui/icons-material';
 
 const MainBox = styled.div`
   width: 100%;
@@ -60,14 +62,48 @@ const Img = styled.img`
   height: 40vh;
 `;
 
+const Ul = styled.ul`
+width: 100%;
+height: auto;
+max-height: 60vh;
+border: 2px solid grey;
+background-color: #ffffff;
+color: #777;
+list-style: none;
+`;
+
+const Li = styled.li`
+  cursor:pointer;
+  &:hover{
+    color: orange;
+  }
+`;
+
+const LocDiv = styled.div`
+  position: relative;
+`;
+
+const SgBoxDiv = styled.div`
+width: 100%;
+background-color: #ffffff;
+border: 2px solid grey ;
+border-radius: 10px;
+    display: flex;
+    z-index: 7;
+  position: absolute;
+  top: 70px;
+  left: 0;
+  @media (max-width:800px){
+    flex-direction: column;
+  }
+`;
+
 const EditProp = () => {
     const navigate = useNavigate();
     const path = useLocation();
     console.log(path)
     const propId = path.pathname.split("/")[3];
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-
-
     const titleRef = useRef();
     const typeRef = useRef();
     const purposeRef = useRef();
@@ -79,9 +115,59 @@ const EditProp = () => {
 
     const [oldImgs, setOldImgs] = useState([]);
     const [previewUrls, setPreviewUrls] = useState([]);
-    const [coordinates,setCoordinates] = useState({lat:28.6139, lng:77.2090})
+    const [coordinates, setCoordinates] = useState({ lat: 28.6139, lng: 77.2090 })
 
+    const [query, setQuery] = useState("");
+    const [box, setBox] = useState(false);
+    const [suggestions, setSuggestions] = useState([]);
 
+    const handleSelect = (sgn) => {
+        setBox(false)
+        setQuery(sgn.name);
+        getData(sgn.mapbox_id);
+    }
+
+    const handleQuery = (e) => {
+        setBox(true)
+        setQuery(e.target.value)
+    }
+
+    const getData = async (id) => {
+        await axios.get(`https://api.mapbox.com/search/searchbox/v1/retrieve/${id}?session_token=${123}&access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`)
+            .then((res) => {
+                console.log(res.data)
+                console.log(res.data.features)
+                console.log(res.data.features[0].geometry.coordinates)
+                console.log(res.data.features[0].properties.name)
+                const name = res.data.features[0].properties.name;
+                const coords = res.data.features[0].geometry.coordinates;
+                // setPlace({ name: name, coords: coords })
+                console.log(coords)
+                setCoordinates({ lat: coords[1], lng: coords[0] });
+
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    const suggest = async () => {
+        await axios.get(`https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}
+        &session_token=${123}&access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`)
+            .then((res) => {
+                console.log(res)
+                console.log(res.data)
+                setSuggestions(res.data.suggestions)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    useEffect(() => {
+        console.log(query)
+        suggest()
+    }, [query])
     const getProperty = async () => {
         await axiosInstance.get(`/getproperty/${propId}`)
             .then((response) => {
@@ -91,7 +177,8 @@ const EditProp = () => {
                 titleRef.current.value = property.title;
                 typeRef.current.value = property.type;
                 purposeRef.current.value = property.purpose;
-                locationRef.current.value = property.location;
+                // locationRef.current.value = property.location;
+                setQuery(property.location)
                 priceRef.current.value = property.price;
                 areaRef.current.value = property.area;
                 descriptionRef.current.value = property.description;
@@ -132,14 +219,14 @@ const EditProp = () => {
         const title = titleRef.current.value;
         const type = typeRef.current.value;
         const purpose = purposeRef.current.value;
-        const location = locationRef.current.value;
+        // const location = locationRef.current.value;
         const price = priceRef.current.value;
         const area = areaRef.current.value;
         const description = descriptionRef.current.value;
         const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.webp)$/i;
 
 
-        if (title === '' || type === '' || purpose === '' || location === '') {
+        if (title === '' || type === '' || purpose === '' || query === '') {
             notify("Title, Type, Purpose and Location are required")
             return;
         }
@@ -156,7 +243,7 @@ const EditProp = () => {
         formData.append('title', title)
         formData.append('type', type)
         formData.append('purpose', purpose)
-        formData.append('location', location)
+        formData.append('location', query)
         formData.append('price', price)
         formData.append('area', area)
         formData.append('description', description)
@@ -242,7 +329,7 @@ const EditProp = () => {
                             <Form.Label>Title</Form.Label>
                             <Form.Control type='text' name='title' ref={titleRef} />
                         </Form.Group>
-                        
+
                         <Form.Group controlId='type'>
                             <Form.Label>Type</Form.Label>
                             <Form.Select type='text' name='type' ref={typeRef}>
@@ -262,19 +349,37 @@ const EditProp = () => {
 
                         <Form.Group controlId='price'>
                             <Form.Label>Price</Form.Label>
-                            <Form.Control type='number' name='price' ref={priceRef} min={0}/>
+                            <Form.Control type='number' name='price' ref={priceRef} min={0} />
                         </Form.Group>
                         <Form.Group controlId='area'>
                             <Form.Label>Area</Form.Label>
                             <Form.Control type='text' name='area' ref={areaRef} />
                         </Form.Group>
 
-                        <Form.Group controlId='location'>
-                            <Form.Label>Location</Form.Label>
-                            <Form.Control type='text' name='location' ref={locationRef} />
-                        </Form.Group>
+                        <LocDiv >
+                            <Form.Group controlId='location' >
+                                <Form.Label>Location</Form.Label>
+                                <Form.Control type='text' name='location' value={query} onChange={handleQuery} />
+                                {box &&
+                                    suggestions?.length > 0 &&
+                                    <SgBoxDiv>
 
-                        <LocationMap coordinates={coordinates} setCoordinates={setCoordinates} edit={true} />
+                                        <Ul>
+                                            {
+                                                suggestions?.map((sgn) => (
+                                                    <Li onClick={() => handleSelect(sgn)}>{sgn.name}</Li>
+                                                ))
+                                            }
+                                        </Ul>
+                                        <Close onClick={() => setBox(false)} style={{ cursor: "pointer" }} />
+
+                                    </SgBoxDiv>
+                                }
+                            </Form.Group>
+
+                        </LocDiv>
+
+                        {/* <LocationMap coordinates={coordinates} setCoordinates={setCoordinates} edit={true} /> */}
 
                         <Form.Group controlId='description'>
                             <Form.Label>Description</Form.Label>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components';
 import axiosInstance from '../../axios/axiosInstance';
 
-const Wrapper=styled.div`
+const Wrapper = styled.div`
     width: 100%;
     height: 10vh;
     display: flex;
@@ -25,21 +25,21 @@ const ImgDiv = styled.div`
     justify-content: center;
 `;
 
-const Img=styled.img`
+const Img = styled.img`
     width: 40px;
     height: 40px;
     border-radius: 50%;
     object-fit: cover;
 `;
 
-const RightDiv= styled.div`
+const RightDiv = styled.div`
 flex: 7;
     display: flex;
     flex-direction: column;
   overflow: hidden;
 
 `;
-const ConversationName=styled.span`
+const ConversationName = styled.span`
     font-weight: bold;
 `;
 
@@ -56,41 +56,47 @@ const LastMsg = styled.span`
     }
 `;
 
-const Conversation = ({conversation,currentUser}) => {
-    const [user2,setUser2] = useState(null);
+const Conversation = ({ conversation, currentUser }) => {
+    const [user2, setUser2] = useState(null);
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const user2Id = conversation.members.find((m)=> m!== currentUser._id)
+    const user2Id = conversation.members.find((m) => m !== currentUser._id)
 
-    useEffect(()=>{
-        const getUser=async()=>{
+    useEffect(() => {
+        const getUser = async () => {
             try {
                 await axiosInstance.get(`/find-user/${user2Id}`)
-                .then((res)=>{
-                    setUser2(res.data)
-                })
-                .catch((err)=>{
-                    console.log(err)
-                })
+                    .then((res) => {
+                        setUser2(res.data)
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                    })
             } catch (error) {
                 console.log(error)
             }
         }
 
         getUser();
-    },[currentUser,conversation])
-  return (
-    <Wrapper>
-      <ImgDiv>
-      <Img src={user2?.image ? PF+ user2.image : "/images/avatar.png"} alt="" />
-      </ImgDiv>
-      <RightDiv>
-        <ConversationName >{user2?.username}</ConversationName>
-        <LastMsg>
-            {conversation.lastMessage}
-        </LastMsg>
-      </RightDiv>
-    </Wrapper>
-  )
+    }, [currentUser, conversation])
+    return (
+        <Wrapper>
+            <ImgDiv>
+                <Img src={user2?.image ?
+                    (user2.googleUser
+                        ? user2.image
+                        : PF + user2.image)
+                    : '/images/avatar.png'} alt=""
+                    onError={(e) => e.target.src = "/images/avatar.png"}
+                />
+            </ImgDiv>
+            <RightDiv>
+                <ConversationName >{user2?.username}</ConversationName>
+                <LastMsg>
+                    {conversation.lastMessage}
+                </LastMsg>
+            </RightDiv>
+        </Wrapper>
+    )
 }
 
 export default Conversation

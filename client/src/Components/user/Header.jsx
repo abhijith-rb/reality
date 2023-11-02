@@ -10,6 +10,7 @@ const HeadContainer = styled.div`
     top: 0;
     left: 0;
     z-index: 99;
+   
 `;
 
 const Header = ({setSidebar}) => {

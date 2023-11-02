@@ -17,7 +17,7 @@ const PostsDiv = styled.div`
 
 const PostsHead = styled.h2`
     font-weight: 400;
-    color: #6C737E;
+    color: #12233f;
 `;
 
 const Cards = styled.div`
@@ -41,7 +41,7 @@ const Cards = styled.div`
 `;
 
 
-const Posts = ({ title }) => {
+const Posts = ({ title, type }) => {
     const [posts, setPosts] = useState([]);
     const user = useSelector((state) => state.user.user);
 
@@ -77,7 +77,7 @@ const Posts = ({ title }) => {
         try {
             await axiosInstance.get("/getallproperties")
                 .then((response) => {
-                    setPosts(response.data)
+                    handleTypes(response.data)
                 })
                 .catch((err) => {
 
@@ -91,6 +91,17 @@ const Posts = ({ title }) => {
     useEffect(() => {
         getPosts()
     }, [])
+
+    const handleTypes = (qposts)=>{
+        if(type == "latest"){
+            qposts.reverse()
+        }
+        else if(type=="mostViewed"){
+            qposts.sort((a,b)=> b.views.length - a.views.length);
+            qposts = qposts.slice(0,4);
+        }
+        setPosts(qposts)
+    }
 
     console.log(posts)
 

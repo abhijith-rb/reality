@@ -15,8 +15,8 @@ const MainBox = styled.div`
 
 const Title = styled.h1`
   text-align: center;
-  color: #96B6C5;
-  /* color: #36454F; */
+  /* color: #96B6C5; */
+  color: #36454F;
 `;
 
 const OrderCardBlue = styled.div`

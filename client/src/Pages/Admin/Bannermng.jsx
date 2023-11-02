@@ -21,8 +21,8 @@ const MainBox = styled.div`
 
 const Title = styled.h1`
   text-align: center;
-  color: #96B6C5;
-
+  /* color: #96B6C5; */
+  color: #36454F;
 
 `;
 
@@ -53,6 +53,13 @@ const TableResponsive = styled.div`
   &::-webkit-scrollbar-thumb {
     background: transparent;
   }
+`;
+
+const Img = styled.img`
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    object-fit: cover;
 `;
 
 const Bannermng = () => {
@@ -189,7 +196,7 @@ const Bannermng = () => {
                                     (banners.map((banner) => {
                                         return (<tr key={banner._id}>
                                             <td>{banner.title}</td>
-                                            <td>{banner.image}</td>
+                                            <td><Img src={PF + banner.image}  alt=''/></td>
                                             <td>{banner.description}</td>
                                             <td >
                                                 <Btns>

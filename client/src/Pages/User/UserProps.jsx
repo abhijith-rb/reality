@@ -294,7 +294,7 @@ const UserProps = () => {
                 </TopDiv>
 
                 {properties &&
-                    properties.length > 0 ?
+                    properties?.length > 0 ?
                     (<TableResponsive className="table-responsive">
                         <table className="table table-bordered">
                             <thead>
@@ -330,7 +330,7 @@ const UserProps = () => {
                         </table>
                     </TableResponsive>)
 
-                    : (<h2 style={{ textAlign: 'center', color: "white" }}>No Search Results</h2>)
+                    : (<h2 style={{ textAlign: 'center', color: "#777" }}>No Search Results</h2>)
 
                 }
 

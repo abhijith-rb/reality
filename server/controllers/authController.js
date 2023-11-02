@@ -83,7 +83,7 @@ authCtrl.regenerateToken = async(req,res)=>{
     jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET,(err,user)=>{
         if(err) return res.sendStatus(403);
         const accessToken = generateAccessToken({name:user.name,role:user.role});
-        res.cookie('access_token',accessToken,{httpOnly:true, maxAge: 1000 * 60 })
+        res.cookie('access_token',accessToken,{httpOnly:true, maxAge: 1000 * 60 * 15})
 
         res.send("access-token regenerated");
     })

@@ -72,7 +72,8 @@ const Home = () => {
                           onError={(e)=> e.target.src = "/images/noBanner.jpg"}
                           />
             </Banner>
-          <Posts title="Latest Properties"/>
+          <Posts title="Trending Properties" type="mostViewed" />
+          <Posts title="Latest Properties" type="latest" />
         </>
       }
     </UserLayout>

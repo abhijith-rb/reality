@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 const NavContainer = styled.div`
     width: 100%;
     height: 5vh;
-    /* background-color: #B0D9B1; */
     background-color: #B5CFD8;
     display: flex;
     justify-content: space-between;
@@ -14,20 +13,24 @@ const NavContainer = styled.div`
     }
 `;
 
-const Ul = styled.ul`
-width: 100%;
-  list-style: none;
+const WrapDiv = styled.div`
+  width: 100%;
   display: flex;
+  align-items: center;
   justify-content: space-around;
-/* border: 2px solid red; */
-
 `;
 
-const Li = styled.li`
-  color: #434549;
-  cursor: pointer;
-`;
 
+const Span = styled.span`
+   color: #434549;
+   cursor: pointer;
+   padding: 0px 20px;
+   border: 2px solid transparent;
+   &:hover{
+    border: 2px solid #434549;
+    border-radius: 5px;
+   }
+`;
 
 
 const Navigator = () => {
@@ -38,13 +41,14 @@ const Navigator = () => {
   }
   return (
     <NavContainer>
-        <Ul>
-          <Li onClick={()=>goToList("Buy")}>Buy</Li>
-          <Li onClick={()=>goToList("Rent")}>Rent</Li>
-          <Li onClick={()=>navigate("/blogs")}>Blogs</Li>
-          <Li onClick={()=>navigate("/favorites")}>Favorites</Li>
-        </Ul>
 
+        <WrapDiv>
+          <Span onClick={()=>goToList("Buy")}>Buy</Span>
+          <Span onClick={()=>goToList("Rent")}>Rent</Span>
+          <Span onClick={()=>navigate("/blogs")}>Blogs</Span>
+          <Span onClick={()=>navigate("/favorites")}>Favorites</Span>
+
+        </WrapDiv>
     </NavContainer>
   )
 }

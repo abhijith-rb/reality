@@ -56,10 +56,11 @@ const Blogs = () => {
             </TopDiv>
         }
         <Wrapper>
-            {
+            {blogs.length >0 ?
                 blogs.reverse().map((b,i)=>(
                     <BlogPost post={b} key={i}/>
                 ))
+                : <h2 style={{color:"#777"}}>No Blogs</h2>
             } 
 
         </Wrapper>

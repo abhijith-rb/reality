@@ -15,6 +15,9 @@ const ContentWrapper = styled.div`
 `;
 
 const Content = ({children}) => {
+  useEffect(()=>{
+    window.scrollTo(0,0)
+  },[])
  
   return (
       <ContentWrapper>

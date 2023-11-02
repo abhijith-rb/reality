@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import UserLayout from '../../Components/user/UserLayout';
 import axiosInstance from '../../axios/axiosInstance';
 import LocationMap from '../../Components/LocationMap';
+import axios from 'axios';
 
 const MainBox = styled.div`
   width: 100%;
@@ -58,6 +59,31 @@ const CarouselDiv = styled.div`
     background-color: black;
 `;
 
+const Ul = styled.ul`
+width: 100%;
+height: auto;
+max-height: 60vh;
+  z-index: 7;
+  position: absolute;
+  top: 70px;
+  left: 0;
+border: 2px solid grey;
+background-color: #ffffff;
+color: #777;
+list-style: none;
+`;
+
+const Li = styled.li`
+  cursor:pointer;
+  &:hover{
+    color: orange;
+  }
+`;
+
+const LocDiv = styled.div`
+  position: relative;
+`;
+
 const PostProp = () => {
   const user = useSelector((state) => state.user.user)
   const navigate = useNavigate();
@@ -71,7 +97,19 @@ const PostProp = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
 
   const [previewUrls, setPreviewUrls] = useState([]);
-  const [coordinates,setCoordinates] = useState({lat:28.6139, lng:77.2090})
+  const [coordinates, setCoordinates] = useState({ lat: 28.6139, lng: 77.2090 })
+
+  const [query, setQuery] = useState("");
+  const [box, setBox] = useState(true);
+  const [suggestions, setSuggestions] = useState([]);
+  const [place, setPlace] = useState({ name: "", coords: [] });
+
+
+  const handleSelect = (sgn) => {
+    setBox(false)
+    setQuery(sgn.name);
+    getData(sgn.mapbox_id);
+  }
 
 
   const handleFileChange = (event) => {
@@ -96,17 +134,18 @@ const PostProp = () => {
     const title = titleRef.current.value;
     const type = typeRef.current.value;
     const purpose = purposeRef.current.value;
-    const location = locationRef.current.value;
+    // const location = locationRef.current.value;
     const price = priceRef.current.value;
     const area = areaRef.current.value;
     const description = descriptionRef.current.value;
     const ownerId = user._id;
     const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.webp)$/i;
 
-    if (title === '' || type === '' || purpose === '' || location === '') {
+
+    if (title === '' || type === '' || purpose === '' || query === '') {
       notify("Title, Type, Purpose and Location are required")
       return;
-  }
+    }
 
     const formData = new FormData();
     for (const file of selectedFiles) {
@@ -116,10 +155,11 @@ const PostProp = () => {
       }
       formData.append('images', file)
     }
+
     formData.append('title', title)
     formData.append('type', type)
     formData.append('purpose', purpose)
-    formData.append('location', location)
+    formData.append('location', query)
     formData.append('price', price)
     formData.append('area', area)
     formData.append('description', description)
@@ -148,6 +188,49 @@ const PostProp = () => {
     theme: "dark",
   });
 
+  const handleQuery = (e) => {
+    setBox(true)
+    setQuery(e.target.value)
+  }
+
+  const getData = async (id) => {
+    await axios.get(`https://api.mapbox.com/search/searchbox/v1/retrieve/${id}?session_token=${123}&access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`)
+      .then((res) => {
+        console.log(res.data)
+        console.log(res.data.features)
+        console.log(res.data.features[0].geometry.coordinates)
+        console.log(res.data.features[0].properties.name)
+        const name = res.data.features[0].properties.name;
+        const coords = res.data.features[0].geometry.coordinates;
+        setPlace({ name: name, coords: coords })
+        console.log(coords)
+        setCoordinates({ lat: coords[1], lng: coords[0] });
+
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  const suggest = async () => {
+    await axios.get(`https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}
+    &session_token=${123}&access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`)
+      .then((res) => {
+        console.log(res)
+        console.log(res.data)
+        setSuggestions(res.data.suggestions)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  useEffect(() => {
+    console.log(query)
+    suggest()
+  }, [query])
+
+  console.log(coordinates)
   return (
     <UserLayout>
       <MainBox>
@@ -217,13 +300,26 @@ const PostProp = () => {
               <Form.Control type='text' name='area' ref={areaRef} />
             </Form.Group>
 
+            <LocDiv >
+              <Form.Group controlId='location' >
+                <Form.Label>Location</Form.Label>
+                <Form.Control type='text' name='location' value={query} onChange={handleQuery} />
+                {box &&
+                  suggestions?.length > 0 &&
+                  <Ul>
+                    {
+                      suggestions?.map((sgn) => (
+                        // <Li onClick={()=>getData(sgn.mapbox_id)}>{sgn.name}</Li>
+                        <Li onClick={() => handleSelect(sgn)}>{sgn.name}</Li>
+                      ))
+                    }
+                  </Ul>
+                }
+              </Form.Group>
 
-            <Form.Group controlId='location'>
-              <Form.Label>Location</Form.Label>
-              <Form.Control type='text' name='location' ref={locationRef} />
-            </Form.Group>
+            </LocDiv>
 
-            <LocationMap coordinates={coordinates} setCoordinates={setCoordinates} edit={true}/>
+            {/* <LocationMap coordinates={coordinates} setCoordinates={setCoordinates} edit={true} /> */}
 
             <Form.Group controlId='description'>
               <Form.Label>Description</Form.Label>

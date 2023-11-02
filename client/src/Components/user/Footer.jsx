@@ -18,7 +18,7 @@ const FootLg = styled.div`
     align-items: center;
     justify-content: center;
     padding: 1vh 2vw 0 2vw;
-    color: #3a3d43;
+    /* color: #3a3d43; */
     @media (max-width: 800px){
         flex-direction: column;
         padding: 0 2px;
@@ -46,6 +46,8 @@ const Rightlg = styled.div`
     @media (max-width: 800px){
         width: 95%;
         flex-direction: row;
+        align-items: center;
+        gap: 3vw;
     }
 `;
 
@@ -68,6 +70,7 @@ const Ul = styled.ul`
     display: flex;
     justify-content: space-between;
     gap: 2vw;
+    padding: 0;
 `;
 
 const Footer = () => {
@@ -88,9 +91,9 @@ const Footer = () => {
             <Rightlg>
                 <h4>Connect with us</h4>
                 <Ul>
-                    <li ><a href="https://www.facebook.com" ><Facebook/></a></li>
-                    <li><a href="https://www.youtube.com"><YouTube style={{color:"red"}}/></a></li>
-                    <li><a href="https://www.instagram.com"><Instagram style={{color:"magenta"}}/></a></li>
+                    <li><i class="fa-brands fa-facebook fa-xl" style={{color: "#2e4876"}} href="https://www.facebook.com" ></i></li>
+                    <li><i class="fa-brands fa-youtube fa-xl" style={{color: "#cd1818"}} href="https://www.youtube.com"></i></li>
+                    <li><i class="fa-brands fa-square-instagram fa-xl" style={{color: "#ae1e33"}} href="https://www.instagram.com"></i></li>
                 </Ul>
             </Rightlg>
         </FootLg>

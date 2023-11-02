@@ -36,13 +36,18 @@ const Ul = styled.ul`
 const Li = styled.li`
   cursor: pointer;
   margin-bottom:3vh;
+  padding: 0 20px;
+  border: 2px solid transparent;
+  &:hover{
+    border: 2px solid #434549;
+    border-radius: 10px;
+  }
 `;
 
 const Logo = styled.span`
     color: #6C737E;
     font-size: 2rem;
     cursor: pointer;
-    font-family: 'Times New Roman', Times, serif;
     font-style: italic;
     flex: 2;
     margin-left: 1vw;
@@ -96,12 +101,12 @@ const UserSidebar = ({setSidebar}) => {
           {user?.subscribed && <Li onClick={()=>navigate("/userprops")}>My Properties</Li>}
           <Li onClick={()=>navigate("/blogs")}>Blogs</Li>
           {user?.role === "user"
-            ?<Li >
+            ?
               <Button variant='outline-danger' onClick={handleLogout}>Logout</Button> 
-              </Li>
-            :<Li >
+              
+            :
               <Button variant='outline-primary' onClick={()=>navigate("/login")}> Login</Button>
-              </Li>
+              
         }
         </Ul>
 

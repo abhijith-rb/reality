@@ -36,13 +36,18 @@ const Ul = styled.ul`
 const Li = styled.li`
   cursor: pointer;
   margin-bottom:3vh;
+  padding: 0 20px;
+  border: 2px solid transparent;
+  &:hover{
+    border: 2px solid #434549;
+    border-radius: 10px;
+  }
 `;
 
 const Logo = styled.span`
     color: #ffffff;
     font-size: 2rem;
     cursor: pointer;
-    font-family: 'Times New Roman', Times, serif;
     font-style: italic;
     flex: 2;
     /* margin-left: 1vw; */
@@ -87,20 +92,18 @@ const Sidebar = ({ setShowSBar }) => {
         <Li onClick={() => navigate("/admin/propmng")}>Properties</Li>
         <Li onClick={() => navigate("/admin/bannermng")}>Banners</Li>
         <Li onClick={() => navigate("/admin/blogmng")}>Blogs</Li>
-        <Li>
+
+        {/* <Li>
           {user?.role === "admin"
             ? (<Button variant='danger' onClick={handleLogout}>
               Logout
             </Button>)
 
-
             : (<Button onClick={() => navigate('/login')}>
               Login
             </Button>)
-
-
           }
-        </Li>
+        </Li> */}
 
       </Ul>
 

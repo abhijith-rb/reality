@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -7,6 +7,7 @@ import { Button, NavItem, Navbar } from 'react-bootstrap'
 import axios from 'axios';
 import MenuIcon from '@mui/icons-material/Menu';
 import axiosInstance from '../../axios/axiosInstance';
+import { ArrowDropDownCircle } from '@mui/icons-material';
 
 
 const HeadContainer = styled.div`
@@ -29,7 +30,6 @@ const Logo = styled.span`
     color: #ffffff;
     font-size: 2rem;
     cursor: pointer;
-    font-family: 'Times New Roman', Times, serif;
     font-style: italic;
     flex: 2;
     margin-left: 1vw;
@@ -54,6 +54,27 @@ const AuthDiv = styled.div`
     width: 24vw;
     align-items: center;
     justify-content: space-evenly;
+    position: relative;
+`;
+
+const AuthMain = styled.div`
+    cursor: pointer;
+`;
+
+const AuthSub = styled.div`
+min-width: 10vw;
+height: auto;
+    position: absolute;
+    top: 50px;
+    right: 40%;
+    background-color: #ffffff;
+    padding: 2vh 2vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    gap: 2vh;
 `;
 
 const Img = styled.img`
@@ -78,6 +99,7 @@ const AdminHeader = ({ setShowSBar }) => {
     const user = useSelector((state) => state.user.user)
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [box,setBox] = useState(false)
 
     const handleLogout = async () => {
         await axiosInstance.delete('/auth/logout')
@@ -108,21 +130,31 @@ const AdminHeader = ({ setShowSBar }) => {
 
            
 
-            <div>
+            <AuthDiv>
+                <AuthMain onClick={()=>setBox(!box)}>
+                    <Img src='/images/avatar.png'/>
+                    <ArrowDropDownCircle style={{color:"white"}}/>
 
-                {user?.role === "admin"
-                    ? (<Button variant='danger' onClick={handleLogout}>
-                        Logout
-                    </Button>)
+                </AuthMain>
+
+                {
+                    box &&
+                    <AuthSub>
+                        <span>Admin</span>
+                        {user?.role === "admin"
+                            ? (<Button variant='danger' onClick={handleLogout}>
+                                Logout
+                            </Button>)
 
 
-                    : (<Button onClick={() => navigate('/login')}>
-                        Login
-                    </Button>)
-
+                            : (<Button onClick={() => navigate('/login')}>
+                                Login
+                            </Button>)
+                        }
+                    </AuthSub>
 
                 }
-            </div>
+            </AuthDiv>
 
         </HeadContainer>
     )

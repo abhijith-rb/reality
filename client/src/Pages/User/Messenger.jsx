@@ -8,7 +8,7 @@ import Message from '../../Components/chat/Message';
 import { setCurrentChat } from '../../redux/chatReducer';
 import { Cancel, VideoCall } from '@mui/icons-material';
 import axiosInstance from '../../axios/axiosInstance';
-import {v4} from 'uuid'
+import { v4 } from 'uuid'
 import NotifyVc from '../../Components/chat/NotifyVc';
 import { useNavigate } from 'react-router-dom';
 
@@ -186,12 +186,12 @@ const Messenger = () => {
     const scrollRef = useRef();
     const currentChat = useSelector((state) => state.chat.current)
     console.log("firstCurrentChat", currentChat)
-    const [roomId,setRoomId] = useState()
+    const [roomId, setRoomId] = useState()
     const navigate = useNavigate()
     const SocketUrl = process.env.REACT_APP_SOCKET_URL;
 
     const [callerName, setCallerName] = useState("An User")
-    const [callnotice,setCallnotice] = useState(false)
+    const [callnotice, setCallnotice] = useState(false)
 
     const msgRef = useRef();
 
@@ -237,12 +237,12 @@ const Messenger = () => {
 
         })
 
-        socket.current.on('notifyCall', ({callerName,roomId}) => {
+        socket.current.on('notifyCall', ({ callerName, roomId }) => {
             console.log(`video call from ${callerName} notified`)
             setCallerName(callerName)
             setRoomId(roomId)
             setCallnotice(true)
-            
+
         })
 
         return () => {
@@ -373,7 +373,7 @@ const Messenger = () => {
         navigate(`/room/${roomId}`)
         socket.current.emit('room-id', {
             receiverId,
-            username:user.username,
+            username: user.username,
             roomId
         })
     }
@@ -403,7 +403,12 @@ const Messenger = () => {
                                     <ChatBoxTopWrap>
                                         <ChatInfo>
                                             <InfoLeft>
-                                                <Img src={recInfo?.image ? PF + recInfo.image : "/images/avatar.png"} alt="" />
+                                                <Img src={recInfo?.image ?
+                                                    (recInfo.googleUser
+                                                        ? recInfo.image
+                                                        : PF + recInfo.image)
+                                                    : '/images/avatar.png'} alt=""
+                                                    onError={(e) => e.target.src = "/images/avatar.png"} />
                                                 <span>{recInfo?.username}</span>
                                             </InfoLeft>
                                             <InfoRight>
@@ -455,10 +460,10 @@ const Messenger = () => {
                         }
 
 
-                {callnotice && <NotifyVc callerName={callerName} setCallNotice={setCallnotice} roomId={roomId}/>}
+                        {callnotice && <NotifyVc callerName={callerName} setCallNotice={setCallnotice} roomId={roomId} />}
                     </ChatBoxWrapper>
                 </ChatBox>
-                
+
             </Wrapper>
 
         </UserLayout>

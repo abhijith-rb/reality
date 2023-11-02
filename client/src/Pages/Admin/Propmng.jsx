@@ -21,7 +21,8 @@ const MainBox = styled.div`
 
 const Title = styled.h1`
   text-align: center;
-  color: #96B6C5;
+  /* color: #96B6C5; */
+  color: #36454F;
 
 `;
 
@@ -100,7 +101,7 @@ const Propmng = () => {
                     .catch((err) => {
                         console.log(err)
                         notify(err.response.data.msg)
-                       
+
                     })
             }
         } catch (error) {
@@ -115,7 +116,7 @@ const Propmng = () => {
                 console.log(response.data);
                 setProperties(response.data)
             })
-            .catch((err)=>{
+            .catch((err) => {
                 console.log(err)
             })
     }
@@ -135,7 +136,7 @@ const Propmng = () => {
                 })
                 .catch((err) => {
                     console.log(err)
-                    
+
                 })
         }
     }
@@ -147,21 +148,21 @@ const Propmng = () => {
 
     function formatPrice(price) {
         if (typeof price !== 'number' || isNaN(price)) {
-          return 'N/A'; 
+            return 'N/A';
         }
-      
+
         if (price >= 10000000) {
-    
-          const formattedPrice = (price / 10000000).toFixed(2);
-          return formattedPrice.endsWith('.00') ? formattedPrice.slice(0, -3) + ' Cr' : formattedPrice + ' Cr';
-        } 
-        else if (price >= 100000) {
-          const formattedPrice = (price / 100000).toFixed(2);
-          return formattedPrice.endsWith('.00') ? formattedPrice.slice(0, -3) + ' Lac' : formattedPrice + ' Lac';
-        } else {
-          return price.toLocaleString('en-IN');
+
+            const formattedPrice = (price / 10000000).toFixed(2);
+            return formattedPrice.endsWith('.00') ? formattedPrice.slice(0, -3) + ' Cr' : formattedPrice + ' Cr';
         }
-      }
+        else if (price >= 100000) {
+            const formattedPrice = (price / 100000).toFixed(2);
+            return formattedPrice.endsWith('.00') ? formattedPrice.slice(0, -3) + ' Lac' : formattedPrice + ' Lac';
+        } else {
+            return price.toLocaleString('en-IN');
+        }
+    }
 
     return (
         <AdminLayout>
@@ -177,7 +178,7 @@ const Propmng = () => {
 
                     <div>
 
-                        <Form onSubmit={handleSearch} className='searchForm' style={{ width: "100%", display: "flex", alignItems: "center"}}>
+                        <Form onSubmit={handleSearch} className='searchForm' style={{ width: "100%", display: "flex", alignItems: "center" }}>
                             <Form.Group controlId="formBasicInput"  >
                                 <Form.Control type="text" name='search' ref={searchRef} placeholder="Search here..." />
                             </Form.Group>
@@ -187,45 +188,46 @@ const Propmng = () => {
                     </div>
 
                 </TopDiv>
-                
+
                 {
                     properties?.length > 0 ?
-                    (<TableResponsive className="table-responsive">
-                        <table className="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Location</th>
-                                    <th>Price</th>
-                                    <th style={{ textAlign: "center" }}>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    (properties.map((property) => {
-                                        return (<tr key={property._id}>
-                                            <td>{property.title}</td>
-                                            <td>{property.location}</td>
-                                            <td>₹ {formatPrice(property.price)}</td>
-                                            <td >
-                                                <Btns>
+                        (<TableResponsive className="table-responsive">
+                            <table className="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Location</th>
+                                        <th>Price</th>
+                                        <th style={{ textAlign: "center" }}>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        (properties.map((property) => {
+                                            return (<tr key={property._id} onClick={()=>navigate(`/post-detail/${property._id}`)} 
+                                            style={{cursor:"pointer"}}>
+                                                <td>{property.title}</td>
+                                                <td>{property.location}</td>
+                                                <td>₹ {formatPrice(property.price)}</td>
+                                                <td >
+                                                    <Btns>
 
-                                                    <Button variant='warning' onClick={() => navigate(`/admin/editproperty/${property._id}`)}>Edit</Button>
-                                                    <Button variant='danger' onClick={() => showDeleteModal(property._id, property.title)}>Delete</Button>
-                                                </Btns>
-                                            </td>
-                                        </tr>)
-                                    }))
+                                                        <Button variant='warning' onClick={(e) =>{e.stopPropagation(); navigate(`/admin/editproperty/${property._id}`)}}>Edit</Button>
+                                                        <Button variant='danger' onClick={(e) =>{ e.stopPropagation() ;showDeleteModal(property._id, property.title)}}>Delete</Button>
+                                                    </Btns>
+                                                </td>
+                                            </tr>)
+                                        }))
 
 
 
-                                }
+                                    }
 
-                            </tbody>
-                        </table>
-                    </TableResponsive>)
+                                </tbody>
+                            </table>
+                        </TableResponsive>)
 
-                    : (<h2 style={{ textAlign: 'center', color: "#777" }}>No Search Results</h2>)
+                        : (<h2 style={{ textAlign: 'center', color: "#777" }}>No Search Results</h2>)
 
                 }
 
