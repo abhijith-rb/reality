@@ -130,7 +130,7 @@ const Propmng = () => {
         const squery = searchRef.current.value;
         console.log(squery)
         if (squery) {
-            await axiosInstance.get(`/search-property?squery=${squery}`)
+            await axiosInstance.get(`/prop-search?squery=${squery}`)
                 .then((response) => {
                     setProperties(response.data)
                 })

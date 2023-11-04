@@ -7,6 +7,7 @@ const Dcard = styled.div`
     padding-top: 1vh;
     padding-bottom: 1vh;
     padding-left: 3vw;
+    padding-right: 3vw;
     width: 100%;
     background-color: #ffffff;
     font-weight:500;

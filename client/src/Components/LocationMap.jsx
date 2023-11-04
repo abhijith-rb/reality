@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import GoogleMapReact from 'google-map-react';
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
+import { LocationOn, Room } from '@mui/icons-material';
 
 const Marker = styled.div`
   position: relative;
@@ -8,9 +9,9 @@ const Marker = styled.div`
   height: 32px; 
 `;
 
-const Pin = styled.div`
+const PinStyle = styled.div`
   position: absolute;
-  bottom: 0;
+  top: 25%;
   left: 50%;
   transform: translateX(-50%);
   width: 8px; 
@@ -19,16 +20,32 @@ const Pin = styled.div`
   border-radius: 50%; 
 `;
 
+const PulseAnim = keyframes`
+  0%{
+    transform: scale(1);
+  }
+  50%{
+    transform: scale(1.2);
+  }
+  100%{
+    transform: scale(1);
+  }
+`;
+
 const Pulse = styled.div`
   position: absolute;
   bottom: 0;
-  left: 50%;
+  left: 0;
   transform: translateX(-50%);
   width: 16px; 
   height: 16px; 
   border: 2px solid red; 
   border-radius: 50%; 
-  animation: pulse-animation 2s infinite; 
+  animation: ${PulseAnim} 2s infinite;
+  display :flex ;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
 `;
 
 const LocationMap = ({coordinates,setCoordinates,edit}) => {
@@ -58,8 +75,10 @@ const LocationMap = ({coordinates,setCoordinates,edit}) => {
                 draggable={true}
                 onDragend={edit && onMarkerDragEnd}
             >
-                <Pin/>
-                <Pulse/>
+                
+                <Pulse>
+                  <LocationOn style={{color:"red",fontSize:"48px"}}/>
+                </Pulse>  
             </Marker>    
         </GoogleMapReact>
 

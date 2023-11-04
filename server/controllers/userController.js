@@ -256,6 +256,27 @@ userCtrl.searchProperties = async (req, res) => {
     }
   };
 
+userCtrl.propSearch = async (req, res) => {
+    console.log(req.query)
+    const squery = req.query.squery;
+    try {
+      if (squery) {
+        console.log(squery)
+        
+        const regex = new RegExp(squery, 'i');
+        const properties = await Property.find(
+            { 
+             $or:[{title: {$regex:regex}} ,{location: {$regex:regex}}],
+            });
+        console.log(properties);
+        res.status(200).json(properties);
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ msg: "Something went wrong" });
+    }
+  };
+
 userCtrl.deleteImg = async (req, res) => {
     const propId = req.params.id;
     const filename = req.query.filename;

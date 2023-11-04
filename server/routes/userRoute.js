@@ -5,6 +5,7 @@ const userCtrl = require('../controllers/userController');
 router.get('/getallproperties', userCtrl.getAllProps)
 router.get('/getproperty/:id', userCtrl.getSpecificProperty)
 router.get('/search-property', userCtrl.searchProperties)
+router.get('/prop-search', userCtrl.propSearch)
 router.get('/find-user/:id', userCtrl.findUser)
 
 router.get('/getfavs/:id',userCtrl.authenticateToken, userCtrl.getFavorites)

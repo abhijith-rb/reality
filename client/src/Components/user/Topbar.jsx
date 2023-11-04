@@ -116,13 +116,16 @@ const Bar = styled.input`
 const SgBoxDiv = styled.div`
 width: 100%;
 background-color: #ffffff;
-border: 2px solid grey ;
 border-radius: 10px;
+box-shadow: 
+    12px 12px 16px 0 rgba(0, 0, 0, 0.25),
+    -8px -8px 12px 0 rgba(255, 255, 255, 0.3);
     display: flex;
     z-index: 7;
   position: absolute;
   top: 40px;
   left: 0;
+  padding: 1vh 1vw;
   @media (max-width:800px){
     flex-direction: column;
   }
@@ -134,7 +137,6 @@ height: auto;
 max-height: 60vh;
 /* border: 2px solid grey; */
 background-color: #ffffff;
-color: #777;
 list-style: none;
 margin: 0;
 padding-left: 5px;
@@ -144,8 +146,9 @@ border-radius: 10px;
 
 const Li = styled.li`
   cursor:pointer;
+  color: #444;
   &:hover{
-    color: blueviolet;
+    color: #7393A7;
   }
 `;
 
@@ -250,7 +253,7 @@ const Topbar = ({ setSidebar }) => {
                                 }
                             </Ul>
 
-                             <Close onClick={() => setBox(false)} style={{cursor:"pointer"}}/>
+                            <Close onClick={() => setBox(false)} style={{ cursor: "pointer", color: "#444" }} />
                         </SgBoxDiv>
                     }
                 </SearchCombo>

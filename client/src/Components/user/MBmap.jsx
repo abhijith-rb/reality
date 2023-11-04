@@ -81,7 +81,7 @@ const MBmap = () => {
 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      accessToken:"pk.eyJ1IjoiYWotci1iIiwiYSI6ImNsbnlqajUxZTB4MHEybGxla2JybmViOWIifQ.TKkEoSF3eJQTPRtsAfYruw",
+      accessToken:process.env.REACT_APP_MAPBOX_TOKEN,
       style: "mapbox://styles/mapbox/streets-v12",
       center:[lng,lat],
       zoom: zoom
@@ -109,7 +109,7 @@ const MBmap = () => {
 
   const suggest = async()=>{
     await axios.get(`https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}
-    &session_token=${123}&access_token=${"pk.eyJ1IjoiYWotci1iIiwiYSI6ImNsbnlqajUxZTB4MHEybGxla2JybmViOWIifQ.TKkEoSF3eJQTPRtsAfYruw"}`)
+    &session_token=${123}&access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`)
     .then((res)=>{
       console.log(res)
       console.log(res.data)
@@ -126,7 +126,7 @@ const MBmap = () => {
   },[query])
 
   const getData = async(id)=>{
-    await axios.get(`https://api.mapbox.com/search/searchbox/v1/retrieve/${id}?session_token=${123}&access_token=${"pk.eyJ1IjoiYWotci1iIiwiYSI6ImNsbnlqajUxZTB4MHEybGxla2JybmViOWIifQ.TKkEoSF3eJQTPRtsAfYruw"}`)
+    await axios.get(`https://api.mapbox.com/search/searchbox/v1/retrieve/${id}?session_token=${123}&access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`)
     .then((res)=>{
       console.log(res.data)
       console.log(res.data.features)
