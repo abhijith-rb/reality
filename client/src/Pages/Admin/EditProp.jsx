@@ -66,7 +66,7 @@ const Ul = styled.ul`
 width: 100%;
 height: auto;
 max-height: 60vh;
-border: 2px solid grey;
+border: 2px solid #7393A7;
 background-color: #ffffff;
 color: #777;
 list-style: none;
@@ -75,7 +75,7 @@ list-style: none;
 const Li = styled.li`
   cursor:pointer;
   &:hover{
-    color: orange;
+    color: #7393A7;
   }
 `;
 

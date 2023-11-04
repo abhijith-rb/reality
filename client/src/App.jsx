@@ -40,7 +40,6 @@ import Bannermng from './Pages/Admin/Bannermng';
 import EditBanner from './Pages/Admin/EditBanner';
 import { useEffect } from 'react';
 import axiosInstance from './axios/axiosInstance';
-import MBmap from './Components/user/MBmap';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -133,7 +132,6 @@ function App() {
 
         <Route path='*' element={<Notfound/>}/>
 
-        <Route path='/test' element={<MBmap/>} />
       </Routes>
 
       </BrowserRouter>
