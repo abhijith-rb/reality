@@ -8,11 +8,14 @@ import SellerCard from '../../Components/user/SellerCard';
 import { styled } from 'styled-components';
 import axiosInstance from '../../axios/axiosInstance';
 import { useSelector } from 'react-redux';
+import PrimeDeets from '../../Components/user/PrimeDeets';
+import Gallery from './Gallery';
 
 const Wrapper = styled.div`
     width: 100%;
     height: auto;
     /* background-color: #eeebeb; */
+    position: relative;
 `;
 
 const ContainerDiv = styled.div`
@@ -25,12 +28,12 @@ const ContainerDiv = styled.div`
 `;
 
 const MainDiv = styled.div`
-    flex:6;
+    flex:7;
     margin-bottom: 3rem;
 `;
 
 const SideDiv = styled.div`
-    flex:3;
+    flex:2;
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -45,6 +48,7 @@ const Detail = () => {
   const [post,setPost] = useState({})
   const [date,setDate] = useState("");
   const user = useSelector((state)=>state.user.user);
+  const [galOpen,setGalOpen] = useState(false);
 
 
   const getProperty = async() => {
@@ -87,7 +91,8 @@ const Detail = () => {
         <Wrapper>
             <ContainerDiv>
                 <MainDiv>
-                    <Imagecard post={post}/>
+                    <PrimeDeets post={post} setGalOpen={setGalOpen}/>
+                    {/* <Imagecard post={post}/> */}
                     <DetailsCard post={post}/>
                 </MainDiv>
                 <SideDiv>
@@ -96,6 +101,8 @@ const Detail = () => {
 
             </ContainerDiv>
         </Wrapper>
+
+        {galOpen && <Gallery images={post?.images} setGalOpen={setGalOpen}/>}
     </UserLayout>
   )
 }

@@ -114,18 +114,31 @@ userCtrl.addProperty = async (req, res) => {
     const { title, type, purpose, location, price, area, description, ownerId } = req.body;
     const coordinates = JSON.parse(req.body.coordinates)
     console.log(coordinates)
+    let propObj = { title, type, purpose, location, price, area, 
+        description, ownerId, coordinates}
     try {
-        if (req.files) {
-            const images = req.files;
-            const newProperty = new Property({ title, type, purpose, location, price, area, description, ownerId, coordinates, images });
-            await newProperty.save();
+
+        if(type === "Residential"){
+            const {bed,bath,tfloors,age} = req.body;
+            propObj = {...propObj,bed,bath,tfloors,age}
+        }
+        else if(type === "Commercial"){
+            const {floor,wash,lift} = req.body;
+            propObj = {...propObj,floor,wash,lift}
+        }
+        else if(type === "Plot"){
+            const {wall,built,opens} = req.body;
+            propObj = {...propObj,wall,built,opens}
+        }
+
+        if (req.files.length) {
+            propObj.images = req.files;
             console.log("img Present")
         }
-        else {
-            const newProperty = new Property({ title, type, purpose, location, price, area, description, coordinates, ownerId });
-            await newProperty.save();
-            console.log("img Absent")
-        }
+
+        const newProperty = new Property(propObj);
+        await newProperty.save();
+
         console.log("New Property saved");
         res.status(200).json({ msg: "New Property saved" })
     } catch (error) {
@@ -171,31 +184,40 @@ userCtrl.updateProperty = async (req, res) => {
     console.log("checkpoint 3125")
     const propId = req.params.id;
     console.log(propId)
+    console.log(req.body)
+    const { title, type, purpose, location, price, area, description } = req.body;
+    const coordinates = JSON.parse(req.body.coordinates)
+    let propObj = { title, type, purpose, location, price, area, 
+        description, coordinates}
     try {
-        console.log(req.body)
-        const { title, type, purpose, location, price, area, description } = req.body;
-        const coordinates = JSON.parse(req.body.coordinates)
+
+        if(type === "Residential"){
+            const {bed,bath,tfloors,age} = req.body;
+            propObj = {...propObj,bed,bath,tfloors,age}
+        }
+        else if(type === "Commercial"){
+            const {floor,wash,lift} = req.body;
+            propObj = {...propObj,floor,wash,lift}
+        }
+        else if(type === "Plot"){
+            const {wall,built,opens} = req.body;
+            propObj = {...propObj,wall,built,opens}
+        }
 
         if (req.files.length) {
-            console.log(req.files)
-            console.log("checkpoint 3125 img")
-
             const images = req.files;
+            console.log("img Present")
+            
             const updatedProperty = await Property.findByIdAndUpdate(propId, {
-                $set: {
-                    title, type, purpose, location, price, area, description, coordinates
-                },
+                $set: propObj,
                 $push: { images: { $each: images } }
             }, { new: true })
             res.status(200).json(updatedProperty)
         }
         else {
             console.log("checkpoint 3125 no img")
-            console.log(title, type)
             const updatedProperty = await Property.findByIdAndUpdate(propId, {
-                $set: {
-                    title, type, purpose, location, price, area, description, coordinates
-                }
+                $set: propObj
             }, { new: true })
             res.status(200).json(updatedProperty)
         }

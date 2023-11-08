@@ -308,15 +308,16 @@ const UserProps = () => {
                             <tbody>
                                 {
                                     (properties.map((property) => {
-                                        return (<tr key={property._id}>
+                                        return (<tr key={property._id} onClick={()=>navigate(`/post-detail/${property._id}`)} 
+                                        style={{cursor:"pointer"}}>
                                             <td>{property.title}</td>
                                             <td>{property.location}</td>
                                             <td>₹ {formatPrice(property.price)}</td>
                                             <td >
                                                 <Btns>
 
-                                                    <Button variant='warning' onClick={() => navigate(`/updateproperty/${property._id}`)}>Edit</Button>
-                                                    <Button variant='danger' onClick={() => showDeleteModal(property._id, property.title)}>Delete</Button>
+                                                    <Button variant='warning' onClick={(e) =>{e.stopPropagation(); navigate(`/updateproperty/${property._id}`)}}>Edit</Button>
+                                                    <Button variant='danger' onClick={(e) =>{e.stopPropagation(); showDeleteModal(property._id, property.title)}}>Delete</Button>
                                                 </Btns>
                                             </td>
                                         </tr>)

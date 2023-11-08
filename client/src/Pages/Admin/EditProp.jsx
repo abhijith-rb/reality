@@ -7,16 +7,14 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import AdminLayout from '../../Components/admin/AdminLayout';
 import axiosInstance from '../../axios/axiosInstance';
-import LocationMap from '../../Components/LocationMap';
 import axios from 'axios';
 import { Close } from '@mui/icons-material';
 
 const MainBox = styled.div`
   width: 100%;
-  min-height: 150vh;
+  min-height: 50vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -66,10 +64,12 @@ const Ul = styled.ul`
 width: 100%;
 height: auto;
 max-height: 60vh;
-border: 2px solid #7393A7;
 background-color: #ffffff;
 color: #777;
 list-style: none;
+margin: 0;
+padding-left: 5px;
+border-radius: 10px;
 `;
 
 const Li = styled.li`
@@ -83,19 +83,26 @@ const LocDiv = styled.div`
   position: relative;
 `;
 
+const CheckDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3vh;
+`;
+
 const SgBoxDiv = styled.div`
-width: 100%;
-background-color: #ffffff;
-border: 2px solid grey ;
-border-radius: 10px;
+    width: 100%;
+    background-color: #ffffff;
+    border: 2px solid #7393A7;
+    border-radius: 10px;
     display: flex;
     z-index: 7;
-  position: absolute;
-  top: 70px;
-  left: 0;
-  @media (max-width:800px){
-    flex-direction: column;
-  }
+    position: absolute;
+    top: 70px;
+    left: 0;
+    padding: 1vh 1vw;
+    @media (max-width:800px){
+        flex-direction: column;
+    }
 `;
 
 const EditProp = () => {
@@ -104,32 +111,59 @@ const EditProp = () => {
     console.log(path)
     const propId = path.pathname.split("/")[3];
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const titleRef = useRef();
-    const typeRef = useRef();
-    const purposeRef = useRef();
-    const locationRef = useRef();
-    const priceRef = useRef();
-    const areaRef = useRef();
-    const descriptionRef = useRef();
-    const [selectedFiles, setSelectedFiles] = useState([]);
 
+    const [property, setProperty] = useState({
+        title: "",
+        type: "Residential",
+        purpose: "Buy",
+        location: "",
+        price: 5000,
+        area: "",
+        description: "",
+        bed: 1,
+        bath: 1,
+        tfloors: 1,
+        age: 1,
+        floor: 1,
+        wash: 1,
+        lift: 1,
+        wall: false,
+        built: false,
+        opens: 1,
+    })
+
+
+    const [selectedFiles, setSelectedFiles] = useState([]);
     const [oldImgs, setOldImgs] = useState([]);
     const [previewUrls, setPreviewUrls] = useState([]);
     const [coordinates, setCoordinates] = useState({ lat: 28.6139, lng: 77.2090 })
 
-    const [query, setQuery] = useState("");
     const [box, setBox] = useState(false);
     const [suggestions, setSuggestions] = useState([]);
+    const [page, setPage] = useState(1);
+
+    const handleFirst = () => {
+        if (property.title === '' || property.type === ''
+            || property.purpose === '' || property.location === '') {
+            notify("Title, Type, Purpose and Location are required")
+            return;
+        }
+        setPage(2);
+    }
+
+    const handleSecond = () => {
+        setPage(3)
+    }
 
     const handleSelect = (sgn) => {
         setBox(false)
-        setQuery(sgn.name);
+        setProperty((prev) => ({ ...prev, location: sgn.name }))
         getData(sgn.mapbox_id);
     }
 
-    const handleQuery = (e) => {
+    const handlelocation = (e) => {
         setBox(true)
-        setQuery(e.target.value)
+        setProperty((prev) => ({ ...prev, location: e.target.value }))
     }
 
     const getData = async (id) => {
@@ -139,9 +173,7 @@ const EditProp = () => {
                 console.log(res.data.features)
                 console.log(res.data.features[0].geometry.coordinates)
                 console.log(res.data.features[0].properties.name)
-                const name = res.data.features[0].properties.name;
                 const coords = res.data.features[0].geometry.coordinates;
-                // setPlace({ name: name, coords: coords })
                 console.log(coords)
                 setCoordinates({ lat: coords[1], lng: coords[0] });
 
@@ -152,7 +184,7 @@ const EditProp = () => {
     }
 
     const suggest = async () => {
-        await axios.get(`https://api.mapbox.com/search/searchbox/v1/suggest?q=${query}
+        await axios.get(`https://api.mapbox.com/search/searchbox/v1/suggest?q=${property.location}
         &session_token=${123}&access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`)
             .then((res) => {
                 console.log(res)
@@ -165,25 +197,19 @@ const EditProp = () => {
     }
 
     useEffect(() => {
-        console.log(query)
+        console.log(property.location)
         suggest()
-    }, [query])
+    }, [property.location])
+
     const getProperty = async () => {
         await axiosInstance.get(`/getproperty/${propId}`)
             .then((response) => {
-                const property = response.data;
-                console.log(property.images);
+                const fetchedData = response.data;
+                console.log(fetchedData.images);
+                setProperty((prev) => ({ ...prev, ...fetchedData }))
 
-                titleRef.current.value = property.title;
-                typeRef.current.value = property.type;
-                purposeRef.current.value = property.purpose;
-                // locationRef.current.value = property.location;
-                setQuery(property.location)
-                priceRef.current.value = property.price;
-                areaRef.current.value = property.area;
-                descriptionRef.current.value = property.description;
-                property.coordinates && setCoordinates(property.coordinates)
-                property.images && setOldImgs(property.images);
+                fetchedData.coordinates && setCoordinates(fetchedData.coordinates)
+                fetchedData.images && setOldImgs(fetchedData.images);
             })
             .catch((err) => {
                 console.log(err)
@@ -216,18 +242,16 @@ const EditProp = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const title = titleRef.current.value;
-        const type = typeRef.current.value;
-        const purpose = purposeRef.current.value;
-        // const location = locationRef.current.value;
-        const price = priceRef.current.value;
-        const area = areaRef.current.value;
-        const description = descriptionRef.current.value;
+
         const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.webp)$/i;
 
-
-        if (title === '' || type === '' || purpose === '' || query === '') {
+        if (property.title === '' || property.type === '' || property.purpose === '' || property.location === '') {
             notify("Title, Type, Purpose and Location are required")
+            return;
+        }
+
+        if (property.price < 1000 || property.area === '') {
+            notify("Enter a valid price and Area")
             return;
         }
 
@@ -240,15 +264,32 @@ const EditProp = () => {
             formData.append('images', file)
         }
 
-        formData.append('title', title)
-        formData.append('type', type)
-        formData.append('purpose', purpose)
-        formData.append('location', query)
-        formData.append('price', price)
-        formData.append('area', area)
-        formData.append('description', description)
+        formData.append('title', property.title)
+        formData.append('type', property.type)
+        formData.append('purpose', property.purpose)
+        formData.append('location', property.location)
+        formData.append('price', property.price)
+        formData.append('area', property.area)
+        formData.append('description', property.description)
         formData.append('coordinates', JSON.stringify(coordinates))
-        console.log(title)
+
+        if (property.type === "Residential") {
+            formData.append('bed', property.bed)
+            formData.append('bath', property.bath)
+            formData.append('tfloors', property.tfloors)
+            formData.append('age', property.age)
+
+        } else if (property.type === "Commercial") {
+            formData.append('floor', property.floor)
+            formData.append('wash', property.wash)
+            formData.append('lift', property.lift)
+
+        } else if (property.type === "Plot") {
+            formData.append('wall', property.wall)
+            formData.append('built', property.built)
+            formData.append('opens', property.opens)
+
+        }
 
         await axiosInstance.post(`/updateproperty/${propId}`, formData)
             .then((response) => {
@@ -278,6 +319,9 @@ const EditProp = () => {
             })
     }
 
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [page])
 
     return (
         <AdminLayout>
@@ -286,114 +330,267 @@ const EditProp = () => {
 
                     <Title>Edit Property</Title>
 
-                    {[...oldImgs, ...previewUrls].length > 0 &&
-                        <ImageBox>
+                    {
+                        page === 1 &&
 
-                            <Carousel >
-
-                                {
-                                    [...oldImgs, ...previewUrls].map((elem, i) => {
-                                        return (
-                                            <CarouselDiv key={i}>
-                                                <Img src={elem.filename ? PF + elem.filename : elem} alt="" />
-                                                {elem.filename &&
-                                                    <>
-
-                                                        <DeleteIcon onClick={() => imgremover(elem.filename)}
-                                                            style={{ color: "red", cursor: "pointer", position: "absolute", right: "35px", top: "10px" }} />
-                                                    </>
-
-                                                }
-                                            </CarouselDiv>
-                                        )
-                                    })}
+                        <Form style={{ marginTop: "1rem" }}>
 
 
-                            </Carousel>
-
-                        </ImageBox>
-                    }
-
-                    <Form onSubmit={handleSubmit} style={{ marginTop: "1rem" }}>
-
-                        <Form.Group controlId="ControlFile">
-                            <Form.Control
-                                type="file"
-                                name="images"
-                                multiple
-                                onChange={handleFileChange}
-                            />
-                        </Form.Group>
-
-                        <Form.Group controlId='title'>
-                            <Form.Label>Title</Form.Label>
-                            <Form.Control type='text' name='title' ref={titleRef} />
-                        </Form.Group>
-
-                        <Form.Group controlId='type'>
-                            <Form.Label>Type</Form.Label>
-                            <Form.Select type='text' name='type' ref={typeRef}>
-                                <option value="Residential">Residential</option>
-                                <option value="Commercial">Commercial</option>
-                                <option value="Plot">Plot</option>
-                            </Form.Select>
-                        </Form.Group>
-
-                        <Form.Group controlId='purpose'>
-                            <Form.Label>Purpose</Form.Label>
-                            <Form.Select type='text' name='purpose' ref={purposeRef}>
-                                <option value="Rent">Rent</option>
-                                <option value="Buy">Buy</option>
-                            </Form.Select>
-                        </Form.Group>
-
-                        <Form.Group controlId='price'>
-                            <Form.Label>Price</Form.Label>
-                            <Form.Control type='number' name='price' ref={priceRef} min={0} />
-                        </Form.Group>
-                        <Form.Group controlId='area'>
-                            <Form.Label>Area</Form.Label>
-                            <Form.Control type='text' name='area' ref={areaRef} />
-                        </Form.Group>
-
-                        <LocDiv >
-                            <Form.Group controlId='location' >
-                                <Form.Label>Location</Form.Label>
-                                <Form.Control type='text' name='location' value={query} onChange={handleQuery} />
-                                {box &&
-                                    suggestions?.length > 0 &&
-                                    <SgBoxDiv>
-
-                                        <Ul>
-                                            {
-                                                suggestions?.map((sgn) => (
-                                                    <Li onClick={() => handleSelect(sgn)}>{sgn.name}</Li>
-                                                ))
-                                            }
-                                        </Ul>
-                                        <Close onClick={() => setBox(false)} style={{ cursor: "pointer" }} />
-
-                                    </SgBoxDiv>
-                                }
+                            <Form.Group controlId='title'>
+                                <Form.Label>Title</Form.Label>
+                                <Form.Control type='text' name='title' value={property.title}
+                                    onChange={(e) => setProperty((prev) => ({ ...prev, title: e.target.value }))
+                                    } />
+                            </Form.Group>
+                            <Form.Group controlId='type'>
+                                <Form.Label>Type</Form.Label>
+                                <Form.Select type='text' name='type' value={property.type}
+                                    onChange={(e) => setProperty((prev) => ({ ...prev, type: e.target.value }))
+                                    }>
+                                    <option value="Residential">Residential</option>
+                                    <option value="Commercial">Commercial</option>
+                                    <option value="Plot">Plot</option>
+                                </Form.Select>
                             </Form.Group>
 
-                        </LocDiv>
+                            <Form.Group controlId='purpose'>
+                                <Form.Label>Purpose</Form.Label>
+                                <Form.Select type='text' name='purpose' value={property.purpose}
+                                    onChange={(e) => setProperty((prev) => ({ ...prev, purpose: e.target.value }))
+                                    }>
+                                    <option value="Buy">Buy</option>
+                                    <option value="Rent">Rent</option>
+                                </Form.Select>
+                            </Form.Group>
 
-                        {/* <LocationMap coordinates={coordinates} setCoordinates={setCoordinates} edit={true} /> */}
+                            <LocDiv >
+                                <Form.Group controlId='location' >
+                                    <Form.Label>Location</Form.Label>
+                                    <Form.Control type='text' name='location' value={property.location} onChange={handlelocation} />
+                                    {box &&
+                                        suggestions?.length > 0 &&
+                                        <SgBoxDiv>
+                                            <Ul>
+                                                {
+                                                    suggestions?.map((sgn) => (
+                                                        <Li onClick={() => handleSelect(sgn)}>{sgn.name}</Li>
+                                                    ))
+                                                }
+                                            </Ul>
+                                            <Close onClick={() => setBox(false)} style={{ cursor: "pointer", color: "#444" }} />
 
-                        <Form.Group controlId='description'>
-                            <Form.Label>Description</Form.Label>
-                            <Form.Control as='textarea' rows={4} style={{ maxHeight: "15vh" }}
-                                name='description' ref={descriptionRef} />
-                        </Form.Group>
+                                        </SgBoxDiv>
+                                    }
+                                </Form.Group>
 
-                        <Btns>
+                            </LocDiv>
 
-                            <Button type='submit'>Submit</Button>
-                            <Button onClick={() => navigate("/admin/propmng")} variant='secondary'>Cancel</Button>
-                        </Btns>
+                            <Btns>
 
-                    </Form>
+                                <Button onClick={() => navigate("/admin/propmng")} variant='secondary'>Cancel</Button>
+                                <Button type='button' onClick={handleFirst}>Next</Button>
+
+                            </Btns>
+
+                        </Form>
+
+                    }
+
+                    {page === 2 &&
+                        property.type === "Residential"
+                        &&
+                        <Form>
+                            <Form.Group controlId='bed'>
+                                <Form.Label>Bedrooms</Form.Label>
+                                <Form.Control type='number' name='bed' value={property.bed} min={0}
+                                    onChange={(e) => setProperty((prev) => ({ ...prev, bed: e.target.value }))}
+                                />
+                            </Form.Group>
+                            <Form.Group controlId='bath'>
+                                <Form.Label>Bathrooms</Form.Label>
+                                <Form.Control type='number' name='bath' value={property.bath} min={0}
+                                    onChange={(e) => setProperty((prev) => ({ ...prev, bath: e.target.value }))}
+
+                                />
+                            </Form.Group>
+                            <Form.Group controlId='tfloors'>
+                                <Form.Label>Total floors</Form.Label>
+                                <Form.Control type='number' name='tfloors' value={property.tfloors} min={0}
+                                    onChange={(e) => setProperty((prev) => ({ ...prev, tfloors: e.target.value }))}
+
+                                />
+                            </Form.Group>
+                            <Form.Group controlId='age'>
+                                <Form.Label>Property Age</Form.Label>
+                                <Form.Control type='number' name='age' value={property.age} min={0}
+                                    onChange={(e) => setProperty((prev) => ({ ...prev, age: e.target.value }))}
+
+                                />
+                            </Form.Group>
+
+                            <Btns>
+
+                                <Button onClick={() => setPage(1)} variant='secondary'>Back</Button>
+                                <Button type='button' onClick={handleSecond}>Next</Button>
+
+                            </Btns>
+                        </Form>
+                    }
+
+                    {page === 2 &&
+                        property.type === "Commercial"
+                        &&
+                        <Form>
+                            <Form.Group controlId='floor'>
+                                <Form.Label>Floor</Form.Label>
+                                <Form.Control type='number' name='floor' value={property.floor} min={0}
+                                    onChange={(e) => setProperty((prev) => ({ ...prev, floor: e.target.value }))}
+
+                                />
+                            </Form.Group>
+                            <Form.Group controlId='wash'>
+                                <Form.Label>Washrooms</Form.Label>
+                                <Form.Control type='number' name='wash' value={property.wash} min={0}
+                                    onChange={(e) => setProperty((prev) => ({ ...prev, wash: e.target.value }))}
+
+                                />
+                            </Form.Group>
+                            <Form.Group controlId='lift'>
+                                <Form.Label>Lifts</Form.Label>
+                                <Form.Control type='number' name='lift' value={property.lift} min={0}
+                                    onChange={(e) => setProperty((prev) => ({ ...prev, lift: e.target.value }))}
+
+                                />
+                            </Form.Group>
+
+                            <Btns>
+
+                                <Button onClick={() => setPage(1)} variant='secondary'>Back</Button>
+                                <Button type='button' onClick={handleSecond}>Next</Button>
+
+                            </Btns>
+                        </Form>
+                    }
+
+                    {page === 2 &&
+                        property.type === "Plot"
+                        &&
+                        <Form>
+                            <Form.Group controlId='openSides'>
+                                <Form.Label>Open Sides</Form.Label>
+                                <Form.Control type='number' name='openSides' value={property.opens} min={0}
+                                    onChange={(e) => setProperty((prev) => ({ ...prev, opens: e.target.value }))}
+
+                                />
+                            </Form.Group>
+
+                            <Form.Group controlId='wall'>
+                                <CheckDiv>
+                                    <Form.Label>Boundary wall</Form.Label>
+                                    <Form.Check type='checkbox' name='wall' checked={property.wall}
+                                        onChange={(e) => setProperty((prev) => ({ ...prev, wall: e.target.checked }))}
+
+                                    />
+
+                                </CheckDiv>
+                            </Form.Group>
+                            <Form.Group controlId='built'>
+                                <CheckDiv>
+                                    <Form.Label>Any Construction done</Form.Label>
+                                    <Form.Check type='checkbox' name='built' checked={property.built}
+                                        onChange={(e) => setProperty((prev) => ({ ...prev, built: e.target.checked }))}
+
+                                    />
+                                </CheckDiv>
+                            </Form.Group>
+
+
+                            <Btns>
+
+                                <Button onClick={() => setPage(1)} variant='secondary'>Back</Button>
+                                <Button type='button' onClick={handleSecond}>Next</Button>
+
+                            </Btns>
+                        </Form>
+                    }
+
+                    {page === 3 &&
+                        <>
+
+                            {[...oldImgs, ...previewUrls].length > 0 &&
+                                <ImageBox>
+
+                                    <Carousel >
+
+                                        {
+                                            [...oldImgs, ...previewUrls].map((elem, i) => {
+                                                return (
+                                                    <CarouselDiv key={i}>
+                                                        <Img src={elem.filename ? PF + elem.filename : elem} alt="" />
+                                                        {elem.filename &&
+                                                            <>
+
+
+                                                                <DeleteIcon onClick={() => imgremover(elem.filename)}
+                                                                    style={{ color: "red", cursor: "pointer", position: "absolute", right: "35px", top: "10px" }} />
+                                                            </>
+
+                                                        }
+                                                    </CarouselDiv>
+                                                )
+                                            })}
+
+
+                                    </Carousel>
+
+                                </ImageBox>
+                            }
+
+                            <Form onSubmit={handleSubmit} style={{ marginTop: "1rem" }}>
+                                <Form.Group controlId="ControlFile">
+                                    <Form.Control
+                                        type="file"
+                                        name="images"
+                                        multiple
+                                        onChange={handleFileChange}
+                                    />
+                                </Form.Group>
+
+                                <Form.Group controlId='price'>
+                                    <Form.Label>Price</Form.Label>
+                                    <Form.Control type='number' name='price'
+                                        value={property.price} min={0}
+                                        onChange={(e) => setProperty((prev) => ({ ...prev, price: e.target.value }))}
+                                    />
+                                </Form.Group>
+
+                                <Form.Group controlId='area'>
+                                    <Form.Label>Area</Form.Label>
+                                    <Form.Control type='text' name='area'
+                                        value={property.area}
+                                        onChange={(e) => setProperty((prev) => ({ ...prev, area: e.target.value }))}
+                                    />
+                                </Form.Group>
+
+                                <Form.Group controlId='description'>
+                                    <Form.Label>Description</Form.Label>
+                                    <Form.Control as='textarea' rows={4} style={{ maxHeight: "15vh" }}
+                                        name='description' value={property.description}
+                                        onChange={(e) => setProperty((prev) => ({ ...prev, description: e.target.value }))}
+                                    />
+                                </Form.Group>
+
+                                <Btns>
+
+                                    <Button onClick={() => setPage(2)} variant='secondary'>Back</Button>
+                                    <Button type='submit'>Submit</Button>
+
+                                </Btns>
+                            </Form>
+                        </>
+
+                    }
+
                 </Edit>
 
 

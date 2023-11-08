@@ -65,7 +65,7 @@ const DetailsCard = ({post}) => {
 
   return (
     <Dcard>
-        <h1 style={{marginBottom:'4vh'}}>Property Details</h1>
+        <h1 style={{marginBottom:'4vh'}}>More Details</h1>
 
         <Ul>
           <Li>

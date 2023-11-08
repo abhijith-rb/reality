@@ -16,7 +16,6 @@ const Card = styled.div`
 const CarouselImage = styled.div`
     width: 100%;
     height: 450px;
-    /* background-color: #88C4FE; */
 `;
 
 const Img = styled.img`

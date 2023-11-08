@@ -14,6 +14,7 @@ const Sellercardx= styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     border-radius: 10px;
     box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5);
     font-family: 'Montserrat', sans-serif;
@@ -40,8 +41,8 @@ const Img = styled.img`
 `;
 
 const LongBtn = styled.button`
-    width: 60%;
-    height: 5vh;
+    width: 75%;
+    min-height: 5vh;
     font-weight: bold;
     margin-top: 1rem;
     color: #1876D0;
@@ -50,7 +51,7 @@ const LongBtn = styled.button`
     border-radius: 5px;
 `;
 
-const Title = styled.h3`
+const Title = styled.h4`
     color: #ffffff;
 `
 
