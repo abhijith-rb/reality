@@ -240,20 +240,10 @@ const UserProps = () => {
                 <div className="row">
 
                     <div className="col-md-4 col-xl-4">
-                        <OrderCardPink>
+                        <OrderCardBlue>
                             <CardBlock>
                                 <h3 className="m-b-20">Property Views</h3>
                                 <Head2 ><Preview style={{ fontSize: '35px' }} /><span>{cardDeets?.views}</span></Head2>
-                                {/* <p className="m-b-0">Completed Orders<Fright className="f-right">351</Fright></p> */}
-                            </CardBlock>
-                        </OrderCardPink>
-                    </div>
-
-                    <div className="col-md-4 col-xl-4">
-                        <OrderCardBlue>
-                            <CardBlock>
-                                <h3 className="m-b-20">Sales Listings</h3>
-                                <Head2 ><Business style={{ fontSize: '35px' }} /><span>{cardDeets?.buys}</span></Head2>
                                 {/* <p className="m-b-0">Completed Orders<Fright className="f-right">351</Fright></p> */}
                             </CardBlock>
                         </OrderCardBlue>
@@ -262,11 +252,21 @@ const UserProps = () => {
                     <div className="col-md-4 col-xl-4">
                         <OrderCardYellow>
                             <CardBlock>
-                                <h3 className="m-b-20">Rental Listings</h3>
-                                <Head2 ><Apartment style={{ fontSize: '35px' }} /><span>{cardDeets?.rents}</span></Head2>
+                                <h3 className="m-b-20">My Listings</h3>
+                                <Head2><Business style={{ fontSize: '35px' }} /><span>{cardDeets?.ownerProps}</span></Head2>
                                 {/* <p className="m-b-0">Completed Orders<Fright className="f-right">351</Fright></p> */}
                             </CardBlock>
                         </OrderCardYellow>
+                    </div>
+
+                    <div className="col-md-4 col-xl-4">
+                        <OrderCardPink onClick={()=>navigate("/subscribe")}>
+                            <CardBlock>
+                                <h3 className="m-b-20">Subscription</h3>
+                                <Head2><CardMembership style={{ fontSize: '35px' }} /><span>{cardDeets?.subDoc?.plan.toUpperCase()}</span></Head2>
+                                <p style={{marginTop:"4vh"}} className="m-b-0">Valid upto: {cardDeets?.subDoc?.endDate.split('T')[0]}</p>
+                            </CardBlock>
+                        </OrderCardPink>
                     </div>
 
                   

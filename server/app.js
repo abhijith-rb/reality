@@ -11,11 +11,40 @@ const cookieParser = require('cookie-parser')
 const path = require("path");
 const cors = require("cors");
 const socketConnect = require('./socket/socket.js');
+const cron = require('node-cron');
+const Subscription = require('./models/SubscribeModel.js');
+const User = require('./models/UserModel.js')
 
 const PORT = process.env.PORT || 8800;
 const MongoURI = process.env.MongoURI;
 console.log(MongoURI)
 const ClientUrl = process.env.ClientUrl;
+
+cron.schedule('0 0 * * *',async()=>{
+    console.log("Cron running successfully")
+    const currentDate = Date.now();
+    const query = {endDate:{$lt:currentDate}};
+
+    try {
+        const expiredSubs = await Subscription.find(query);
+        console.log(expiredSubs)
+    
+        await Subscription.updateMany(query,
+                {$set:{status:'expired'}},{new:true}
+            )
+    
+        const userIds = expiredSubs.map((sub=>sub.userId));
+    
+        const userFindQuery = {_id:{$in:userIds}};
+    
+        await User.updateMany(userFindQuery,{
+            $set:{subscribed:false}
+        })
+        
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 app.use((req, res, next) => {
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');

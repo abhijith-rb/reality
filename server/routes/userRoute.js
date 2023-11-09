@@ -16,8 +16,12 @@ router.post('/updateproperty/:id',userCtrl.authenticateToken, userCtrl.upload.ar
 router.get('/deleteproperty/:id',userCtrl.authenticateToken, userCtrl.deleteProperty)
 router.delete('/deleteimg/:id',userCtrl.authenticateToken, userCtrl.deleteImg)
 router.get('/getuserprops/:id',userCtrl.authenticateToken, userCtrl.getUserProps)
+
 router.post('/subscribe/:id/to',userCtrl.authenticateToken, userCtrl.createSubscription)
+router.put('/unsubscribe/:id',userCtrl.authenticateToken, userCtrl.unsubscribe)
+router.get('/get-subscription-data/:id',userCtrl.authenticateToken, userCtrl.getSubscriptionData)
 router.post('/verifypayment',userCtrl.authenticateToken, userCtrl.checkVerified)
+router.put('/payment-failure',userCtrl.authenticateToken, userCtrl.FailedPayment)
 
 router.put('/likeprop',userCtrl.authenticateToken, userCtrl.likeProp)
 router.put('/addview', userCtrl.authenticateToken, userCtrl.addView)

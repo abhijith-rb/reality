@@ -10,24 +10,21 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import { updateUser } from '../../redux/userReducer';
 import axiosInstance from '../../axios/axiosInstance';
+import SubscribedApp from '../../Components/user/SubscribedApp';
 
 const Wrapper = styled.div`
-    /* min-height: 120vh; */
     display: flex;
-    /* align-items: center; */
     justify-content: center;
-    /* background-color: yellow; */
 `;
 
 const FormWrap = styled.div`
     width: 80vw;
-    /* min-height: 80vh; */
     height: fit-content;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 3vh;
-    background-color: #B0D9B1;
+    background-color: #B5CFD8;
     padding: 3vh 3vw;
     margin-bottom:3vh;
 `;
@@ -35,7 +32,6 @@ const FormWrap = styled.div`
 const SubBox = styled.div`
     width:100%;
     height: auto;
-    /* border: 2px solid grey; */
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -47,7 +43,6 @@ const SubBox = styled.div`
 
 const MonthBox = styled.div`
     min-width:20vw;
-    /* max-width:40vw; */
     height: 30vh;
     padding: 2vh 2vw;
     display: flex;
@@ -64,7 +59,6 @@ const MonthBox = styled.div`
 
 const YearBox = styled.div`
     min-width:20vw;
-    /* max-width:40vw; */
     height: 30vh;
     padding: 2vh 2vw;
     display: flex;
@@ -79,33 +73,45 @@ const YearBox = styled.div`
     }
 `;
 
+const SubedDiv = styled.div`
+    width: 80vw;
+    min-height: 30vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3vh;
+    background-color: #B5CFD8;
+    padding: 3vh 3vw;
+    margin-bottom:3vh;
+`;
+
 const Subscribe = () => {
     const user = useSelector((state) => state.user.user)
     const [Razorpay] = useRazorpay();
     const navigate = useNavigate()
     const notify = (msg) => toast(msg);
     const [isSub,setIsSub] = useState(false)
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     console.log(user)
 
     const razorPayment = (order) => {
         console.log(order)
         const options = {
-            key: "rzp_test_6JFoZx1fYTkS3n",
+            key: process.env.REACT_APP_RAZORPAY_KEY,
             amount: order.amount, 
             currency: 'INR',
-            name: 'Reality',
+            name: 'Realify',
             description: 'Payment for Order',
-            image: '/path/to/your/logo.png', 
+            image: '/favicon.png', 
             order_id: order.id, 
             handler: function (response) {
                 verifyPayment(response, order,user._id)
                 console.log(response);
             },
             prefill: {
-                name: 'John Doe',
-                email: 'johndoe@example.com',
+                name: 'Abhijith',
+                email: 'abhijithrb91@gmail.com',
                 contact: '1234567890',
             },
             notes: {
@@ -116,6 +122,9 @@ const Subscribe = () => {
             }
         }
         const rzp = new Razorpay(options);
+        rzp.on('payment.failed',()=>{
+            paymentFailure(order.receipt);
+        })
         rzp.open();
     }
 
@@ -133,9 +142,20 @@ const Subscribe = () => {
         })
     }
 
+    const paymentFailure = async(docId)=>{
+        await axiosInstance.put("/payment-failure",{docId})
+        .then((res)=>{
+            notify(res.data.msg)
+        })
+        .catch((err)=>{
+            notify(err.response.data.msg)
+        })
+        
+    }
+
 
     const handleSub = async (plan) => {
-        console.log("handlesub called")
+        console.log("handlesub called",plan)
         await axiosInstance.post(`/subscribe/${user._id}/to/?plan=${plan}`)
             .then((res) => {
                 console.log(res.data)
@@ -148,10 +168,18 @@ const Subscribe = () => {
 
     }
 
+
     return (
         <UserLayout>
             <Wrapper>
-                <FormWrap>
+                {/* <FormWrap> */}
+                    
+                    {user?.subscribed
+                        ? 
+                        <SubscribedApp/>
+
+                        :
+                        <FormWrap>
                     <h2>Subscribe to the App</h2>
                     <h5>Terms & Conditions</h5>
                     <p>By subscribing to Realify, you agree to comply with these Terms 
@@ -166,11 +194,6 @@ const Subscribe = () => {
                            will not be liable for any damages resulting from app use. These terms 
                            are governed by India's laws, and we may update them periodically, with 
                            the latest version available on the Realify app. For questions, contact us at realify@gmail.com.</p>
-                    
-                    {user?.subscribed
-                        ? <h2 style={{color:"green"}}>Congrats!!! You are subscribed to this App.</h2>
-
-                        :
                         <SubBox>
                             <MonthBox>
                                 <h3>₹500/month</h3>
@@ -185,8 +208,9 @@ const Subscribe = () => {
                                 <Button variant='danger' onClick={()=>handleSub("yearly")}>Select</Button>
                             </YearBox>
                         </SubBox>
+                        </FormWrap>
                     }
-                </FormWrap>
+                {/* </FormWrap> */}
             </Wrapper>
             <ToastContainer/>
         </UserLayout>

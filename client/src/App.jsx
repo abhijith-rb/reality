@@ -108,6 +108,7 @@ function App() {
           <Route path='/messenger' element={<Messenger/>}/>
           <Route path='/favorites' element={<Favorites/>}/>
           <Route path='/room/:roomId' element={<RoomPage/>}/>
+          <Route path='/subscribe' element={<Subscribe/>}/>
         </Route>
 
         <Route element={<SubscribedRoute/>}>
@@ -116,7 +117,6 @@ function App() {
           <Route path='/updateproperty/:id' element={<UpdateProp/>}/>
         </Route>
 
-        <Route path='/subscribe' element={<Subscribe/>}/>
         
         <Route element={<AuthRoute />}>
           <Route path='register' element={<Register/>} />

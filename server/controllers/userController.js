@@ -6,8 +6,8 @@ const Banner = require('../models/BannerModel');
 const Razorpay = require('razorpay');
 const Subscription = require('../models/SubscribeModel');
 const instance = new Razorpay({
-    key_id: 'rzp_test_6JFoZx1fYTkS3n',
-    key_secret: 'Q15DfBbJFIrDy1K1FTsDE7CA',
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_SECRET,
 });
 const objectId = require('mongoose').Types.ObjectId;
 const bcrypt = require('bcrypt')
@@ -329,12 +329,12 @@ userCtrl.getUserProps = async (req, res) => {
                        }
                 ]}
                 );
-            console.log(properties)
+            // console.log(properties)
             res.status(200).json(properties)
         }
         else {
             const properties = await Property.find({ ownerId: userId });
-            console.log(properties)
+            // console.log(properties)
             res.status(200).json(properties)
         }
     } catch (error) {
@@ -353,13 +353,27 @@ userCtrl.findUser = async (req, res) => {
     }
 }
 
+const deleteSubsDoc = async(orderId)=>{
+    try {
+        const orderid = new objectId(orderId);
+        const docExists = await Subscription.findOne({_id:orderid});
+        if(!docExists) return;
+        
+        await Subscription.deleteOne({_id:orderid});
+        console.log("failed subdoc deleted")
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 const changePaymentStatus = (orderId) => {
     return new Promise((resolve, reject) => {
         const orderid = new objectId(orderId);
         Subscription.updateOne({ _id: orderid },
             {
                 $set: {
-                    paymentStatus: 'Success'
+                    paymentStatus: 'Success',
+                    status: 'active',
                 }
             }).then(() => {
                 resolve()
@@ -370,7 +384,7 @@ const changePaymentStatus = (orderId) => {
 const verifyPayment = (payment) => {
     return new Promise((resolve, reject) => {
         const crypto = require('crypto');
-        let hmac = crypto.createHmac('sha256', 'Q15DfBbJFIrDy1K1FTsDE7CA');
+        let hmac = crypto.createHmac('sha256', process.env.RAZORPAY_SECRET);
 
         hmac.update(payment['razorpay_order_id'] + '|' + payment['razorpay_payment_id']);
         hmac = hmac.digest('hex');
@@ -384,9 +398,7 @@ const verifyPayment = (payment) => {
 };
 
 userCtrl.checkVerified = async (req, res) => {
-    const payment = req.body.payment;
-    const order = req.body.order;
-    const userId = req.body.userId;
+    const {payment,order,userId} = req.body;
 
     verifyPayment(payment)
         .then(() => {
@@ -406,6 +418,7 @@ userCtrl.checkVerified = async (req, res) => {
 
             })
         }).catch((err) => {
+            deleteSubsDoc(order.receipt)
             res.json({ status: false, msg: 'Failed Payment' })
         })
 }
@@ -434,19 +447,41 @@ const generateRazorpay = (orderId, total) => {
 
 userCtrl.createSubscription = async (req, res) => {
     const userId = req.params.id;
+
+    const subActive = await Subscription.findOne({userId,status:'active'});
+    if(subActive){
+        res.status(403).json({msg:"User already has an active subscription"})
+    }
     const plan = req.query.plan;
     let price;
+    let startDate = Date.now();
+    let endDate;
+
     if (plan === "monthly") {
-        price = 500
+        price = 500;
+        const currentTimestamp = Date.now();
+        const currentDate = new Date(currentTimestamp);
+        currentDate.setDate(currentDate.getDate() + 30);
+        console.log(currentDate);
+        endDate = currentDate;
+        
     } else if (plan === "yearly") {
-        price = 6000
+        price = 6000;
+        const currentTimestamp = Date.now();
+        const currentDate = new Date(currentTimestamp);
+        currentDate.setDate(currentDate.getDate() + 365);
+        console.log(currentDate);
+        endDate = currentDate;
     }
 
     const newSub = new Subscription({
         userId: userId,
         plan: plan,
         price: price,
+        startDate,
+        endDate
     })
+    
     try {
         const savedSub = await newSub.save()
         const subId = savedSub._id;
@@ -455,6 +490,34 @@ userCtrl.createSubscription = async (req, res) => {
         res.status(200).json(order)
     } catch (error) {
         res.status(500).json(error)
+    }
+}
+
+userCtrl.FailedPayment = async(req,res)=>{
+    const docId = req.body.docId;
+    try {
+        deleteSubsDoc(docId);
+        res.status(200).json({msg:"Payment failed"})
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({msg:"Something went wrong"})
+    }
+}
+
+userCtrl.unsubscribe = async(req,res)=>{
+    const userId = req.params.id;
+    try {
+        await Subscription.updateOne({userId,status:'active'},{
+            $set:{status:'canceled'}
+        })
+    
+        const user = await User.findOneAndUpdate({_id:userId},{
+            $set:{subscribed:false}
+        },{new:true})
+        res.status(200).json({msg:"Unsubscribed the app",user})
+        
+    } catch (error) {
+        res.status(500).json({msg:"Something went wrong"})
     }
 }
 
@@ -596,13 +659,24 @@ userCtrl.getOwnerPropDeets = async(req,res)=>{
           
    
         const views = viewAgt.length === 0 ? 0 :  viewAgt[0].viewCount;
-        const buys = await Property.find({ownerId:userId , purpose:"Buy"}).countDocuments().exec()
-        const rents = await Property.find({ownerId:userId , purpose:"Rent"}).countDocuments().exec()
+        const ownerProps = await Property.find({ownerId:userId}).countDocuments().exec();
+        const subDoc = await Subscription.findOne({userId,status:'active'})
 
-        console.log({views,buys,rents})
-        res.status(200).json({views,buys,rents})
+        console.log({views,ownerProps,subDoc})
+        res.status(200).json({views,ownerProps,subDoc})
     } catch (error) {
-        res.status(500).json({msg:"Something went wrong 56"})
+        res.status(500).json({msg:"Something went wrong"})
+    }
+}
+
+userCtrl.getSubscriptionData = async(req,res)=>{
+    const userId = req.params.id;
+    try{
+        const subDoc = await Subscription.findOne({userId,status:'active'});
+        res.status(200).json(subDoc)
+    }catch(err){
+        console.log(err)
+        res.status(500).json({msg:"Something went wrong"})
     }
 }
 

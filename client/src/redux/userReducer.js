@@ -29,11 +29,11 @@ export const userSlice = createSlice({
     },
     updateUser:(state,action)=>{
       state.user = action.payload;
-    }
-
+    },
+   
   }
 })
 
-export const { loginStart, loginSuccess, loginFailure, logout, updateUser } = userSlice.actions;
+export const { loginStart, loginSuccess, loginFailure, logout, updateUser, subscriptionUpdate } = userSlice.actions;
 
 export default userSlice.reducer;
