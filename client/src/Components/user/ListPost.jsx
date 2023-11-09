@@ -141,7 +141,9 @@ const ListPost = ({post}) => {
       <Link to={`/post-detail/${post?._id}`} key={post?._id} style={{textDecoration:'none', color:"#555"}}>
     <PostWrap>
         <ImgDiv>
-            <Img src={post?.images[0] ? PF + post?.images[0]?.filename : "/images/noPropImg.png"} alt=''/>
+            <Img src={post?.images[0] ? PF + post?.images[0]?.filename : "/images/noPropImg.png"} alt=''
+                        onError={(e)=> e.target.src = "/images/noPropImg.png"}
+            />
         </ImgDiv>
         <DetailsDiv>
             <h4>{post?.title}</h4>

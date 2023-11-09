@@ -4,15 +4,18 @@ import Modal from 'react-bootstrap/Modal';
 
  
 export default function DeleteConfirmation ({ showModal, confirmModal, hideModal, message })  {
+  const FootStyle = {
+    display:"flex",
+    justifyContent:"space-around",
+  }
     return (
-      <div className='delBox'>
-        <Modal show={showModal} onHide={hideModal}>
-        <Modal.Header closeButton>
+        <Modal show={showModal} onHide={hideModal} >
+        <Modal.Header closeButton >
           
           <Modal.Title>Delete Confirmation</Modal.Title>
         </Modal.Header>
         <Modal.Body><div className="alert alert-danger">{message}</div></Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer style={FootStyle}>
           <Button variant="default" onClick={hideModal}>
             Cancel
           </Button>
@@ -21,7 +24,6 @@ export default function DeleteConfirmation ({ showModal, confirmModal, hideModal
           </Button>
         </Modal.Footer>
       </Modal>
-      </div>
     )
     
 }

@@ -59,7 +59,7 @@ const OrderCardPink = styled.div`
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
   height: 24vh;
-
+  cursor: pointer;
 `;
 
 const CardBlock = styled.div`

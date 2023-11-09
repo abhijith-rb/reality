@@ -3,7 +3,6 @@ import UserLayout from '../../Components/user/UserLayout'
 import { styled } from 'styled-components';
 import { Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import useRazorpay from 'react-razorpay'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -73,17 +72,6 @@ const YearBox = styled.div`
     }
 `;
 
-const SubedDiv = styled.div`
-    width: 80vw;
-    min-height: 30vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3vh;
-    background-color: #B5CFD8;
-    padding: 3vh 3vw;
-    margin-bottom:3vh;
-`;
 
 const Subscribe = () => {
     const user = useSelector((state) => state.user.user)

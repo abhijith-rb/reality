@@ -80,7 +80,6 @@ const Propmng = () => {
     const submitDelete = () => {
         handleDelete();
         hideConfirmationModal();
-
     }
 
     const notify = (msg) => toast(msg);
