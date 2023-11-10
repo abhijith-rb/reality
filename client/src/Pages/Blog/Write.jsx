@@ -74,7 +74,6 @@ const FixedTextareaContainer = styled.div`
   max-width: 40vw; 
  border-radius: 5px;
   height: auto; 
-  /* border: 3px solid #ccc;  */
   padding: 10px; 
   display: flex;
   flex-direction: column; 
@@ -88,11 +87,11 @@ const FixedTextarea = styled.textarea`
   width: 100%;
   height: 100%;
   resize: none;
-  border: none;
   outline: none;
   padding: 1vh 2vw;
   margin: 0;
   border-radius: 10px;
+  border: 3px solid #777; 
 
 `;
 
