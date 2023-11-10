@@ -347,7 +347,8 @@ userCtrl.getUserProps = async (req, res) => {
 userCtrl.findUser = async (req, res) => {
     try {
         const user = await User.findById(req.params.id)
-        res.status(200).json({ username: user.username, image: user.image })
+        const response = {username: user.username, image: user.image, googleUser: user.googleUser}
+        res.status(200).json(response)
     } catch (error) {
         res.status(500).json(error)
     }

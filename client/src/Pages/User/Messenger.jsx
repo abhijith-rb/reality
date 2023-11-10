@@ -15,13 +15,11 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Wrapper = styled.div`
-    /* height: calc(100vh - 70px); */
     height: fit-content;
     display: flex;
 `;
 
 const ChatMenu = styled.div`
-    /* flex: 2; */
     width: 20vw;
     @media (max-width: 800px){
         flex:3;
@@ -29,7 +27,6 @@ const ChatMenu = styled.div`
 `;
 
 const ChatBox = styled.div`
-    /* flex: 4; */
     width: 50vw;
     display: flex;
     justify-content: center;
@@ -46,7 +43,6 @@ const ChatBoxWrapper = styled.div`
     padding: 10px;
     height: 100%;
     width: 100%;
-    /* background-color: red; */
 `;
 
 const ChatBoxTopWrap = styled.div`
@@ -197,12 +193,12 @@ const Messenger = () => {
 
     const [recInfo, setRecinfo] = useState(null)
 
-    const peer = useRef();
-
     const receiverId = currentChat?.members?.find((member) => member !== user._id)
     console.log("receiverId", receiverId)
 
     const getUser = async () => {
+        setRecinfo(null)
+        
         try {
             await axiosInstance.get(`/find-user/${receiverId}`)
                 .then((res) => {
@@ -378,15 +374,14 @@ const Messenger = () => {
         })
     }
 
-    console.log(peer)
-
+    console.log(conversations)
     return (
         <UserLayout>
             <Wrapper>
                 <ChatMenu>
                     <ChatMenuWrapper>
                         {conversations.map((c, i) => (
-                            <div onClick={() => dispatch(setCurrentChat(c))}>
+                            <div key={i} onClick={() => dispatch(setCurrentChat(c))}>
                                 <Conversation key={i} conversation={c}
                                     currentUser={user} />
                             </div>
@@ -404,7 +399,7 @@ const Messenger = () => {
                                         <ChatInfo>
                                             <InfoLeft>
                                                 <Img src={recInfo?.image ?
-                                                    (recInfo.googleUser
+                                                        (recInfo.googleUser
                                                         ? recInfo.image
                                                         : PF + recInfo.image)
                                                     : '/images/avatar.png'} alt=""
@@ -426,7 +421,7 @@ const Messenger = () => {
                                             {messages.map((m) => (
                                                 <div ref={scrollRef}>
                                                     <Message key={m._id} message={m}
-                                                        own={m.senderId === user._id} receiverId={receiverId} />
+                                                        own={m.senderId === user._id} />
                                                 </div>
                                             ))
 

@@ -11,7 +11,7 @@ const PostsDiv = styled.div`
     display: flex;
     flex-direction: column;
     padding-bottom: 5vh;
-    padding-left: 2vw;
+    /* padding-left: 2vw; */
     font-weight:500;
 `;
 
@@ -21,11 +21,12 @@ const PostsHead = styled.h2`
 `;
 
 const Cards = styled.div`
-    width: fit-content;
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
     margin-top: 15px;
-    gap: 3rem;
+    gap: 4vw;
+    padding-left: 2vw;
     
     &::-webkit-scrollbar {
         width: 0.01em;
@@ -37,6 +38,11 @@ const Cards = styled.div`
     
       &::-webkit-scrollbar-thumb {
         background: transparent;
+      }
+
+      @media (max-width:1000px){
+        justify-content: center;
+        padding-left: 0;
       }
 `;
 

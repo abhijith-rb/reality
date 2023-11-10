@@ -16,14 +16,12 @@ const Card = styled.div`
     cursor: pointer;
     box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5);
     background-color: #ffffff;
-    @media (max-width:800px) {
+    @media (max-width:1000px) {
         width: 36vw;
-        height: 55vh;
     }
 
-    @media (max-width:500px) {
+    @media (max-width:600px) {
         width: 85vw;
-        height: 55vh;
     }
 `;
 

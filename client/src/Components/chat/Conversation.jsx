@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components';
 import axiosInstance from '../../axios/axiosInstance';
+import { useSelector } from 'react-redux';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -56,28 +57,31 @@ const LastMsg = styled.span`
     }
 `;
 
-const Conversation = ({ conversation, currentUser }) => {
+const Conversation = ({ conversation, currentUser}) => {
     const [user2, setUser2] = useState(null);
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const user2Id = conversation.members.find((m) => m !== currentUser._id)
+    const user2Id = conversation.members.find((m) => m !== currentUser._id);
+    const currentChat = useSelector((state) => state.chat.current)
+
+    const getUser = async () => {
+        try {
+            await axiosInstance.get(`/find-user/${user2Id}`)
+                .then((res) => {
+                    setUser2(res.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     useEffect(() => {
-        const getUser = async () => {
-            try {
-                await axiosInstance.get(`/find-user/${user2Id}`)
-                    .then((res) => {
-                        setUser2(res.data)
-                    })
-                    .catch((err) => {
-                        console.log(err)
-                    })
-            } catch (error) {
-                console.log(error)
-            }
-        }
-
         getUser();
     }, [currentUser, conversation])
+
+    console.log(user2)
     return (
         <Wrapper>
             <ImgDiv>
