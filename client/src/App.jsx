@@ -40,6 +40,7 @@ import Bannermng from './Pages/Admin/Bannermng';
 import EditBanner from './Pages/Admin/EditBanner';
 import { useEffect } from 'react';
 import axiosInstance from './axios/axiosInstance';
+import Bookings from './Pages/Seller/Bookings.jsx';
 
 const Container = styled.div`
   min-height: 100vh;
@@ -115,6 +116,7 @@ function App() {
           <Route path='/userprops' element={<UserProps/>}/>
           <Route path='/postproperty' element={<PostProp/>}/>
           <Route path='/updateproperty/:id' element={<UpdateProp/>}/>
+          <Route path='/bookings' element={<Bookings/>}/>
         </Route>
 
         

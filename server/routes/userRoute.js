@@ -31,6 +31,14 @@ router.get("/ownerdashboard/:id", userCtrl.authenticateToken, userCtrl.getOwnerP
 router.put('/editprofile/:id',userCtrl.authenticateToken,userCtrl.uploadSingle.single('image'), userCtrl.editProfile)
 router.put('/changepwd/:id',userCtrl.authenticateToken, userCtrl.changePwd)
 
-router.get('/getbanner',userCtrl.getBanner)
+router.get('/getbanner',userCtrl.getBanner);
+
+router.get('/get-slots/:id',userCtrl.authenticateToken, userCtrl.getSlots)
+router.post('/put-slots',userCtrl.authenticateToken, userCtrl.updateSlots)
+
+router.post('/create-visit',userCtrl.authenticateToken, userCtrl.CreateVisit)
+router.get('/get-visit',userCtrl.authenticateToken, userCtrl.getVisit)
+router.delete('/cancel-visit',userCtrl.authenticateToken, userCtrl.cancelVisit)
+router.get('/get-visitors/:id', userCtrl.authenticateToken, userCtrl.getVisitors)
 
 module.exports = router;

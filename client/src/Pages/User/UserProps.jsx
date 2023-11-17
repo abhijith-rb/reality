@@ -11,7 +11,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import UserLayout from '../../Components/user/UserLayout';
 import axiosInstance from '../../axios/axiosInstance';
-import { Apartment, Business, CardMembership, CurrencyRupee, Preview } from '@mui/icons-material';
+import { AccessTime, Apartment, Business, CardMembership, CurrencyRupee, Preview } from '@mui/icons-material';
 
 
 const MainBox = styled.div`
@@ -46,7 +46,7 @@ const OrderCardYellow = styled.div`
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
   height: 24vh;
-
+  cursor: pointer;
 `;
 const OrderCardPink = styled.div`
   color: #fff;
@@ -142,12 +142,16 @@ const UserProps = () => {
     const notify = (msg) => toast(msg);
 
     const getCardDeets = async()=>{
-        
-        await axiosInstance.get(`/ownerdashboard/${user._id}`)
-        .then((res)=>{
-          console.log(res.data)
-          setCardDeets(res.data)
-        })
+        try {
+            await axiosInstance.get(`/ownerdashboard/${user._id}`)
+            .then((res)=>{
+              console.log(res.data)
+              setCardDeets(res.data)
+            })
+            
+        } catch (error) {
+            console.log(error)
+        }
     
       }
 
@@ -176,15 +180,20 @@ const UserProps = () => {
     }
 
     const getuserproperties = async () => {
-        await axiosInstance.get(`/getuserprops/${user._id}`)
-            .then((response) => {
-                console.log(response.data);
-                setProperties(response.data)
-            })
-            .catch((err) => {
-                console.log(err)
-
-            })
+        try {
+            await axiosInstance.get(`/getuserprops/${user._id}`)
+                .then((response) => {
+                    console.log(response.data);
+                    setProperties(response.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+    
+                })
+            
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     useEffect(() => {
@@ -197,14 +206,19 @@ const UserProps = () => {
         const squery = searchRef.current.value;
         console.log(squery)
         if (squery) {
-            await axiosInstance.get(`/getuserprops/${user._id}?squery=${squery}`)
-                .then((response) => {
-                    setProperties(response.data)
-                })
-                .catch((err) => {
-                    console.log(err)
-
-                })
+            try {
+                await axiosInstance.get(`/getuserprops/${user._id}?squery=${squery}`)
+                    .then((response) => {
+                        setProperties(response.data)
+                    })
+                    .catch((err) => {
+                        console.log(err)
+    
+                    })
+                
+            } catch (error) {
+                console.log(error)
+            }
         }
     }
 
@@ -250,10 +264,11 @@ const UserProps = () => {
                     </div>
 
                     <div className="col-md-4 col-xl-4">
-                        <OrderCardYellow>
+                       
+                        <OrderCardYellow onClick={()=>navigate("/bookings")}>
                             <CardBlock>
-                                <h3 className="m-b-20">My Listings</h3>
-                                <Head2><Business style={{ fontSize: '35px' }} /><span>{cardDeets?.ownerProps}</span></Head2>
+                                <h3 className="m-b-20">Bookings</h3>
+                                <Head2><AccessTime style={{ fontSize: '35px' }} /><span></span></Head2>
                                 {/* <p className="m-b-0">Completed Orders<Fright className="f-right">351</Fright></p> */}
                             </CardBlock>
                         </OrderCardYellow>

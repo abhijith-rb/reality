@@ -1,12 +1,10 @@
 import axios from "axios";
 
-
 const axiosInstance = axios.create({
     baseURL : process.env.REACT_APP_BASE_URL,
     withCredentials : true,
 })
 
-let retryCount = 0;
 
 axiosInstance.interceptors.response.use(
   async (response) => {
@@ -15,17 +13,23 @@ axiosInstance.interceptors.response.use(
   async (err) => {
     console.log(err);
 
-    const maxRetries = 6;
+    let retryCount = 0;
+    const maxRetries = 3;
 
     if (err.response?.status === 401) {
       if (retryCount < maxRetries) {
         try {
-          await axiosInstance.post('/auth/refresh-token');
-          console.log("New access token generated");
-
-          const originalRequest = err.config;
-          retryCount++; 
-          return axiosInstance(originalRequest);
+          if(err.config.url !== '/auth/refresh-token'){
+            await axiosInstance.post('/auth/refresh-token');
+            console.log("New access token generated");
+            console.log("Retry count",retryCount)
+  
+            const originalRequest = err.config;
+            retryCount++; 
+            return axiosInstance(originalRequest);
+          }else{
+            console.log("Error in refresh token generating")
+          }
         } catch (refreshErr) {
           console.log(refreshErr);
           console.log("Failed to regenerate new access token");

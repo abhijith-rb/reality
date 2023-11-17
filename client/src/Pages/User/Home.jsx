@@ -27,13 +27,6 @@ const Title = styled.h1`
   filter: drop-shadow(0.35rem 0.35rem 0.4rem rgba(0, 0, 0, 0.5));
 `;
 
-const Description = styled.h5`
-  color:white;
-  position: absolute;
-  top: 60%;
-  left: 20%;
-`
-
 const Home = () => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [banner,setBanner] = useState({})

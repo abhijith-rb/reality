@@ -10,7 +10,9 @@ const instance = new Razorpay({
     key_secret: process.env.RAZORPAY_SECRET,
 });
 const objectId = require('mongoose').Types.ObjectId;
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const Slot = require('../models/SlotModel');
+const Visit = require('../models/VisitModel');
 
 const userCtrl = {}
 
@@ -677,6 +679,164 @@ userCtrl.getSubscriptionData = async(req,res)=>{
         res.status(200).json(subDoc)
     }catch(err){
         console.log(err)
+        res.status(500).json({msg:"Something went wrong"})
+    }
+}
+
+userCtrl.getSlots = async(req,res)=>{
+    const sellerId = req.params.id;
+    try {
+        const sellerSlots = await Slot.find({sellerId});
+
+        let slots = null;
+        if(sellerSlots.length>0){
+            slots = {
+                Sunday:{date:null,timeSlots:[]},
+                Monday:{date:null,timeSlots:[]}, 
+                Tuesday:{date:null,timeSlots:[]}, 
+                Wednesday:{date:null,timeSlots:[]}, 
+                Thursday:{date:null,timeSlots:[]}, 
+                Friday:{date:null,timeSlots:[]}, 
+                Saturday:{date:null,timeSlots:[]}
+            };
+            let temp =[];
+            console.log("sellerSlots",sellerSlots)
+            temp = sellerSlots.filter((s)=>(s.date > Date.now()))
+            for(const x in slots){
+                for(let i=0; i<temp.length;i++){
+                    if(x == temp[i].day){
+                        slots[x].date = temp[i].date;
+                        slots[x].timeSlots = [...temp[i].timeSlots];
+                    }
+                }
+            }
+            console.log("temp",temp)
+            console.log("slots",slots)
+            return res.status(200).json(slots);
+        }
+
+        res.status(200).json(slots)
+    } catch (error) {
+        res.status(500).json({msg:"Something went wrong"})
+    }
+}
+
+userCtrl.updateSlots = async(req,res)=>{
+    const {sellerId,day,date,timeSlots} = req.body;
+    //check if a doc exists with date in future and with the particular day;
+    const docExist = await Slot.findOne({sellerId,day,date:{$gte:Date.now()}});
+    try {
+        if(docExist){
+            const updDoc = await Slot.findByIdAndUpdate(docExist._id,{
+                $set:{sellerId,day,date,timeSlots}
+            },{new:true});
+            return res.status(200).json({updDoc,msg:"Slot updated"})
+        }
+    
+        const newSlot = new Slot({
+            sellerId,day,date,timeSlots
+        })
+        const savedSlot = await newSlot.save();
+        res.status(200).json({savedSlot,msg:"New Slot created"})
+        
+    } catch (error) {
+        res.status(500).json({msg:"Something went wrong"})
+    }
+}
+
+userCtrl.CreateVisit = async(req,res)=>{
+    const {sellerId,visitorId,propertyId,day,date,timeSlot} = req.body;
+    const docExists = await Visit.findOne({sellerId,visitorId,propertyId,date:{$gt:Date.now()}})
+
+    if(docExists) return res.status(409).json({msg:"Visit Already Booked"});
+    try {
+        const newVisit = new Visit({sellerId,
+            visitorId: new objectId(visitorId),
+            propertyId: new objectId(propertyId),
+            day,date,timeSlot});
+        const savedVisit = await newVisit.save();
+       
+        console.log("savedVisit",savedVisit);
+        res.status(200).json({visit:savedVisit,msg:"Visit Booked"})
+    } catch (error) {
+        res.status(500).json({msg:"Something went wrong"})
+    }
+}
+
+userCtrl.getVisit = async(req,res)=>{
+    const sellerId = req.query.sid;
+    const visitorId = req.query.vid;
+    const propertyId = req.query.pid;
+
+    try {
+        const visit = await Visit.findOne({sellerId,visitorId,propertyId,date:{$gte:Date.now()}});
+        res.status(200).json(visit);
+        
+    } catch (error) {
+        res.status(500).json({msg:"Something went wrong"})
+    }
+}
+
+userCtrl.cancelVisit = async(req,res)=>{
+    const sellerId = req.query.sid;
+    const visitorId = req.query.vid;
+    const propertyId = req.query.pid;
+
+    try {
+        await Visit.findOneAndDelete({sellerId,visitorId,propertyId,date:{$gte:Date.now()}})
+        res.status(200).json({msg:"Visit Cancelled"})
+    } catch (error) {
+        res.status(500).json({msg:"Something went wrong"})
+    }
+}
+
+userCtrl.getVisitors = async(req,res)=>{
+    const sellerId = req.params.id;
+    try {
+        const visits = await Visit.aggregate([
+            {
+                $match: { sellerId: sellerId }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'visitorId',
+                    foreignField: '_id',
+                    as: 'visitorInfo'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'properties',
+                    localField: 'propertyId',
+                    foreignField: '_id',
+                    as: 'propertyInfo'
+                }
+            },
+           
+            {
+                $project: {
+                    'visitorName': '$visitorInfo.username',
+                    'propertyTitle': '$propertyInfo.title',
+                    'day': 1,
+                    'date': 1,
+                    'timeSlot': 1,
+                    '_id': 0
+                }
+            },
+            {
+                $group: {
+                    _id: '$sellerId',
+                    visits: { $push: '$$ROOT' }
+                }
+            }
+        ]);
+        
+        console.log("visitsAggr",visits)
+        console.log("visitsArray",visits[0]?.visits)
+        res.status(200).json(visits[0]?.visits)
+    } catch (error) {
+        console.log(error)
         res.status(500).json({msg:"Something went wrong"})
     }
 }

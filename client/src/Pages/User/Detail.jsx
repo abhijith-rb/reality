@@ -10,6 +10,8 @@ import axiosInstance from '../../axios/axiosInstance';
 import { useSelector } from 'react-redux';
 import PrimeDeets from '../../Components/user/PrimeDeets';
 import Gallery from './Gallery';
+import VisitCard from '../../Components/user/VisitCard';
+import VisitModal from '../../Components/Seller/VisitModal';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -49,7 +51,7 @@ const Detail = () => {
   const [date,setDate] = useState("");
   const user = useSelector((state)=>state.user.user);
   const [galOpen,setGalOpen] = useState(false);
-
+  const [visitOpen,setVisitOpen] = useState(false);
 
   const getProperty = async() => {
     await axiosInstance.get(`/getproperty/${postId}`)
@@ -85,23 +87,24 @@ const Detail = () => {
   },[postId])
 
   console.log(date)
-
+  
   return (
     <UserLayout>
         <Wrapper>
             <ContainerDiv>
                 <MainDiv>
                     <PrimeDeets post={post} setGalOpen={setGalOpen}/>
-                    {/* <Imagecard post={post}/> */}
                     <DetailsCard post={post}/>
                 </MainDiv>
                 <SideDiv>
-                    <SellerCard post={post}/>
+                    {user && (user._id!=post.ownerId) && < SellerCard post={post}/>}
+                    {user && (user._id!=post.ownerId) && <VisitCard post={post} setVisitOpen={setVisitOpen}/>}
                 </SideDiv>
 
             </ContainerDiv>
         </Wrapper>
 
+        { visitOpen && <VisitModal sellerId={post.ownerId} propertyId={post._id} setVisitOpen={setVisitOpen}/>}
         {galOpen && <Gallery images={post?.images} setGalOpen={setGalOpen}/>}
     </UserLayout>
   )

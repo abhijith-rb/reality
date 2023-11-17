@@ -86,7 +86,7 @@ const Posts = ({ title, type }) => {
                     handleTypes(response.data)
                 })
                 .catch((err) => {
-
+                    console.log(err)
                 })
 
         } catch (error) {

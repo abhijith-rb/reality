@@ -16,8 +16,8 @@ const Subscription = require('./models/SubscribeModel.js');
 const User = require('./models/UserModel.js')
 
 const PORT = process.env.PORT || 8800;
-const MongoURI = process.env.MongoURI;
-console.log(MongoURI)
+// const MongoURI = process.env.MongoURI;
+// console.log(MongoURI)
 const ClientUrl = process.env.ClientUrl;
 
 cron.schedule('0 0 * * *',async()=>{
