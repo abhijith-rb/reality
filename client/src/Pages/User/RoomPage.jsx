@@ -3,6 +3,8 @@ import { useNavigate, useParams} from 'react-router-dom';
 import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
+import ErrorBoundary from '../../utils/ErrorBoundary';
+// import {ErrorBoundary} from 'react-error-boundary'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -19,48 +21,77 @@ const RoomPage = () => {
   const user = useSelector((state) => state.user.user);
   const videoContainerRef = useRef();
 
-  useEffect(()=>{
-    const appID = Number(process.env.REACT_APP_ZEGO_APP_ID);
-    const serverSecret = process.env.REACT_APP_ZEGO_SERVER_SECRET;
+  const mainFn = ()=>{
+    try {
+      const appID = Number(process.env.REACT_APP_ZEGO_APP_ID);
+      const serverSecret = process.env.REACT_APP_ZEGO_SERVER_SECRET;
 
-    const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
-      appID,
-      serverSecret,
-      roomId,
-      user._id,
-      user.username
-    )
+      const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
+        appID,
+        serverSecret,
+        roomId,
+        user._id,
+        user.username
+      )
 
-    const zc = ZegoUIKitPrebuilt.create(kitToken)
+      console.log("kitToken",kitToken)
+  
+      const zc = ZegoUIKitPrebuilt.create(kitToken)
+      console.log("zc consoled",zc)
+      console.log("zc consoled hasJoinedRoom",zc.hasJoinedRoom)
+  
+      zc.joinRoom({
+        container: videoContainerRef.current,
+        sharedLinks: [
+          {
+            name: "Copy Link",
+            url: `${clientUrl}room/${roomId}`
+          }
+        ],
+        maxUsers:2,
+        scenario: {
+          mode: ZegoUIKitPrebuilt.OneONoneCall
+        },
+        showScreenSharingButton: false,
+        showPreJoinView: false,
 
-    zc.joinRoom({
-      container: videoContainerRef.current,
-      sharedLinks: [
-        {
-          name: "Copy Link",
-          url: `${clientUrl}room/${roomId}`
+        onLeaveRoom : ()=>{
+          if(zc){
+            zc.destroy();
+          }
         }
-      ],
-      maxUsers:2,
-      scenario: {
-        mode: ZegoUIKitPrebuilt.OneONoneCall
-      },
-      showScreenSharingButton: false,
-      showPreJoinView: false,
-      onLeaveRoom : ()=>{
-        zc.destroy();
+      })
+      
+
+  
+      return()=>{
+        if(zc){
+          zc.destroy();
+        }
         navigate("/messenger")
-
       }
-    })
-
-    return()=>{
-      zc.destroy();
+      
+    } catch (error) {
+      console.log(error)
+      
     }
+  }
+
+  useEffect(()=>{
+    mainFn()
+  
   },[])
 
   return (
-      <Wrapper ref={videoContainerRef} />
+      <Wrapper >
+        {
+          videoContainerRef.current 
+          ?
+          <div  ref={videoContainerRef} />
+          :<p>Sorry</p>
+        }
+      </Wrapper>
+
   )
 }
 

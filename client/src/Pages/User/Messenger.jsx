@@ -334,6 +334,8 @@ const Messenger = () => {
         const recId = currentChat?.members.find((member) => member !== user._id)
         // console.log(recId)
 
+        if(recId == null || user._id == null) return;
+
         const message = {
             conversationId: currentChat._id,
             senderId: user._id,
@@ -367,11 +369,16 @@ const Messenger = () => {
         console.log(roomId)
         setRoomId(roomId)
         navigate(`/room/${roomId}`)
-        socket.current.emit('room-id', {
-            receiverId,
-            username: user.username,
-            roomId
-        })
+        try{
+            socket.current.emit('room-id', {
+                receiverId,
+                username: user.username,
+                roomId
+            })
+        }catch(err){
+            console.log(err)
+        }
+        
     }
 
     console.log(conversations)

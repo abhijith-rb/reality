@@ -7,6 +7,11 @@ const chatCtrl = {};
 chatCtrl.addConv = async(req,res)=>{
     const senderId = req.body.senderId;
     const receiverId = req.body.receiverId;
+
+    if(!senderId || !receiverId) {
+        return res.status(409).json({msg:"Something went wrong"})
+    }
+
     try {
         const existingConv = await Conversation.findOne(
             {members:{$all:[senderId,receiverId]}}

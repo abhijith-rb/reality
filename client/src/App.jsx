@@ -41,6 +41,8 @@ import EditBanner from './Pages/Admin/EditBanner';
 import { useEffect } from 'react';
 import axiosInstance from './axios/axiosInstance';
 import Bookings from './Pages/Seller/Bookings.jsx';
+import VcProtect from './utils/VcProtect.jsx';
+
 
 const Container = styled.div`
   min-height: 100vh;
@@ -109,6 +111,7 @@ function App() {
           <Route path='/messenger' element={<Messenger/>}/>
           <Route path='/favorites' element={<Favorites/>}/>
           <Route path='/room/:roomId' element={<RoomPage/>}/>
+          {/* <Route path='/room/:roomId' element={<VcProtect/>}/> */}
           <Route path='/subscribe' element={<Subscribe/>}/>
         </Route>
 

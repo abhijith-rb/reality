@@ -3,19 +3,22 @@ import { useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components';
 
 const Wrapper = styled.div`
-    width: 25vw;
-    padding: 0 1vw;
+    /* width: 25vw; */
+    width: 80%;
+    /* padding: 0 1vw; */
     height: auto;
-    margin: 0px 30px 10px 10px;
+    /* margin: 0px 30px 10px 10px; */
     border-radius: 5px;
-    box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5);
+    /* box-shadow: 5px 5px 22px -6px rgba(0,0,0,0.5); */
     font-family: 'Montserrat', sans-serif;
     font-weight:500;
     cursor: pointer;
     background-color:#ffffff;
+    
     @media (max-width: 1000px){
         width: 90vw;
     }
+    /* border: 2px solid blue; */
 `;
 
 const PostImg = styled.img`
