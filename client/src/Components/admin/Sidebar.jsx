@@ -5,8 +5,9 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Close } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'react-bootstrap';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { logout } from '../../redux/userReducer';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const SideContainer = styled.div`
   min-width: 17vw;
@@ -63,6 +64,8 @@ const LogoDiv = styled.div`
 `;
 
 const Sidebar = ({ setShowSBar }) => {
+  const axiosInstance = useAxiosPrivate()
+
   const user = useSelector((state) => state.user.user)
   const dispatch = useDispatch()
   const navigate = useNavigate();

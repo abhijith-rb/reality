@@ -10,8 +10,9 @@ import { useSelector } from 'react-redux';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import UserLayout from '../../Components/user/UserLayout';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { AccessTime, Apartment, Business, CardMembership, CurrencyRupee, Preview } from '@mui/icons-material';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 
 const MainBox = styled.div`
@@ -113,6 +114,8 @@ const TableResponsive = styled.div`
 `;
 
 const UserProps = () => {
+    const axiosInstance = useAxiosPrivate()
+
     const [cardDeets, setCardDeets] = useState({})
     const user = useSelector((state) => state.user.user)
     const navigate = useNavigate();

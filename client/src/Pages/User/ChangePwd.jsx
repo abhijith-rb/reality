@@ -4,9 +4,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
+import axios from "../../api/axios"
 import { styled } from 'styled-components';
-import axiosInstance from '../../axios/axiosInstance';
+
 
 
 const Wrapper = styled.div`
@@ -63,7 +63,7 @@ const ChangePwd = () => {
             notify("Passwords doesn't match")
             return;
         }
-        await axiosInstance.post(`/auth/updatepwd/${userId}`, { password: password })
+        await axios.post(`/auth/updatepwd/${userId}`, { password: password })
             .then((res) => {
                 navigate("/login")
             })

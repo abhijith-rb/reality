@@ -6,10 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { logout } from '../../redux/userReducer';
 import { setCurrentChat } from '../../redux/chatReducer';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { Close } from '@mui/icons-material';
 import { Button } from 'react-bootstrap';
 import {googleLogout} from '@react-oauth/google'
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const SideContainer = styled.div`
   min-width: 17vw;
@@ -60,6 +61,8 @@ const LogoDiv = styled.div`
 `;
 
 const UserSidebar = ({setSidebar}) => {
+  const axiosInstance = useAxiosPrivate()
+
   const navigate = useNavigate();
   const user = useSelector((state)=> state.user.user)
   const dispatch = useDispatch();

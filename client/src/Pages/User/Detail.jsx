@@ -6,12 +6,13 @@ import DetailsCard from '../../Components/user/DetailsCard';
 import axios from 'axios';
 import SellerCard from '../../Components/user/SellerCard';
 import { styled } from 'styled-components';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { useSelector } from 'react-redux';
 import PrimeDeets from '../../Components/user/PrimeDeets';
 import Gallery from './Gallery';
 import VisitCard from '../../Components/user/VisitCard';
 import VisitModal from '../../Components/Seller/VisitModal';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -46,6 +47,8 @@ const SideDiv = styled.div`
 `;
 
 const Detail = () => {
+    const axiosInstance = useAxiosPrivate()
+
   const postId = useLocation().pathname.split("/")[2];
   const [post,setPost] = useState({})
   const [date,setDate] = useState("");

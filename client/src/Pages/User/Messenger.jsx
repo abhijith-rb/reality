@@ -7,10 +7,11 @@ import Conversation from '../../Components/chat/Conversation';
 import Message from '../../Components/chat/Message';
 import { setCurrentChat } from '../../redux/chatReducer';
 import { Cancel, VideoCall } from '@mui/icons-material';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { v4 } from 'uuid'
 import NotifyVc from '../../Components/chat/NotifyVc';
 import { useNavigate } from 'react-router-dom';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 
 
@@ -172,6 +173,8 @@ const OpenDiv = styled.div`
 `;
 
 const Messenger = () => {
+    const axiosInstance = useAxiosPrivate()
+
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const dispatch = useDispatch();
     const [conversations, setConversations] = useState([])

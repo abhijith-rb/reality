@@ -7,6 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdminLayout from '../../Components/admin/AdminLayout';
 import axiosInstance from '../../axios/axiosInstance';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 
 const MainBox = styled.div`
@@ -54,6 +55,8 @@ const Btns = styled.div`
 
 
 const EditBanner = () => {
+  const axiosInstance = useAxiosPrivate()
+
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const navigate = useNavigate();
   const titleRef = useRef();

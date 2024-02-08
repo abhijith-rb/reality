@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Button } from 'react-bootstrap';
 import { updateUser } from '../../redux/userReducer';
 import ConfirmModal from '../../utils/ConfirmModal';
 import { useNavigate } from 'react-router-dom';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const SubedDiv = styled.div`
     width: 40vw;
@@ -46,6 +47,8 @@ const BtnsDiv = styled.div`
 `;
 
 const SubscribedApp = () => {
+    const axiosInstance = useAxiosPrivate()
+
     const user = useSelector((state)=>state.user.user);
     const dispatch = useDispatch();
     const navigate = useNavigate();

@@ -57,26 +57,26 @@ const Container = styled.div`
 
 
 function App() {
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
 
-  const getData = async () => {
-    console.log("calling getdata");
+  // const getData = async () => {
+  //   console.log("calling getdata");
 
-    await axiosInstance.get(`/getdetails`)
-      .then((response) => {
-        console.log(response.data)
-        dispatch(updateUser(response.data));
+  //   await axiosInstance.get(`/getdetails`)
+  //     .then((response) => {
+  //       console.log(response.data)
+  //       dispatch(updateUser(response.data));
         
-      })
-      .catch(async(err) => {
-        console.log(err)
+  //     })
+  //     .catch(async(err) => {
+  //       console.log(err)
       
-      })
-  }
+  //     })
+  // }
 
-  useEffect(()=>{
-    getData()
-  },[])
+  // useEffect(()=>{
+  //   getData()
+  // },[])
 
   return (
     <Container >

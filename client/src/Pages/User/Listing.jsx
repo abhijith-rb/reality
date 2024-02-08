@@ -3,9 +3,10 @@ import UserLayout from '../../Components/user/UserLayout'
 import { styled } from 'styled-components';
 import ListPost from '../../Components/user/ListPost';
 import { useLocation } from 'react-router-dom';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { Button, Form } from 'react-bootstrap';
 import { Cancel, Close } from '@mui/icons-material';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const FullWrap = styled.div`
     width:100%;
@@ -127,6 +128,8 @@ const FilterBox = styled.div`
 `;
 
 const Listing = () => {
+    const axiosInstance = useAxiosPrivate()
+
     const [posts, setPosts] = useState([]);
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);

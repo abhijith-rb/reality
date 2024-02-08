@@ -4,11 +4,12 @@ import { styled } from "styled-components";
 import { useSelector } from "react-redux";
 import { AddCircle, Image } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import axiosInstance from "../../axios/axiosInstance";
+// import axiosInstance from "../../axios/axiosInstance";
 import AdminLayout from "../../Components/admin/AdminLayout";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Button } from "react-bootstrap";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const Wrapper = styled.div`
     width: 70vw;
@@ -108,6 +109,8 @@ const Btns = styled.div`
 `;
 
 const CreateBlog = () => {
+    const axiosInstance = useAxiosPrivate()
+
     const [title, setTitle] = useState("");
     const [tag1, setTag1] = useState("");
     const [tag2, setTag2] = useState("");

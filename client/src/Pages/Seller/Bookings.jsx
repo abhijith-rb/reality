@@ -5,9 +5,10 @@ import styled from 'styled-components';
 import SlotModal from '../../Components/Seller/SlotModal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { useSelector } from 'react-redux';
 import VisitorsModal from '../../Components/Seller/VisitorsModal';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const Wrapper = styled.div`
     position: relative;
@@ -85,6 +86,8 @@ const SlotIntDiv = styled.div`
 `;
 
 const Bookings = ()=>{
+    const axiosInstance = useAxiosPrivate()
+
     const user = useSelector((state)=>state.user.user)
     const notify = (msg)=> toast(msg);
     const todayDate = new Date();

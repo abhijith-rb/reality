@@ -1,9 +1,10 @@
 import React, {useRef } from 'react'
 import styled from 'styled-components';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { Button } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 
 const ProfileBox = styled.div`
@@ -50,6 +51,8 @@ const FieldInput = styled.input`
 `;
 
 const ChangePwd = ({user,setPage}) => {
+  const axiosInstance = useAxiosPrivate()
+
   const notify = (msg)=> toast(msg)
 
   const oldRef = useRef()

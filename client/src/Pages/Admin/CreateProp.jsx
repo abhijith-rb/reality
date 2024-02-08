@@ -7,10 +7,11 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdminLayout from '../../Components/admin/AdminLayout';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import { Close } from '@mui/icons-material';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const MainBox = styled.div`
   width: 100%;
@@ -106,6 +107,8 @@ const SgBoxDiv = styled.div`
 `;
 
 const CreateProp = () => {
+  const axiosInstance = useAxiosPrivate()
+
   const user = useSelector((state) => state.user.user);
   const navigate = useNavigate();
   

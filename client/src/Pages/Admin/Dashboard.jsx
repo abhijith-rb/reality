@@ -3,7 +3,8 @@ import { LineChart, Line, XAxis, YAxis, Tooltip, Legend, PieChart, Pie, } from '
 import styled from 'styled-components';
 import AdminLayout from '../../Components/admin/AdminLayout';
 import { Apartment, CardMembership, CurrencyRupee } from '@mui/icons-material';
-import axiosInstance from '../../axios/axiosInstance';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+// import axiosInstance from '../../axios/axiosInstance';
 
 
 const MainBox = styled.div`
@@ -133,6 +134,8 @@ const GraphsDiv = styled.div`
 `;
 
 const Dashboard = () => {
+  const axiosInstance = useAxiosPrivate()
+
   const [cardDeets, setCardDeets] = useState({})
   const [pieDeets, setPieDeets] = useState({})
   const [graphData, setGraphData] = useState([])

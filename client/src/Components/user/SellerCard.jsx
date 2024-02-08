@@ -3,7 +3,8 @@ import { styled } from 'styled-components'
 import { setCurrentChat } from '../../redux/chatReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../../axios/axiosInstance';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+// import axiosInstance from '../../axios/axiosInstance';
 
 
 const Sellercardx= styled.div`
@@ -61,6 +62,8 @@ const OwnerName = styled.span`
 `;
 
 const SellerCard = ({post}) => {
+    const axiosInstance = useAxiosPrivate()
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;

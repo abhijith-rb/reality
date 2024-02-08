@@ -8,9 +8,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSelector } from 'react-redux';
 import UserLayout from '../../Components/user/UserLayout';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import axios from 'axios';
 import { Close } from '@mui/icons-material';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const MainBox = styled.div`
   width: 100%;
@@ -104,6 +105,8 @@ border-radius: 10px;
 `;
 
 const PostProp = () => {
+  const axiosInstance = useAxiosPrivate()
+
   const user = useSelector((state) => state.user.user)
   const navigate = useNavigate();
 

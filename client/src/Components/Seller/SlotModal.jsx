@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { CancelOutlined} from '@mui/icons-material';
 import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const Wrapper = styled.div`
     width: 50vw;
@@ -88,6 +89,8 @@ const CloseIcon = {
 }
 
 const SlotModal = ({setBox,slots,setSlots,day,idx}) => {
+  const axiosInstance = useAxiosPrivate()
+
   const notify = (msg)=> toast(msg);
    const user = useSelector((state)=>state.user.user)
     const currDate = new Date();

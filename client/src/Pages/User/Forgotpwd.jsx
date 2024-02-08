@@ -5,7 +5,8 @@ import { Button, Form } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link, useNavigate } from 'react-router-dom';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
+import axios from '../../api/axios'
 
 const Wrapper = styled.div`
     height: auto;
@@ -62,7 +63,7 @@ const Forgotpwd = () => {
             notify(`Invalid Email format`)
             return;
         }
-        await axiosInstance.post("/auth/genotp",{email:email})
+        await axios.post("/auth/genotp",{email:email})
         .then((res)=>{
             notify("Otp Send Successfully")
         })
@@ -76,7 +77,7 @@ const Forgotpwd = () => {
         e.preventDefault()
         const email = emailRef.current.value;
         const otp = otpRef.current.value;
-        await axiosInstance.post("/auth/verifyotp",{otp:otp,email:email})
+        await axios.post("/auth/verifyotp",{otp:otp,email:email})
         .then((res)=>{
             const userId = res.data.userId;
             navigate(`/changepwd?q=${userId}`)

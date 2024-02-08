@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import Posts from '../../Components/posts/Posts';
 import UserLayout from '../../Components/user/UserLayout';
 import styled from 'styled-components';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import Loader from '../../utils/Loader';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const Banner = styled.div`
   position: relative;
@@ -28,6 +29,8 @@ const Title = styled.h1`
 `;
 
 const Home = () => {
+  const axiosInstance = useAxiosPrivate()
+
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [banner,setBanner] = useState({})
   const getBanner = async()=>{

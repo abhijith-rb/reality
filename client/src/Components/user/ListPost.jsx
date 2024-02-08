@@ -5,7 +5,8 @@ import { styled } from 'styled-components'
 import { setCurrentChat } from '../../redux/chatReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../../axios/axiosInstance';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+// import axiosInstance from '../../axios/axiosInstance';
 
 const PostWrap = styled.div`
     width: 80vw;
@@ -98,6 +99,8 @@ const ClippedPara = styled.p`
 
 
 const ListPost = ({post}) => {
+  const axiosInstance = useAxiosPrivate()
+
   const dispatch = useDispatch();
     const navigate = useNavigate();
   const user = useSelector((state)=> state.user.user)

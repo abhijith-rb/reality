@@ -4,9 +4,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import UserLayout from '../../Components/user/UserLayout';
 import { CheckCircle } from '@mui/icons-material';
+import axios from '../../api/axios'
 
 const Content = styled.div`
   height: auto;
@@ -107,7 +108,7 @@ const Register = () => {
             notify(`Invalid Email format`)
             return;
         }
-        await axiosInstance.post("/auth/createotpformail",{email:email})
+        await axios.post("/auth/createotpformail",{email:email})
         .then((res)=>{
             notify("Otp Send Successfully")
             setSent(true)
@@ -122,7 +123,7 @@ const Register = () => {
     e.preventDefault()
         const email = emailRef.current.value;
         const otp = otpRef.current.value;
-        await axiosInstance.post("/auth/verifyemail",{otp:otp,email:email})
+        await axios.post("/auth/verifyemail",{otp:otp,email:email})
         .then((res)=>{
           notify(res.data.msg)
           setVerified(true);
@@ -177,7 +178,7 @@ const Register = () => {
       return;
     }
 
-    await axiosInstance.post('/auth/register', {
+    await axios.post('/auth/register', {
       username, email, password, phone
     })
       .then((response) => {

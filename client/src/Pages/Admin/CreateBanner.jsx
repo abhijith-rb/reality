@@ -6,7 +6,8 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdminLayout from '../../Components/admin/AdminLayout';
-import axiosInstance from '../../axios/axiosInstance';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+// import axiosInstance from '../../axios/axiosInstance';
 
 
 const MainBox = styled.div`
@@ -53,6 +54,8 @@ const Btns = styled.div`
 
 
 const CreateBanner = () => {
+  const axiosInstance = useAxiosPrivate()
+
   const navigate = useNavigate();
   const titleRef = useRef();
   const descriptionRef = useRef();

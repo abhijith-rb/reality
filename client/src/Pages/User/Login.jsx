@@ -6,11 +6,12 @@ import { loginStart, loginSuccess, loginFailure } from '../../redux/userReducer'
 import styled from 'styled-components';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import UserLayout from '../../Components/user/UserLayout';
 import {GoogleLogin, GoogleOAuthProvider} from '@react-oauth/google'
 import jwt_decode from 'jwt-decode'
-import axios from 'axios';
+import axios from '../../api/axios';
+import { setCurrentToken } from '../../redux/accessTokenReducer';
 
 const Content = styled.div`
   height: 75vh;
@@ -86,12 +87,14 @@ const Login = () => {
       return;
     }
 
-    await axiosInstance.post('/auth/login', {
+    await axios.post('/auth/login', {
       username, password
     }).then((response) => {
-      const userInfo = response.data;
+      console.log("reponsed login", response)
+      const userInfo = response?.data?.userInfo;
       console.log(userInfo)
       dispatch(loginSuccess(userInfo))
+      dispatch(setCurrentToken(response?.data?.accessToken))
 
       if (userInfo.role === "user") {
         navigate("/")
@@ -119,7 +122,7 @@ const Login = () => {
 
     dispatch(loginStart())
 
-    await axiosInstance.post("/auth/google-auth", userInfo)
+    await axios.post("/auth/google-auth", userInfo)
     .then((res)=>{
       const userInfo = res.data;
       dispatch(loginSuccess(userInfo))

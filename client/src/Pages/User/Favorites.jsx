@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import UserLayout from '../../Components/user/UserLayout';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PropCard from '../../Components/posts/PropCard';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const PostsDiv = styled.div`
     height: auto;
@@ -49,6 +50,8 @@ const Cards = styled.div`
 `;
 
 const Favorites = () => {
+    const axiosInstance = useAxiosPrivate()
+
     const navigate = useNavigate()
     const [posts,setPosts] = useState([]);
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;

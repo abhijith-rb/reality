@@ -10,8 +10,10 @@ import Popper from '../Popper';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { setCurrentChat } from '../../redux/chatReducer';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import axios from 'axios';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+import { setCurrentToken } from '../../redux/accessTokenReducer';
 
 
 const TopContainer = styled.div`
@@ -154,6 +156,8 @@ const Li = styled.li`
 
 
 const Topbar = ({ setSidebar }) => {
+    const axiosInstance = useAxiosPrivate()
+
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const user = useSelector((state) => state.user.user)
     const dispatch = useDispatch();
@@ -212,6 +216,7 @@ const Topbar = ({ setSidebar }) => {
         await axiosInstance.delete('/auth/logout')
             .then(() => {
                 dispatch(logout())
+                dispatch(setCurrentToken(null))
                 setTooltip(false)
                 dispatch(setCurrentChat(null))
                 console.log("logout dispatched")

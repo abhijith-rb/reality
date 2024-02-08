@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { styled } from 'styled-components';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { format } from 'timeago.js'
 
 const Wrapper = styled.div`

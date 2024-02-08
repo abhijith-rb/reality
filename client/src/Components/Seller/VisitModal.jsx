@@ -2,10 +2,11 @@ import { CancelOutlined } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import styled from 'styled-components';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const Wrapper = styled.div`
     width: 90%;
@@ -117,6 +118,8 @@ const BodyContainer = styled.div`
 `;
 
 const VisitModal = ({ setVisitOpen, propertyId, sellerId }) => {
+    const axiosInstance = useAxiosPrivate()
+
     const [visit, setVisit] = useState(null)
     const user = useSelector((state) => state.user.user);
     const [selected, setSelected] = useState({

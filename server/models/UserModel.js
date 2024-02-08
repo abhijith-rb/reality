@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema({
     role:{type:String,default:"user"},
     isBlocked:{type:Boolean,default:false},
     subscribed:{type:Boolean,default:false},
-    googleUser:{type:Boolean, default:false}
+    googleUser:{type:Boolean, default:false},
+    refreshToken:[String]
 })
 
 const User = mongoose.model('User',userSchema)

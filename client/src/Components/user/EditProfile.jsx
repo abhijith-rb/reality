@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { updateUser } from '../../redux/userReducer';
 import { Button } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const ProfileBox = styled.div`
   flex: 6;
@@ -94,6 +95,8 @@ const CustomFileLabel = styled.label`&::after{
 `;
 
 const EditProfile = ({ user }) => {
+  const axiosInstance = useAxiosPrivate()
+
   const dispatch = useDispatch()
   const notify = (msg)=> toast(msg)
 

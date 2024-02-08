@@ -8,7 +8,8 @@ import Sidebar from '../../Components/admin/Sidebar';
 import AdminLayout from '../../Components/admin/AdminLayout';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axiosInstance from '../../axios/axiosInstance';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+// import axiosInstance from '../../axios/axiosInstance';
 
 const MainBox = styled.div`
   width: 100%;
@@ -45,6 +46,8 @@ const Btns = styled.div`
 `;
 
 const CreateUser = () => {
+  const axiosInstance = useAxiosPrivate()
+
   const navigate = useNavigate()
   const usernameRef = useRef()
   const emailRef = useRef()

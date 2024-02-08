@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import BlogPost from '../../Components/blog/BlogPost'
 import { styled } from 'styled-components';
 import UserLayout from '../../Components/user/UserLayout';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const Wrapper = styled.div`
     height: fit-content;
@@ -64,6 +65,8 @@ const Img = styled.img`
 `;
 
 const Blogs = () => {
+    const axiosInstance = useAxiosPrivate()
+
     const [blogs, setBlogs] = useState([])
     const user = useSelector((state) => state.user.user);
     const navigate = useNavigate();

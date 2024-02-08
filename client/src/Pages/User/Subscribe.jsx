@@ -8,8 +8,9 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import { updateUser } from '../../redux/userReducer';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import SubscribedApp from '../../Components/user/SubscribedApp';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const Wrapper = styled.div`
     display: flex;
@@ -74,6 +75,8 @@ const YearBox = styled.div`
 
 
 const Subscribe = () => {
+    const axiosInstance = useAxiosPrivate()
+
     const user = useSelector((state) => state.user.user)
     const [Razorpay] = useRazorpay();
     const navigate = useNavigate()

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { useSelector } from 'react-redux';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -58,6 +59,8 @@ const LastMsg = styled.span`
 `;
 
 const Conversation = ({ conversation, currentUser}) => {
+    const axiosInstance = useAxiosPrivate()
+
     const [user2, setUser2] = useState(null);
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const user2Id = conversation.members.find((m) => m !== currentUser._id);

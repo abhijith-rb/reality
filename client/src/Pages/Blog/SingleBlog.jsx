@@ -4,13 +4,14 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { useState } from "react";
 import { Link } from "react-router-dom"
 import DeleteConfirmation from '../../utils/DeleteConfirmation';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { useSelector } from 'react-redux';
 import UserLayout from '../../Components/user/UserLayout';
 import { styled } from 'styled-components';
 import { Delete,Edit } from '@mui/icons-material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const Wrapper = styled.div`
     height: fit-content;
@@ -154,6 +155,8 @@ const UpdImg = styled.img`
 
 
 const SingleBlog = () => {
+    const axiosInstance = useAxiosPrivate()
+
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const location = useLocation();
     console.log(location)

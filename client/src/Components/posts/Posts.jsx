@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PropCard from './PropCard';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 const PostsDiv = styled.div`
     height: auto;
@@ -48,6 +49,8 @@ const Cards = styled.div`
 
 
 const Posts = ({ title, type }) => {
+    const axiosInstance = useAxiosPrivate()
+
     const [posts, setPosts] = useState([]);
     const user = useSelector((state) => state.user.user);
 

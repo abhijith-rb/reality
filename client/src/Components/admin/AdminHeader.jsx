@@ -6,8 +6,9 @@ import { logout } from '../../redux/userReducer';
 import { Button, NavItem, Navbar } from 'react-bootstrap'
 import axios from 'axios';
 import MenuIcon from '@mui/icons-material/Menu';
-import axiosInstance from '../../axios/axiosInstance';
+// import axiosInstance from '../../axios/axiosInstance';
 import { ArrowDropDownCircle } from '@mui/icons-material';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 
 const HeadContainer = styled.div`
@@ -95,6 +96,8 @@ const Bar = styled.input`
 
 
 const AdminHeader = ({ setShowSBar }) => {
+    const axiosInstance = useAxiosPrivate()
+
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const user = useSelector((state) => state.user.user)
     const dispatch = useDispatch();

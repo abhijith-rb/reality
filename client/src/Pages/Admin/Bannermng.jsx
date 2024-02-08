@@ -9,7 +9,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import AdminLayout from '../../Components/admin/AdminLayout';
 import SearchIcon from '@mui/icons-material/Search';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import axiosInstance from '../../axios/axiosInstance';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+// import axiosInstance from '../../axios/axiosInstance';
 
 const MainBox = styled.div`
   width: 100%;
@@ -63,6 +64,7 @@ const Img = styled.img`
 `;
 
 const Bannermng = () => {
+    const axiosInstance = useAxiosPrivate();
     const navigate = useNavigate();
     const [banners, setBanners] = useState([]);
     const searchRef = useRef();
